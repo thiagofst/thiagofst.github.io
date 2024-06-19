@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Interests - Thiago Ferreira</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container {
+            max-width: 800px; /* Adjust as per your layout requirements */
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .project-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .project-box img {
+            width: 100px; /* Adjust image size as needed */
+            height: auto;
+            margin-right: 20px;
+        }
+        .project-title {
+            color: navy;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .research-description {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .research-description.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html">Thiago Ferreira dos Santos</a>
+    </header>
+    <div class="container">
+        <h2>Research Interests</h2>
+        
+        <div class="project-box" onclick="toggleResearch('research1')">
+            <img src="Fig_TOI1173.pdf" alt="TOI-1173b">
+            <div class="project-title">Exoplanets Detection and Characterisation</div>
+        </div>
+        <div id="research1" class="research-description">
+
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt libero justo, vitae pharetra ante consequat a. Integer lacinia ex vel turpis aliquam, non feugiat leo lacinia. Nullam ac dui et nisi lobortis elementum. Morbi at urna a lorem facilisis elementum. Aenean eget pharetra nulla. Nulla facilisi. Integer sagittis ligula et fermentum auctor. Cras tempus lacus sed nisi vestibulum, in suscipit dui elementum.</p>
+            <p>Etiam molestie, sapien in posuere dapibus, dui est fermentum sapien, a feugiat lorem turpis sit amet velit. Duis eget dolor ac eros placerat gravida. Cras bibendum convallis turpis, a dapibus sem congue non. Sed dapibus justo ac posuere sodales. Curabitur rutrum posuere metus, nec gravida lorem ultricies vel. Morbi pellentesque feugiat urna, et lacinia sem condimentum at.</p>
+            <p>Integer ut nibh sit amet velit molestie suscipit. Nunc ac mauris ut felis gravida tincidunt non id orci. Phasellus a tellus eu augue venenatis finibus at a nunc. Nullam viverra venenatis quam at accumsan. Nullam elementum gravida nisi nec tincidunt. Aenean suscipit, lorem sit amet consectetur mattis, eros odio condimentum metus, eget tempor est purus at est. Fusce interdum ex sed dolor cursus, at gravida felis ultrices.</p>
+            <p>Aliquam consectetur nibh eget lectus pharetra, sit amet mollis purus efficitur. Quisque lacinia aliquam dolor nec dapibus. Curabitur vehicula, risus sed dapibus viverra, libero erat efficitur neque, nec pellentesque quam elit nec enim. Proin gravida velit nec lectus tincidunt venenatis. Etiam vitae quam est. Curabitur egestas, velit nec ultricies ullamcorper, libero nisl egestas dui, sed congue justo quam eget ex.</p>
+            <p>Proin eu lorem vitae est semper rutrum. Aliquam erat volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nullam vel semper orci. Duis non venenatis felis. Aliquam tristique vitae mi id posuere. Vivamus non ex eu purus sollicitudin posuere. Aliquam sed ante a nisi lacinia faucibus. Nulla vitae pharetra orci. In vel elit aliquet, venenatis justo nec, interdum metus.</p>
+
+        </div>
+        
+        <div class="project-box" onclick="toggleResearch('research2')">
+            <img src="Fig_PopIII_HR.pdf" alt="PopIII">
+            <div class="project-title">Population III Stars</div>
+        </div>
+        <div id="research2" class="research-description">
+
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt libero justo, vitae pharetra ante consequat a. Integer lacinia ex vel turpis aliquam, non feugiat leo lacinia. Nullam ac dui et nisi lobortis elementum. Morbi at urna a lorem facilisis elementum. Aenean eget pharetra nulla. Nulla facilisi. Integer sagittis ligula et fermentum auctor. Cras tempus lacus sed nisi vestibulum, in suscipit dui elementum.</p>
+            <p>Etiam molestie, sapien in posuere dapibus, dui est fermentum sapien, a feugiat lorem turpis sit amet velit. Duis eget dolor ac eros placerat gravida. Cras bibendum convallis turpis, a dapibus sem congue non. Sed dapibus justo ac posuere sodales. Curabitur rutrum posuere metus, nec gravida lorem ultricies vel. Morbi pellentesque feugiat urna, et lacinia sem condimentum at.</p>
+            <p>Integer ut nibh sit amet velit molestie suscipit. Nunc ac mauris ut felis gravida tincidunt non id orci. Phasellus a tellus eu augue venenatis finibus at a nunc. Nullam viverra venenatis quam at accumsan. Nullam elementum gravida nisi nec tincidunt. Aenean suscipit, lorem sit amet consectetur mattis, eros odio condimentum metus, eget tempor est purus at est. Fusce interdum ex sed dolor cursus, at gravida felis ultrices.</p>
+            <p>Aliquam consectetur nibh eget lectus pharetra, sit amet mollis purus efficitur. Quisque lacinia aliquam dolor nec dapibus. Curabitur vehicula, risus sed dapibus viverra, libero erat efficitur neque, nec pellentesque quam elit nec enim. Proin gravida velit nec lectus tincidunt venenatis. Etiam vitae quam est. Curabitur egestas, velit nec ultricies ullamcorper, libero nisl egestas dui, sed congue justo quam eget ex.</p>
+            <p>Proin eu lorem vitae est semper rutrum. Aliquam erat volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nullam vel semper orci. Duis non venenatis felis. Aliquam tristique vitae mi id posuere. Vivamus non ex eu purus sollicitudin posuere. Aliquam sed ante a nisi lacinia faucibus. Nulla vitae pharetra orci. In vel elit aliquet, venenatis justo nec, interdum metus.</p>
+
+        </div>
+
+        
+        <div class="project-box" onclick="toggleResearch('research3')">
+            <img src="Fig_TOI2533.png" alt="BDs">
+            <div class="project-title">Spin-Orbit Analyses to Eclipsing Brown Dwarf Companions</div>
+        </div>
+        <div id="research3" class="research-description">
+
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt libero justo, vitae pharetra ante consequat a. Integer lacinia ex vel turpis aliquam, non feugiat leo lacinia. Nullam ac dui et nisi lobortis elementum. Morbi at urna a lorem facilisis elementum. Aenean eget pharetra nulla. Nulla facilisi. Integer sagittis ligula et fermentum auctor. Cras tempus lacus sed nisi vestibulum, in suscipit dui elementum.</p>
+            <p>Etiam molestie, sapien in posuere dapibus, dui est fermentum sapien, a feugiat lorem turpis sit amet velit. Duis eget dolor ac eros placerat gravida. Cras bibendum convallis turpis, a dapibus sem congue non.
