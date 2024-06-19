@@ -6,16 +6,20 @@
     <title>Research Interests - Thiago Ferreira</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .toggle-button {
+        .research-section {
+            margin-bottom: 20px;
+        }
+        .research-title {
             cursor: pointer;
             color: blue;
             text-decoration: underline;
             margin-bottom: 10px;
         }
-        .research-section {
+        .research-description {
             display: none;
+            margin-top: 10px;
         }
-        .research-section.show {
+        .research-description.show {
             display: block;
         }
     </style>
@@ -26,23 +30,25 @@
     </header>
     <div class="container">
         <h2>Research Projects</h2>
-        <button class="toggle-button" onclick="toggleResearchSections()">Toggle Research Projects</button>
-        <section id="research1" class="research-section">
-            <h3>1. A</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
+        <section class="research-section" id="research1">
+            <h3 class="research-title" onclick="toggleResearch('research1')">1. A</h3>
+            <div class="research-description">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
+            </div>
         </section>
-        <section id="research2" class="research-section">
-            <h3>2. B</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
+        <section class="research-section" id="research2">
+            <h3 class="research-title" onclick="toggleResearch('research2')">2. B</h3>
+            <div class="research-description">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
+            </div>
         </section>
     </div>
 
     <script>
-        function toggleResearchSections() {
-            var sections = document.querySelectorAll('.research-section');
-            sections.forEach(function(section) {
-                section.classList.toggle('show');
-            });
+        function toggleResearch(id) {
+            var section = document.getElementById(id);
+            var description = section.querySelector('.research-description');
+            description.classList.toggle('show');
         }
     </script>
 </body>
