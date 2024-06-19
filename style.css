@@ -15,7 +15,7 @@ header {
 
 header a {
     text-decoration: none;
-    color: #000080; /* Navy blue */
+    color: #00416A; /* Prussian Blue */
     font-size: 2rem; /* Increase font size */
     font-weight: bold; /* Make text bold */
     margin-top: 1cm; /* Add space below */
@@ -102,7 +102,7 @@ li {
 /* Style for toggle buttons */
 .toggle-button {
     cursor: pointer;
-    color: #000080; /* Navy blue */
+    color: #00416A; /* Prussian Blue */
     text-decoration: underline;
     margin-bottom: 10px;
 }
@@ -155,17 +155,17 @@ input, textarea, button {
 }
 
 button {
-    background-color: #000080; /* Navy blue */
+    background-color: #00416A; /* Prussian Blue */
     color: #FFFFFF;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #0000FF; /* Lighter blue on hover */
+    background-color: #005B96; /* Lighter Prussian Blue on hover */
 }
 
 /* Accessibility improvements */
 a:focus, button:focus, input:focus, textarea:focus {
-    outline: 2px dashed #000080; /* Navy blue focus outline */
+    outline: 2px dashed #00416A; /* Prussian Blue focus outline */
     outline-offset: 4px;
 }
