@@ -6,26 +6,33 @@
     <title>Research Interests - Thiago Ferreira</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .research-section {
+        .project-box {
+            border: 1px solid #ccc;
+            padding: 20px;
             margin-bottom: 20px;
-        }
-        .research-title {
             cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .project-box img {
+            width: 50px; /* Miniature image */
+            height: auto;
+            margin-right: 20px;
+        }
+        .project-title {
+            flex: 1;
             color: navy;
-            text-decoration: underline;
-            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
         }
         .research-description {
             display: none;
             margin-top: 10px;
+            padding: 10px;
+            border-top: 1px solid #ccc;
         }
         .research-description.show {
             display: block;
-        }
-        .project-image {
-            max-width: 100%;
-            height: auto;
-            margin-top: 10px;
         }
     </style>
 </head>
@@ -34,45 +41,45 @@
         <a href="index.html">Thiago Ferreira dos Santos</a>
     </header>
     <div class="container">
-        
         <h2>Research Projects</h2>
         
-        <section class="research-section" id="research1">
-            <h3 class="research-title" onclick="toggleResearch('research1')">AAA</h3>
-            <div class="research-description">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
-                <img class="project-image" src="cat_NatGeo.jpeg" alt="Cat Image" style="width: 30%;">
-            </div>
-        </section>
+        <div class="project-box" onclick="toggleResearch('research1')">
+            <img src="cat_NatGeo.jpeg" alt="Cat Image">
+            <div class="project-title">AAA</div>
+        </div>
+        <div id="research1" class="research-description">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
+        </div>
         
-        <section class="research-section" id="research1">
-            <h3 class="research-title" onclick="toggleResearch('research1')">Formation and Evolution of Brown Dwarfs</h3>
-            <div class="research-description">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
-            </div>
-        </section>
+        <div class="project-box" onclick="toggleResearch('research2')">
+            <img src="cat_NatGeo.jpeg" alt="Cat Image">
+            <div class="project-title">Formation and Evolution of Brown Dwarfs</div>
+        </div>
+        <div id="research2" class="research-description">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
+        </div>
 
-        <section class="research-section" id="research2">
-            <h3 class="research-title" onclick="toggleResearch('research2')">Seeking Solar Systems Analogues</h3>
-            <div class="research-description">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
-            </div>
-        </section>
+        <div class="project-box" onclick="toggleResearch('research3')">
+            <img src="cat_NatGeo.jpeg" alt="Cat Image">
+            <div class="project-title">Seeking Solar Systems Analogues</div>
+        </div>
+        <div id="research3" class="research-description">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
+        </div>
 
-        <section class="research-section" id="research2">
-            <h3 class="research-title" onclick="toggleResearch('research2')">Time-series analysis of Near-IR variabilities with the ESO/VVV & VVV-X Surveys</h3>
-            <div class="research-description">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
-            </div>
-        </section>
-
+        <div class="project-box" onclick="toggleResearch('research4')">
+            <img src="cat_NatGeo.jpeg" alt="Cat Image">
+            <div class="project-title">Time-series analysis of Near-IR variabilities with the ESO/VVV & VVV-X Surveys</div>
+        </div>
+        <div id="research4" class="research-description">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
+        </div>
     
     </div>
 
     <script>
         function toggleResearch(id) {
-            var section = document.getElementById(id);
-            var description = section.querySelector('.research-description');
+            var description = document.getElementById(id);
             description.classList.toggle('show');
         }
     </script>
