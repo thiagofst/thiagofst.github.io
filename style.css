@@ -87,3 +87,27 @@ footer {
 li {
     margin-bottom: 0.5em; /* Space between lines */
 }
+
+/* Style for toggle buttons */
+.toggle-button {
+    cursor: pointer;
+    color: #000080; /* Navy blue */
+    text-decoration: underline;
+    margin-bottom: 10px;
+}
+
+/* Style for research sections */
+.research-section {
+    display: none;
+}
+
+.research-section.show {
+    display: block;
+}
+
+/* Style for images in projects */
+.project-image {
+    width: 50%;
+    display: block;
+    margin: 0 auto 1em;
+}
