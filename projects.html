@@ -13,10 +13,11 @@
             cursor: pointer;
             display: flex;
             align-items: center;
+            height: 150px; /* Fixed height for uniform boxes */
         }
         .project-box img {
-            width: 50px; /* Miniature image */
-            height: auto;
+            width: auto;
+            height: 100%; /* Full height of the box */
             margin-right: 20px;
         }
         .project-title {
@@ -45,36 +46,12 @@
         
         <div class="project-box" onclick="toggleResearch('research1')">
             <img src="cat_NatGeo.jpeg" alt="Cat Image">
-            <div class="project-title">AAA</div>
+            <div class="project-title">Project I</div>
         </div>
         <div id="research1" class="research-description">
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
         </div>
         
-        <div class="project-box" onclick="toggleResearch('research2')">
-            <img src="cat_NatGeo.jpeg" alt="Cat Image">
-            <div class="project-title">Formation and Evolution of Brown Dwarfs</div>
-        </div>
-        <div id="research2" class="research-description">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
-        </div>
-
-        <div class="project-box" onclick="toggleResearch('research3')">
-            <img src="cat_NatGeo.jpeg" alt="Cat Image">
-            <div class="project-title">Seeking Solar Systems Analogues</div>
-        </div>
-        <div id="research3" class="research-description">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
-        </div>
-
-        <div class="project-box" onclick="toggleResearch('research4')">
-            <img src="cat_NatGeo.jpeg" alt="Cat Image">
-            <div class="project-title">Time-series analysis of Near-IR variabilities with the ESO/VVV & VVV-X Surveys</div>
-        </div>
-        <div id="research4" class="research-description">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
-        </div>
-    
     </div>
 
     <script>
