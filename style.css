@@ -1,5 +1,6 @@
+/* General styles */
 body {
-    font-family: Serif;
+    font-family: "Computer Modern Serif", serif;
     margin: 0;
     padding: 0;
     background-color: #FFFFFF;
@@ -21,16 +22,22 @@ header a {
     display: inline-block;
 }
 
+/* Fixed navigation bar */
 nav {
     margin: 0;
     padding: 0;
     text-align: center;
     background: #FFFFFF;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
 }
 
 nav ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 nav ul li {
@@ -43,14 +50,17 @@ nav ul li a {
     color: #000000; /* Black text */
 }
 
+/* Container styling */
 .container {
     width: 80%;
     margin: 2rem auto;
     padding: 1rem;
     background: #FFFFFF;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 5rem; /* Adjust for fixed nav */
 }
 
+/* Footer styling */
 footer {
     text-align: center;
     padding: 1rem;
@@ -65,6 +75,7 @@ footer {
     font-size: 0.9rem; /* Smaller font size */
 }
 
+/* Publication list styling */
 .publications-list {
     margin-top: 1.5em; /* Space above the list */
     padding-left: 0; /* Remove default padding */
@@ -110,4 +121,51 @@ li {
     width: 50%;
     display: block;
     margin: 0 auto 1em;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        margin-top: 7rem; /* Adjust for fixed nav on smaller screens */
+    }
+
+    header a {
+        font-size: 1.5rem;
+    }
+
+    nav ul li {
+        display: block;
+        margin: 0.5rem 0;
+    }
+
+    nav ul li a {
+        font-size: 1.2rem;
+    }
+}
+
+/* Form and button styling */
+input, textarea, button {
+    font-family: "Computer Modern Serif", serif;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+button {
+    background-color: #000080; /* Navy blue */
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0000FF; /* Lighter blue on hover */
+}
+
+/* Accessibility improvements */
+a:focus, button:focus, input:focus, textarea:focus {
+    outline: 2px dashed #000080; /* Navy blue focus outline */
+    outline-offset: 4px;
 }
