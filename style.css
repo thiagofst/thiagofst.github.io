@@ -9,8 +9,6 @@ body {
 header {
     background: #FFFFFF;
     color: #000000; /* Black text */
-    padding: 0; /* Remove default padding */
-    text-align: center;
     height: 80px; /* Adjust height as needed */
     display: flex;
     align-items: center;
