@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Research Interests - Thiago Ferreira</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .toggle-button {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+            margin-bottom: 10px;
+        }
+        .research-section {
+            display: none;
+        }
+        .research-section.show {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -12,14 +26,24 @@
     </header>
     <div class="container">
         <h2>Research Projects</h2>
-        <section id="research1">
+        <button class="toggle-button" onclick="toggleResearchSections()">Toggle Research Projects</button>
+        <section id="research1" class="research-section">
             <h3>1. A</h3>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
         </section>
-        <section id="research2">
+        <section id="research2" class="research-section">
             <h3>2. B</h3>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
         </section>
     </div>
+
+    <script>
+        function toggleResearchSections() {
+            var sections = document.querySelectorAll('.research-section');
+            sections.forEach(function(section) {
+                section.classList.toggle('show');
+            });
+        }
+    </script>
 </body>
 </html>
