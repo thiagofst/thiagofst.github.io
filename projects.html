@@ -11,7 +11,7 @@
         }
         .research-title {
             cursor: pointer;
-            color: blue;
+            color: navy;
             text-decoration: underline;
             margin-bottom: 10px;
         }
@@ -21,6 +21,11 @@
         }
         .research-description.show {
             display: block;
+        }
+        .project-image {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -34,6 +39,7 @@
             <h3 class="research-title" onclick="toggleResearch('research1')">1. A</h3>
             <div class="research-description">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac nisl et eros convallis convallis.</p>
+                <img class="project-image" src="cat_NatGeo.jpeg" alt="Cat Image">
             </div>
         </section>
         <section class="research-section" id="research2">
