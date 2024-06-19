@@ -1,5 +1,6 @@
 /* General styles */
 body {
+    /* font-family: "Computer Modern Serif", serif; */
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -15,7 +16,7 @@ header {
 
 header a {
     text-decoration: none;
-    color: #00416A; /* Prussian Blue */
+    color: #000080; /* Navy blue */
     font-size: 2rem; /* Increase font size */
     font-weight: bold; /* Make text bold */
     margin-top: 1cm; /* Add space below */
@@ -64,8 +65,8 @@ nav ul li a {
 footer {
     text-align: center;
     padding: 1rem;
-    background: #FFFFFF; /* White background */
-    color: #333; /* Dark text */
+    background: #333;
+    color: #FFFFFF;
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -102,7 +103,7 @@ li {
 /* Style for toggle buttons */
 .toggle-button {
     cursor: pointer;
-    color: #00416A; /* Prussian Blue */
+    color: #000080; /* Navy blue */
     text-decoration: underline;
     margin-bottom: 10px;
 }
@@ -155,17 +156,17 @@ input, textarea, button {
 }
 
 button {
-    background-color: #00416A; /* Prussian Blue */
+    background-color: #000080; /* Navy blue */
     color: #FFFFFF;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #005B96; /* Lighter Prussian Blue on hover */
+    background-color: #0000FF; /* Lighter blue on hover */
 }
 
 /* Accessibility improvements */
 a:focus, button:focus, input:focus, textarea:focus {
-    outline: 2px dashed #00416A; /* Prussian Blue focus outline */
+    outline: 2px dashed #000080; /* Navy blue focus outline */
     outline-offset: 4px;
 }
