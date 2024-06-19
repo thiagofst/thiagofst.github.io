@@ -5,26 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thiago Ferreira</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        .personal-photo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .personal-photo img {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-        }
-        .social-media {
-            text-align: center;
-            margin: 20px 0;
-        }
         .social-media a {
             margin: 0 10px;
             text-decoration: none;
             color: #000080; /* Navy blue */
             font-size: 1.5rem;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #333;
+            color: #FFFFFF;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
@@ -33,11 +29,6 @@
         <a href="https://astronomy.yale.edu/people/thiago-ferreira-dos-santos" target="_blank">Thiago Ferreira dos Santos</a>
     </header>
     <div class="container">
-        <!-- Personal Photo Section -->
-        <section class="personal-photo">
-            <img src="path_to_your_image.jpg" alt="Thiago Ferreira dos Santos">
-        </section>
-
         <section id="about">
             <h2>About Me</h2>
             <p>I am a first-year PhD student in Astronomy at Yale University.</p>
@@ -64,13 +55,6 @@
             </ul>
         </section>
         
-        <!-- Social Media Links Section -->
-        <section class="social-media">
-            <a href="https://www.linkedin.com/in/thiago-ferreira-dos-santos" target="_blank"><i class="fa fa-linkedin"></i> LinkedIn</a>
-            <a href="https://www.researchgate.net/profile/Thiago_Ferreira_Dos_Santos" target="_blank"><i class="fa fa-researchgate"></i> ResearchGate</a>
-            <a href="https://twitter.com/thiago_ferreira" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
-        </section>
-
         <section id="contact">
             <h2>Contact Information</h2>
             <p>Email: <a href="mailto:thiago.dossantos@yale.edu">thiago.dossantos@yale.edu</a></p>
@@ -78,5 +62,14 @@
             <p>Department of Astronomy, Yale University, P.O. Box 208101, New Haven, CT 06520-8101, USA. </p>
         </section>
     </div>
+
+    <footer>
+        <p>&copy; 2024 Thiago Ferreira</p>
+        <div class="social-media">
+            <a href="https://twitter.com/thiago_ferreira" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://github.com/thiago-ferreira" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://instagram.com/thiago_ferreira" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+    </footer>
 </body>
 </html>
