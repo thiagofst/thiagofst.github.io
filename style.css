@@ -4,54 +4,45 @@ body {
     padding: 0;
     background-color: #FFFFFF;
 }
-
 header {
     background: #FFFFFF;
     color: #000000; /* Black text */
     padding: 1rem 0;
     text-align: center;
 }
-
 header a {
     text-decoration: none;
     color: #000080; /* Navy blue */
     font-size: 2rem; /* Increase font size */
     font-weight: bold; /* Make text bold */
-    margin-top: 1.5cm; /* Add space below */
+    margin-top: 1cm; /* Add space below */
     display: inline-block;
 }
-
 nav {
-    margin: 3;
+    margin: 0;
     padding: 0;
     text-align: center;
     background: #FFFFFF;
 }
-
 nav ul {
     list-style: none;
     padding: 0;
-    margin: 0;
 }
-
 nav ul li {
     display: inline;
-    margin: 0 1.5rem; /* Increased lateral spacing */
+    margin: 0 1rem;
 }
-
 nav ul li a {
     text-decoration: none;
     color: #000000; /* Black text */
 }
-
 .container {
     width: 80%;
-    margin: 2rem 10%; /* Larger lateral margins */
+    margin: 2rem auto;
     padding: 1rem;
     background: #FFFFFF;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
 footer {
     text-align: center;
     padding: 1rem;
