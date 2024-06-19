@@ -9,11 +9,8 @@ body {
 header {
     background: #FFFFFF;
     color: #000000; /* Black text */
-    height: 80px; /* Adjust height as needed */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 20px; /* Adjust this value to move the text down */
+    padding: 1rem 0;
+    text-align: center;
 }
 
 header a {
@@ -21,7 +18,8 @@ header a {
     color: #000080; /* Navy blue */
     font-size: 2rem; /* Increase font size */
     font-weight: bold; /* Make text bold */
-    margin: 0; /* Remove margin */
+    margin-top: 0.1cm; /* Add space below */
+    display: inline-block;
 }
 
 /* Fixed navigation bar */
