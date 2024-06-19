@@ -17,19 +17,20 @@
         h2 {
             color: navy;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+        .presentation-item {
+            margin-bottom: 20px;
         }
-        li {
-            margin-bottom: 10px;
-        }
-        a {
+        .presentation-item a {
             text-decoration: none;
-            color: #000080; /* Your custom hyperlink color */
+            color: #9F0705; /* Custom hyperlink color */
         }
-        a:hover {
+        .presentation-item a:hover {
             text-decoration: underline;
+        }
+        .conference-details {
+            display: flex;
+            justify-content: space-between;
+            font-style: italic;
         }
     </style>
 </head>
@@ -39,13 +40,25 @@
     </header>
     <div class="container">
         <h2>Conference Presentations and Posters</h2>
-        <ul>
-            <li><a href="path_to_your_pdf/Presentation1.pdf" target="_blank">Conference Presentation 1</a></li>
-            <li><a href="path_to_your_pdf/Poster1.pdf" target="_blank">Poster Presentation 1</a></li>
-            <li><a href="path_to_your_pdf/Presentation2.pdf" target="_blank">Conference Presentation 2</a></li>
-            <li><a href="path_to_your_pdf/Poster2.pdf" target="_blank">Poster Presentation 2</a></li>
-            <!-- Add more presentations and posters as needed -->
-        </ul>
+        <div class="presentation-item">
+            <p>
+                <a href="path_to_your_pdf/Presentation1.pdf" target="_blank">Poster Title 1</a>, Authors
+            </p>
+            <div class="conference-details">
+                <span>Conference Name 1</span>
+                <span>Year 1</span>
+            </div>
+        </div>
+        <div class="presentation-item">
+            <p>
+                <a href="path_to_your_pdf/Poster1.pdf" target="_blank">Poster Title 2</a>, Authors
+            </p>
+            <div class="conference-details">
+                <span>Conference Name 2</span>
+                <span>Year 2</span>
+            </div>
+        </div>
+        <!-- Add more presentations and posters as needed -->
     </div>
 </body>
 </html>
