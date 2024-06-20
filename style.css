@@ -19,7 +19,7 @@ header a {
     font-size: 2rem; /* Increase font size */
     font-weight: bold; /* Make text bold */
     margin-top: 2cm; /* Add space above */
-    margin-bottom: 0.5cm; /* Add space below */
+    margin-bottom: 0.01cm; /* Add space below */
     display: inline-block;
 }
 
