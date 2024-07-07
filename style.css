@@ -1,7 +1,7 @@
 /* General styles */
 body {
     font-family: Arial, sans-serif;
-    margin: 1.5em;
+    margin: 0;
     padding: 0;
     background-color: #FFFFFF;
 }
@@ -18,8 +18,8 @@ header a {
     color: #000080; /* Navy blue */
     font-size: 2rem; /* Increase font size */
     font-weight: bold; /* Make text bold */
-    margin-top: 0.7cm; /* Add space above */
-    margin-bottom: 0.001cm; /* Add space below */
+    margin-top: 2cm; /* Add space above */
+    margin-bottom: 0.01cm; /* Add space below */
     display: inline-block;
 }
 
