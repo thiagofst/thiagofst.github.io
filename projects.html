@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Research Projects - Thiago Ferreira</title>
-        <link rel="stylesheet" href="style.css">
-        <link rel="icon" href="stars.jpeg" type="image/jpeg">
-    </head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Interests - Thiago Ferreira</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .project-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            height: 150px; /* Fixed height for uniform boxes */
+        }
+        .project-box img {
+            width: auto;
+            height: 100%; /* Full height of the box */
+            margin-right: 20px;
+        }
+        .project-title {
+            flex: 1;
+            color: navy;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .research-description {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .research-description.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html">Thiago Ferreira dos Santos</a>
+    </header>
     <div class="container">
         <h2>Research Interests</h2>
         
