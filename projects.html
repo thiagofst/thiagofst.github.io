@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Research Projects - Thiago Ferreira</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" href="stars.jpeg" type="image/jpeg">
+    </head>
+
+    <div class="container">
+        <h2>Research Interests</h2>
+        
+        <div class="project-box" onclick="toggleResearch('research1')">
+            <img src="Fig_TOI1173.pdf" alt="TOI-1173b">
+            <div class="project-title">Exoplanets Detection and Characterisation</div>
+        </div>
+        <div id="research1" class="research-description">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt libero justo, vitae pharetra ante consequat a. Integer lacinia ex vel turpis aliquam, non feugiat leo lacinia. Nullam ac dui et nisi lobortis elementum. Morbi at urna a lorem facilisis elementum. Aenean eget pharetra nulla. Nulla facilisi. Integer sagittis ligula et fermentum auctor. Cras tempus lacus sed nisi vestibulum, in suscipit dui elementum.</p>
+        </div>
+        
+        <div class="project-box" onclick="toggleResearch('research2')">
+            <img src="Fig_PopIII_HR.pdf" alt="PopIII">
+            <div class="project-title">Population III Stars</div>
+        </div>
+        <div id="research2" class="research-description">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt libero justo, vitae pharetra ante consequat a. Integer lacinia ex vel turpis aliquam, non feugiat leo lacinia. Nullam ac dui et nisi lobortis elementum. Morbi at urna a lorem facilisis elementum. Aenean eget pharetra nulla. Nulla facilisi. Integer sagittis ligula et fermentum auctor. Cras tempus lacus sed nisi vestibulum, in suscipit dui elementum.</p>
+        </div>
+
+        <div class="project-box" onclick="toggleResearch('research3')">
+            <img src="Fig_TOI2533.png" alt="BDs">
+            <div class="project-title">Spin-Orbit Analyses to Eclipsing Brown Dwarf Companions</div>
+        </div>
+        <div id="research3" class="research-description">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt libero justo, vitae pharetra ante consequat a. Integer lacinia ex vel turpis aliquam, non feugiat leo lacinia. Nullam ac dui et nisi lobortis elementum. Morbi at urna a lorem facilisis elementum. Aenean eget pharetra nulla. Nulla facilisi. Integer sagittis ligula et fermentum auctor. Cras tempus lacus sed nisi vestibulum, in suscipit dui elementum.</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleResearch(id) {
+            var description = document.getElementById(id);
+            description.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>
