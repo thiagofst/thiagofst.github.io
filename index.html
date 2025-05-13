@@ -83,11 +83,11 @@
 
     <nav>
         <ul>
-            <li><a href="#" onclick="checkPassword(event)">Curriculum Vitae</a></li>
+            <li><a href="#" onclick="checkPassword(event)">Photos</a></li>
+            <li><a href="CV_thiagoferreira.pdf" target="_blank">Curriculum Vitae</a></li>
         </ul>
-    </nav>    
+    </nav> 
     
-
     <main class="container">
         <section id="about">
             <h2></h2>
@@ -114,15 +114,14 @@
         </section>
     </main>
 
-
     <script>
         function checkPassword(event) {
             event.preventDefault();
             const password = prompt("Password:");
-            const correctPassword = "hockenheim"; // Replace with your actual password
+            const correctPassword = "hockenheim";
     
             if (password === correctPassword) {
-                window.open("CV_thiagoferreira.pdf", "_blank");
+                window.open("index.html", "_blank");
             } else {
                 alert("Incorrect password. Access denied.");
             }
