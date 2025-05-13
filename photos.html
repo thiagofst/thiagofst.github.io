@@ -1,58 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photos - Thiago Ferreira</title>
-    <meta name="description" content="Photo Collage of Thiago Ferreira dos Santos, PhD student in Astronomy at Yale University.">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="stars.jpeg" type="image/jpeg">
-    <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-            font-family: Arial, sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Photos - Thiago Ferreira</title>
+  <meta name="description" content="Photo Collage of Thiago Ferreira dos Santos, PhD student in Astronomy at Yale University." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="stars.jpeg" type="image/jpeg" />
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
+    }
 
-        .collage {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-        }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
 
-        .collage img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        }
+    .collage {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+    }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-    </style>
+    .collage img {
+      width: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .small {
+      grid-row: span 1;
+      grid-column: span 1;
+      height: 150px;
+    }
+
+    .medium {
+      grid-row: span 2;
+      grid-column: span 1;
+      height: 300px;
+    }
+
+    .large {
+      grid-row: span 2;
+      grid-column: span 2;
+      height: 300px;
+    }
+  </style>
 </head>
 <body>
+  <h1>Photo Collage</h1>
 
-    <div class="collage">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-        <img src="cat.jpeg" alt="Cat Photo">
-    </div>
-
+  <div class="collage">
+    <img src="cat.jpeg" class="small" alt="Cat" />
+    <img src="cat.jpeg" class="medium" alt="Cat" />
+    <img src="cat.jpeg" class="large" alt="Cat" />
+    <img src="cat.jpeg" class="small" alt="Cat" />
+    <img src="cat.jpeg" class="medium" alt="Cat" />
+    <img src="cat.jpeg" class="large" alt="Cat" />
+    <img src="cat.jpeg" class="small" alt="Cat" />
+    <img src="cat.jpeg" class="medium" alt="Cat" />
+  </div>
 </body>
 </html>
