@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research - Thiago Ferreira</title>
-    <meta name="description" content="Research of Thiago Ferreira dos Santos, PhD student in Astronomy at Yale University.">
+    <title>Projects - Thiago Ferreira</title>
+    <meta name="description" content="Research Projects of Thiago Ferreira dos Santos, PhD student in Astronomy at Yale University.">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="stars.jpeg" type="image/jpeg">
     <style>
@@ -41,21 +41,91 @@
             background-color: #eee;
             margin-top: 20px;
         }
+
+        .accordion {
+            background-color: #444;
+            color: white;
+            cursor: pointer;
+            padding: 14px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            transition: 0.4s;
+        }
+
+        .active, .accordion:hover {
+            background-color: #555;
+        }
+
+        .panel {
+            padding: 0 18px;
+            display: none;
+            background-color: #f1f1f1;
+            overflow: hidden;
+        }
+
+        .panel p {
+            margin: 0;
+            padding: 10px 0;
+        }
     </style>
 </head>
 
 <body>
     <header>
-        <a href="https://astronomy.yale.edu/people/thiago-ferreira-dos-santos" target="_blank" style="color: white; font-size: 1.5rem;">Thiago Ferreira dos Santos</a>
+        <a href="index.html" target="_blank" style="color: white; font-size: 1.5rem;">Thiago Ferreira dos Santos</a>
     </header>
 
     <main class="container">
-        <h2>Research</h2>
-        <p>Details about my research in Astronomy, including work on exoplanets, stellar evolution, and Galactic archaeology, will be added here.</p>
+        <h2>Projects</h2>
+
+        <!-- Project A -->
+        <button class="accordion">Project A</button>
+        <div class="panel">
+            <p>Description of Project A. This project focuses on ...</p>
+        </div>
+
+        <!-- Project B -->
+        <button class="accordion">Project B</button>
+        <div class="panel">
+            <p>Description of Project B. This project involves ...</p>
+        </div>
+
+        <!-- Project C -->
+        <button class="accordion">Project C</button>
+        <div class="panel">
+            <p>Description of Project C. The main focus of this project is ...</p>
+        </div>
+
     </main>
 
     <footer>
         <p>&copy; 2025 Thiago Ferreira</p>
     </footer>
+
+    <script>
+        // Get all accordion buttons
+        var acc = document.getElementsByClassName("accordion");
+
+        // Loop through all the buttons and add the click event
+        for (var i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                // Toggle the active class
+                this.classList.toggle("active");
+
+                // Get the panel associated with the clicked button
+                var panel = this.nextElementSibling;
+
+                // Toggle the display of the panel (show or hide)
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    </script>
 </body>
 </html>
