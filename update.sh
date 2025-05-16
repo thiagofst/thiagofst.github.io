@@ -1,3 +1,3 @@
-git add index.html research.html style.css
+git add index.html
 git commit -m "update"
 git push origin main
