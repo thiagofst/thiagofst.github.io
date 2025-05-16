@@ -1,3 +1,3 @@
-git add -A 
-git commit -m "Remove files manually deleted"
-git push --force   # Force push to overwrite remote
+git add -u 
+git commit -m "clean"
+git push origin main --force
