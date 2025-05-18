@@ -82,6 +82,8 @@
         <a href="https://astronomy.yale.edu/people/thiago-ferreira-dos-santos" target="_blank" style="color: white; font-size: 2rem;">Thiago Ferreira dos Santos</a>
         <br>
         <img src="2020.jpeg" alt="Photo" style="margin-top: 10px; width: 150px; height: auto; border-radius: 50%;">
+        <br>
+        <button id="toggle-dark" class="toggle-button">Toggle Dark Mode</button>
     </header>
 
     <nav>
@@ -131,6 +133,13 @@
         }
     </script>
 
+
+    <script>
+        const toggle = document.getElementById("toggle-dark");
+        toggle.addEventListener("click", () => {
+            document.body.classList.toggle("dark-mode");
+        });
+    </script>
 
 </body>
 </html>
