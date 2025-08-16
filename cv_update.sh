@@ -1,0 +1,1 @@
+mv /Users/thiagoferreiradossantos/Downloads/CV_thiagoferreira.pdf /Users/thiagoferreiradossantos/thiagofst.github.io
