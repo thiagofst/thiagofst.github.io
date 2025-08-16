@@ -9,62 +9,66 @@
     <link rel="icon" href="stars.jpeg" type="image/jpeg">
     <style>
         body {
-            font-family: Helvetica, Arial, sans-serif;
-            background: #fafafa;
+            font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(120deg, #f7f7f7 60%, #e3e7f1 100%);
             color: #222;
             margin: 0;
             padding: 0;
         }
         header {
             text-align: center;
-            padding: 2rem 0 1rem 0;
-            font-size: 2rem;
+            padding: 3rem 0 1.5rem 0;
+            font-size: 2.3rem;
             font-weight: 600;
-            letter-spacing: 1px;
-            background: none;
-            color: #222;
+            letter-spacing: 2px;
+            color: #3a3a3a;
         }
         nav {
-            margin-top: 1.5rem;
-            margin-bottom: 2rem;
+            margin-top: 2.5rem;
+            margin-bottom: 2.5rem;
         }
         nav ul {
             display: flex;
             justify-content: center;
-            gap: 2rem;
+            gap: 2.5rem;
             list-style: none;
             padding: 0;
             margin: 0;
         }
         nav ul li a {
-            color: #222;
+            color: #3a3a3a;
             font-weight: 500;
-            font-size: 1.3rem;
-            padding: 0.7rem 0.5rem;
+            font-size: 1.4rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
             border-bottom: 2px solid transparent;
-            transition: border 0.2s;
+            background: rgba(255,255,255,0.7);
+            transition: background 0.2s, border 0.2s;
         }
         nav ul li a:hover {
-            border-bottom: 2px solid #0077cc;
+            background: #e3e7f1;
+            border-bottom: 2px solid #a3b3d1;
         }
         .container {
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
-            padding: 2rem 1rem;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            padding: 2.5rem 1.5rem;
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(163,179,209,0.08);
+            border: 1px solid #e3e7f1;
         }
         h2, h3 {
             font-weight: 500;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.2rem;
+            color: #5a5a5a;
         }
         ul {
             padding-left: 1.2rem;
         }
         a {
-            color: #0077cc;
+            color: #6b8bbd;
             text-decoration: none;
         }
         a:hover {
@@ -72,9 +76,21 @@
         }
         footer {
             text-align: center;
-            padding: 2rem 0 1rem 0;
-            color: #aaa;
-            font-size: 0.9rem;
+            padding: 2.5rem 0 1.5rem 0;
+            color: #b3b3b3;
+            font-size: 0.95rem;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.2rem 0.5rem;
+            }
+            nav ul {
+                gap: 1rem;
+            }
+            nav ul li a {
+                font-size: 1.1rem;
+                padding: 0.5rem 0.7rem;
+            }
         }
     </style>
 </head>
