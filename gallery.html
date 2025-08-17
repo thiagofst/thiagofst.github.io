@@ -61,10 +61,46 @@
     <h1><a href="index.html" style="color: #000; text-decoration: none; font-family: 'Shippori Mincho', serif;">Gallery</a></h1>
     <main>
 
+        <div style="text-align:center; margin-top:2em;">
+            <img id="catThumb" src="cat.jpeg" alt="Cat placeholder" style="max-width:300px; cursor:pointer; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+        </div>
+        <!-- Modal -->
+        <div id="catModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); justify-content:center; align-items:center;">
+            <div style="position:relative; background:none; display:flex; flex-direction:column; align-items:center;">
+                <img src="cat.jpeg" alt="Cat placeholder" style="max-width:80vw; max-height:70vh; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.5);">
+                <div style="color:#fff; background:rgba(0,0,0,0.6); padding:12px 24px; border-radius:8px; margin-top:16px; font-size:1.1em; max-width:70vw; text-align:center;">
+                    This is a placeholder for the cat photo. Description goes here.
+                </div>
+                <button id="closeModal" style="margin-top:18px; padding:8px 18px; font-size:1em; border:none; border-radius:6px; background:#fff; color:#333; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.2);">Close</button>
+            </div>
+        </div>
     </main>
+
     <footer>
         2025 | Thiago Ferreira dos Santos
     </footer>
+
+    <script>
+    // Modal logic
+    const catThumb = document.getElementById('catThumb');
+    const catModal = document.getElementById('catModal');
+    const closeModal = document.getElementById('closeModal');
+    catThumb.onclick = function() {
+        catModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    };
+    closeModal.onclick = function() {
+        catModal.style.display = 'none';
+        document.body.style.overflow = '';
+    };
+    // Close modal when clicking outside image/description
+    catModal.onclick = function(e) {
+        if (e.target === catModal) {
+            catModal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    };
+    </script>
 
 </body>
 </html>
