@@ -60,26 +60,8 @@
         <ul>
             <li style="list-style: none; margin-top: 2em; margin-bottom: 1em; font-weight: bold; font-size: 1.1em;">Mapa Mundi</li>
             <div style="display: flex; justify-content: center; margin-bottom: 1em;">
-                <img id="mapaMundi" src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg" alt="Mapa Mundi" style="max-width: 400px; cursor: pointer; border: 2px solid #333; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: box-shadow 0.3s;" onclick="openFullscreenMap()">
+                <iframe src="worldmap_interactive.html" style="width:100%;max-width:620px;height:420px;border:none;overflow:hidden;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);"></iframe>
             </div>
-            <script>
-            function openFullscreenMap() {
-                const imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg';
-                const fullscreenDiv = document.createElement('div');
-                fullscreenDiv.style.position = 'fixed';
-                fullscreenDiv.style.top = '0';
-                fullscreenDiv.style.left = '0';
-                fullscreenDiv.style.width = '100vw';
-                fullscreenDiv.style.height = '100vh';
-                fullscreenDiv.style.background = 'rgba(0,0,0,0.95)';
-                fullscreenDiv.style.display = 'flex';
-                fullscreenDiv.style.justifyContent = 'center';
-                fullscreenDiv.style.alignItems = 'center';
-                fullscreenDiv.style.zIndex = '9999';
-                fullscreenDiv.innerHTML = `<img src="${imgUrl}" style="max-width:90vw; max-height:90vh; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.4);"><span style='position:absolute;top:24px;right:36px;font-size:2em;color:#fff;cursor:pointer;' onclick='this.parentNode.remove()'>&#10006;</span>`;
-                document.body.appendChild(fullscreenDiv);
-            }
-            </script>
             <li style="list-style: none; margin-top: 2em; margin-bottom: 1em; font-weight: bold; font-size: 1.1em;">Posters</li>
                 <div style="height:0.2em;"></div>
                 <li>
