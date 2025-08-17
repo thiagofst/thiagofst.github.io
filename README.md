@@ -1,2 +1,1 @@
-Personal Website
-# thiagofst.github.io
+Website
