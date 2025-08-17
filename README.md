@@ -1,2 +1,2 @@
-Personal WebsiteTest update
+Personal Website
 # thiagofst.github.io
