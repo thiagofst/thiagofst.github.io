@@ -8,35 +8,70 @@
     <style>
         body {
             font-family: 'Shippori Mincho', serif;
-            background-color: #fff;
-            color: #000;
+            background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
+            color: #222;
             margin: 0;
             padding: 0;
         }
 
         h1 {
             text-align: center;
-            color: #000;
+            color: #222;
             font-family: 'Shippori Mincho', serif;
-            font-size: 2em;
+            font-size: 2.2em;
             margin-top: 2em;
+            letter-spacing: 2px;
         }
 
-        p {
-            line-height: 1.7;
-            margin-bottom: 1.2em;
-            font-size: 1.15em;
-            font-family: 'Shippori Mincho', serif;
+        .gallery-row {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 2vw;
+            margin-top: 40px;
+            flex-wrap: wrap;
         }
-
-        ul {
-            list-style-type: disc;
-            margin-left: auto;
-            margin-right: auto;
-            display: inline-block;
-            text-align: left;
-            font-size: 1.15em;
-            font-family: 'Shippori Mincho', serif;
+        .gallery-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 6px 24px rgba(60,60,120,0.13);
+            transition: transform 0.2s, box-shadow 0.2s;
+            padding: 18px 12px 12px 12px;
+            max-width: 320px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 2vw;
+            position: relative;
+        }
+        .gallery-card:hover {
+            transform: translateY(-8px) scale(1.04);
+            box-shadow: 0 12px 32px rgba(60,60,120,0.18);
+        }
+        .gallery-img {
+            width: 95%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            transition: box-shadow 0.2s;
+        }
+        .gallery-card:hover .gallery-img {
+            box-shadow: 0 6px 24px rgba(60,60,120,0.18);
+        }
+        .gallery-desc {
+            margin-top: 14px;
+            font-size: 1.1em;
+            color: #444;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 900px) {
+            .gallery-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .gallery-card {
+                max-width: 95vw;
+            }
         }
 
         main {
@@ -60,23 +95,23 @@
 
     <h1><a href="index.html" style="color: #000; text-decoration: none; font-family: 'Shippori Mincho', serif;">Gallery</a></h1>
     <main>
-        <div style="display: flex; justify-content: center; align-items: flex-start; gap: 2%; margin-top: 40px;">
-            <figure style="flex: 1; max-width: 65%; text-align: center;">
-                <img src="cat.jpeg" alt="Cat" style="width: 90%; height: auto; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);">
-                <figcaption style="margin-top: 12px; font-size: 1.1em; color: #333;">Cat (c. 2025)</figcaption>
-            </figure>
-            <figure style="flex: 1; max-width: 65%; text-align: center;">
-                <img src="cat.jpeg" alt="Cat" style="width: 90%; height: auto; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);">
-                <figcaption style="margin-top: 12px; font-size: 1.1em; color: #333;">Cat (c. 2025)</figcaption>
-            </figure>
-            <figure style="flex: 1; max-width: 65%; text-align: center;">
-                <img src="cat.jpeg" alt="Cat" style="width: 90%; height: auto; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);">
-                <figcaption style="margin-top: 12px; font-size: 1.1em; color: #333;">Cat (c. 2025)</figcaption>
-            </figure>
-            <figure style="flex: 1; max-width: 65%; text-align: center;">
-                <img src="cat.jpeg" alt="Cat" style="width: 90%; height: auto; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);">
-                <figcaption style="margin-top: 12px; font-size: 1.1em; color: #333;">Cat (c. 2025)</figcaption>
-            </figure>
+        <div class="gallery-row">
+            <div class="gallery-card">
+                <img src="cat.jpeg" alt="Cat" class="gallery-img">
+                <div class="gallery-desc">Cat (c. 2025)</div>
+            </div>
+            <div class="gallery-card">
+                <img src="cat.jpeg" alt="Cat" class="gallery-img">
+                <div class="gallery-desc">Cat (c. 2025)</div>
+            </div>
+            <div class="gallery-card">
+                <img src="cat.jpeg" alt="Cat" class="gallery-img">
+                <div class="gallery-desc">Cat (c. 2025)</div>
+            </div>
+            <div class="gallery-card">
+                <img src="cat.jpeg" alt="Cat" class="gallery-img">
+                <div class="gallery-desc">Cat (c. 2025)</div>
+            </div>
         </div>
     </main>
     <footer>
