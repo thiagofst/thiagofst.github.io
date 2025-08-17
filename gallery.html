@@ -25,11 +25,8 @@
 
         .album-container {
             background: #fff;
-            border: 1.5px solid #e5e5e5;
-            border-radius: 18px;
             max-width: 900px;
             margin: 40px auto 0 auto;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             padding: 32px 24px 24px 24px;
         }
         .album-title {
@@ -48,31 +45,27 @@
             flex-wrap: wrap;
         }
         .album-photo {
-            background: #fff;
-            border: 1px solid #e5e5e5;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            padding: 14px 8px 8px 8px;
+            background: none;
+            padding: 0;
             max-width: 200px;
             width: 100%;
             text-align: center;
             margin-bottom: 2vw;
             position: relative;
-            transition: transform 0.2s, box-shadow 0.2s;
         }
         .album-photo:hover {
-            transform: scale(1.03);
-            box-shadow: 0 6px 18px rgba(60,60,120,0.13);
+            transform: none;
+            box-shadow: none;
         }
         .album-img {
             width: 92%;
             height: auto;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            transition: box-shadow 0.2s;
+            box-shadow: none;
+            transition: none;
         }
         .album-photo:hover .album-img {
-            box-shadow: 0 6px 18px rgba(60,60,120,0.11);
+            box-shadow: none;
         }
         .album-desc {
             margin-top: 10px;
