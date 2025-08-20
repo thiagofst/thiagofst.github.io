@@ -128,9 +128,9 @@ const photoThumbs = document.querySelectorAll('.photoThumb');
             document.body.style.overflow = 'hidden';
         };
     });
-    // Allow closing modal by clicking anywhere outside the enlarged image and description
+
     photoModal.onclick = function(e) {
-        // Only close if clicking outside the modal content (not on image or description)
+
         if (e.target === photoModal) {
             photoModal.style.display = 'none';
             document.body.style.overflow = '';
