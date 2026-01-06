@@ -104,7 +104,6 @@ li {
 .toggle-button {
     cursor: pointer;
     color: #000080; /* Navy blue */
-    text-decoration: underline;
     margin-bottom: 10px;
 }
 
