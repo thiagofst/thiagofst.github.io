@@ -12,7 +12,7 @@
             color: #000;
             margin: 0;
             padding: 0;
-        }
+ }
 
         h1 {
             text-align: center;
@@ -20,14 +20,14 @@
             font-family: 'Shippori Mincho', serif;
             font-size: 2em;
             margin-top: 2em;
-        }
+ }
 
         p {
             line-height: 1.7;
             margin-bottom: 1.2em;
             font-size: 1.15em;
             font-family: 'Shippori Mincho', serif;
-        }
+ }
 
         ul {
             list-style-type: disc;
@@ -37,7 +37,7 @@
             text-align: left;
             font-size: 1.15em;
             font-family: 'Shippori Mincho', serif;
-        }
+ }
 
         main {
             text-align: justify;
@@ -45,7 +45,7 @@
             max-width: 1100px;
             margin-left: auto;
             margin-right: auto;
-        }
+ }
 
         footer {
             text-align: center;
@@ -53,7 +53,7 @@
             font-size: 1em;
             color: #000;
             font-family: 'Shippori Mincho', serif;
-        }
+ }
     </style>
 </head>
 <body>
@@ -78,7 +78,7 @@
             <img class="photoThumb" src="photos/TASC9-KASC16_Vienna.jpg" data-desc="9th TESS/16th Kepler Asteroseismic Science Consortium Workshop, Vienna/Austria, July 2025." style="width:220px; height:auto; object-fit:contain; display:block; cursor:pointer; border-radius:12px;">
             
             <!--- Yale -->
-            <img class="photoThumb" src="photos/Yale2023-Welcome.JPG" data-desc="Yale University, New Haven/US (2023)." style="width:220px; height:auto; object-fit:contain; display:block; cursor:pointer; border-radius:12px;">
+            <img class="photoThumb" src="photos/Yale2023-Welcome.JPG" data-desc="Yale University, New Haven/U.S. (2023)." style="width:220px; height:auto; object-fit:contain; display:block; cursor:pointer; border-radius:12px;">
 
             <div style="width:100%; height:24px;"></div>
             <hr style="width:80%; margin:0 auto; border:0; border-top:2px solid #ccc;">
@@ -97,7 +97,7 @@
     </main>
 
     <footer>
-        2026 | Thiago Ferreira dos Santos
+ 2026 | Thiago Ferreira dos Santos
     </footer>
 
     <script>
@@ -113,16 +113,16 @@ const photoThumbs = document.querySelectorAll('.photoThumb');
             modalDesc.textContent = thumb.getAttribute('data-desc');
             photoModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-        };
-    });
+ };
+ });
 
     photoModal.onclick = function(e) {
 
         if (e.target === photoModal) {
             photoModal.style.display = 'none';
             document.body.style.overflow = '';
-        }
-    };
+ }
+ };
     </script>
 
 </body>
