@@ -1,0 +1,179 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FFFFFF;
+}
+
+header {
+    background: #FFFFFF;
+    color: #000000; /* Black text */
+    padding: 1rem 0;
+    text-align: center;
+}
+
+header a {
+    text-decoration: none;
+    color: #000080; /* Navy blue */
+    font-size: 2rem; /* Increase font size */
+    font-weight: bold; /* Make text bold */
+    margin-top: 2cm; /* Add space above */
+    margin-bottom: 0.01cm; /* Add space below */
+    display: inline-block;
+}
+
+/* Fixed navigation bar */
+nav {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: #FFFFFF;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 1rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #000000; /* Black text */
+}
+
+/* Container styling */
+.container {
+    width: 65%;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: #FFFFFF;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 5rem; /* Adjust for fixed nav */
+}
+
+/* Footer styling */
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: #333;
+    color: #FFFFFF;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.smaller-font {
+    font-size: 0.9rem; /* Smaller font size */
+}
+
+/* Publication list styling */
+.publications-list {
+    margin-top: 1.5em; /* Space above the list */
+    padding-left: 0; /* Remove default padding */
+}
+
+.publications-list li {
+    margin-bottom: 0.5em; /* Space between lines */
+}
+
+.non-refereed {
+    margin-top: 1.5em; /* Space above the list */
+    padding-left: 0; /* Remove default padding */
+}
+
+.non-refereed li {
+    margin-bottom: 0.5em; /* Space between lines */
+}
+
+/* Small skip between lines */
+li {
+    margin-bottom: 0.5em; /* Space between lines */
+}
+
+/* Style for toggle buttons */
+.toggle-button {
+    cursor: pointer;
+    color: #000080; /* Navy blue */
+    margin-bottom: 10px;
+}
+
+/* Style for research sections */
+.research-section {
+    display: none;
+}
+
+.research-section.show {
+    display: block;
+}
+
+/* Style for images in projects */
+.project-image {
+    width: 50%;
+    display: block;
+    margin: 0 auto 1em;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        margin-top: 7rem; /* Adjust for fixed nav on smaller screens */
+    }
+
+    header a {
+        font-size: 1.5rem;
+    }
+
+    nav ul li {
+        display: block;
+        margin: 0.5rem 0;
+    }
+
+    nav ul li a {
+        font-size: 1.2rem;
+    }
+}
+
+/* Form and button styling */
+input, textarea, button {
+    font-family: "Computer Modern Serif", serif;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+button {
+    background-color: #000080; /* Navy blue */
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0000FF; /* Lighter blue on hover */
+}
+
+/* Accessibility improvements */
+a:focus, button:focus, input:focus, textarea:focus {
+    outline: 2px dashed #000080; /* Navy blue focus outline */
+    outline-offset: 4px;
+}
+
+/* Social media links */
+.social-media a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #9F0705; 
+    font-size: 1.5rem;
+}
