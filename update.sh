@@ -1,8 +1,12 @@
-git add index.html research.html publications.html posters.html gallery.html style.css README.md
+#!/bin/bash
 
-git add CV_thiagoferreira.pdf
-git add photos/*
-git add posters/*
+git add -u
+git add index.html research.html publications.html posters.html gallery.html style.css README.md CV_thiagoferreira.pdf
+git add photos/* posters/*
 
-git commit -m "update"
-git push origin main
+if ! git diff --cached --quiet; then
+    git commit -m "update"
+    git push origin main
+else
+    echo "No changes to commit."
+fi
