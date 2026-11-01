@@ -40,8 +40,9 @@
             letter-spacing: -0.035em;
         }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--gutter); align-items: start; padding: 1.6rem 0 0 0; }
-        .grid img { display: block; width: 100%; height: auto; cursor: pointer; }
+        .photos { display: grid; grid-template-columns: repeat(4, 1fr); column-gap: var(--gutter); row-gap: var(--gutter); align-items: start; padding: 1.6rem 0 0 0; }
+        .photos img { display: block; width: 100%; height: auto; cursor: pointer; }
+        @media (max-width: 800px) { .photos { grid-template-columns: repeat(2, 1fr); row-gap: 0.8rem; } }
 
         .rule { border: 0; border-top: 1px solid var(--fg); margin: 2.4rem 0 0 0; }
 
@@ -65,18 +66,14 @@
         </header>
 
         <main>
-        <div class="grid">
-            <!-- MESA Summer School 2025 -->
-            <img class="photoThumb" src="photos/20250722-Participants-MESA-School-Leuven.jpg" data-desc="MESA Summer School, Leuven/Belgium, July 2025.">
-            <img class="photoThumb" src="photos/4SciGens-MESA-School-Leuven.jpg" data-desc="Four scientific generations, Leuven/Belgium, July 2025.">
-            <img class="photoThumb" src="photos/GraduationMESASummerSchool-LeuvenBE2025.jpg" data-desc="Graduation - MESA Summer School, Leuven/Belgium, July 2025.">
-            <!-- HITS 2025 -->
-            <img class="photoThumb" src="photos/HITS2025.jpg" data-desc="HITS - Heidelberg/Germany, July 2025.">
-            <!-- TASC9/KASC16 2025 -->
-            <img class="photoThumb" src="photos/TASC2025.jpg" data-desc="Presented my poster on 'seismology of Population III stars' at the TASC9/KASC16 conference in Vienna, Austria, July 2025.">
-            <img class="photoThumb" src="photos/TASC9-KASC16_Vienna.jpg" data-desc="9th TESS/16th Kepler Asteroseismic Science Consortium Workshop, Vienna/Austria, July 2025.">
-            <!-- Yale -->
-            <img class="photoThumb" src="photos/Yale2023-Welcome.JPG" data-desc="Yale University, New Haven/U.S. (2023).">
+        <div class="photos">
+            <img class="photoThumb" src="photos/20250722-Participants-MESA-School-Leuven.jpg" alt="MESA Summer School, Leuven/Belgium, July 2025." data-desc="MESA Summer School, Leuven/Belgium, July 2025.">
+            <img class="photoThumb" src="photos/4SciGens-MESA-School-Leuven.jpg" alt="Four scientific generations, Leuven/Belgium, July 2025." data-desc="Four scientific generations, Leuven/Belgium, July 2025.">
+            <img class="photoThumb" src="photos/GraduationMESASummerSchool-LeuvenBE2025.jpg" alt="Graduation - MESA Summer School, Leuven/Belgium, July 2025." data-desc="Graduation - MESA Summer School, Leuven/Belgium, July 2025.">
+            <img class="photoThumb" src="photos/HITS2025.jpg" alt="HITS - Heidelberg/Germany, July 2025." data-desc="HITS - Heidelberg/Germany, July 2025.">
+            <img class="photoThumb" src="photos/TASC2025.jpg" alt="Presented my poster on 'seismology of Population III stars' at the TASC9/KASC16 conference in Vienna, Austria, July 2025." data-desc="Presented my poster on 'seismology of Population III stars' at the TASC9/KASC16 conference in Vienna, Austria, July 2025.">
+            <img class="photoThumb" src="photos/TASC9-KASC16_Vienna.jpg" alt="9th TESS/16th Kepler Asteroseismic Science Consortium Workshop, Vienna/Austria, July 2025." data-desc="9th TESS/16th Kepler Asteroseismic Science Consortium Workshop, Vienna/Austria, July 2025.">
+            <img class="photoThumb" src="photos/Yale2023-Welcome.JPG" alt="Yale University, New Haven/U.S. (2023)." data-desc="Yale University, New Haven/U.S. (2023).">
         </div>
 
         <hr class="rule">
@@ -103,6 +100,7 @@
     photoThumbs.forEach(thumb => {
         thumb.onclick = function() {
             modalImg.src = thumb.src;
+            modalImg.alt = thumb.alt;
             modalDesc.textContent = thumb.getAttribute('data-desc');
             photoModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
