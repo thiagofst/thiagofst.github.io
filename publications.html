@@ -88,16 +88,19 @@
  }
 
         /* Paper summary (text, then figure) */
+        .pubs { display: inline-block; text-align: left; margin: 2em 0 1em 0; padding-left: 20px; font-family: 'Shippori Mincho', serif; }
+        .paper { display: block; }
         .summary {
             width: 0;
             min-width: 100%;
+            contain: inline-size;
             margin: 0.6em 0 0.4em 0;
             font-size: 0.95em;
         }
         .summary .blurb { margin: 0 0 0.8em 0; text-align: justify; }
         .summary .pair { display: flex; gap: 0.8em; margin-top: 0.8em; }
-        .summary .pair img { flex: 1 1 0; min-width: 0; width: 50%; }
-        .summary img { box-sizing: border-box; display: block; width: 100%; height: auto; margin: 0; border: 1px solid #000; background: #fff; }
+        .summary .pair img { flex: 1 1 0; min-width: 0; width: 50%; max-width: 50%; }
+        .summary img { box-sizing: border-box; display: block; width: 100%; max-width: 100%; height: auto; margin: 0; border: 1px solid #000; background: #fff; }
     </style>
 </head>
 
@@ -107,6 +110,7 @@
     </header>
 
     <main style="text-align: center;">
+        
         <h2 style="margin-top: 0.6em; font-size: 1.5em; font-weight: bold; font-family: 'Shippori Mincho', serif;">Publications List</h2>
         <!--- <div style="font-size: 1.1em; margin-bottom: 0.5em; font-family: 'Shippori Mincho', serif;"></div> --->
         
@@ -118,15 +122,18 @@
         
         </div>
 
-        <ul style="display: inline-block; text-align: left; margin-top: 2em; font-family: 'Shippori Mincho', serif;">
+        <div class="pubs">
         
+        <div class="paper">
         15. <strong>Ferreira, T.</strong> & Galarza, J.Y., et al., 2026, AJ, 172, 211.<a class="small-title" href="https://scixplorer.org/abs/2025arXiv251217072F/abstract" target="_blank"><strong>Giant Planets and Eccentric Orbits Are Common Around Galactic Thick Disc Stars</strong></a>
         <div class="summary">
         <p class="blurb"></p>            
         <img src="figs/ThickDisc_Mass-FeH.pdf" loading="lazy" width="841" height="619">
         </div>
+        </div>
         <div style="height: 1.2em;"></div>
 
+        <div class="paper">
         14. <strong>Ferreira, T.</strong> & Rice, M., 2026, AJ, 172, 111. <a class="small-title" href="https://scixplorer.org/abs/2026AJ....172..111F/abstract" target="_blank"><strong>On the Eccentricity Distribution and Tidal Evolution of Transiting Brown Dwarfs</strong></a>
         <div class="summary">
         <p class="blurb"></p>
@@ -136,10 +143,11 @@
         <img src="figs/TidalModels_Jackson_6.5Gyr.pdf" loading="lazy" width="1047" height="838">
         </div>
         </div>
-        
+        </div>
         <div style="height: 1.2em;"></div>
 
-        13. <strong>Ferreira, T.</strong>, Bellinger, E.P., Farag, E., Lindsay, C.J., 2026, ApJ, 1001, 41. <a class="small-title" href="https://scixplorer.org/abs/2026ApJ..1001...41F/abstract" target="_blank"><strong>Red-Giant Asteroseismology of Low-Mass Population III Stars</strong></a><p>
+        <div class="paper">
+        13. <strong>Ferreira, T.</strong>, Bellinger, E.P., Farag, E., Lindsay, C.J., 2026, ApJ, 1001, 41. <a class="small-title" href="https://scixplorer.org/abs/2026ApJ..1001...41F/abstract" target="_blank"><strong>Red-Giant Asteroseismology of Low-Mass Population III Stars</strong></a>
         <div class="summary">
         <p class="blurb"></p>
         <div class="pair">
@@ -147,14 +155,9 @@
         <img src="figs/Psi_DeltaPi_Mass.pdf" loading="lazy" width="1047" height="838">
         </div>
         </div>
-
-
-        <div style="height: 1.2em;"></div>
-
-
-
-
-    </ul>
+        </div>
+    
+    </div>
 
 
     </main>
