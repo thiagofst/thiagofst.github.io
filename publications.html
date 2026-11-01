@@ -6,151 +6,127 @@
     <title>Publications List - Thiago Ferreira</title>
     <link rel="icon" href="data:,">
     <meta name="description" content="List of publications by Thiago Ferreira dos Santos">
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root { --bg: #fff; --fg: #000; --accent: #e30613; --gutter: 24px; }
+
         body {
-            font-family: 'Shippori Mincho', serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #efefef;
-            color: #000;
- }
+            background: var(--bg);
+            color: var(--fg);
+            font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 17px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
 
-        header {
-            background: #efefef;
-            color: #000;
-            padding: 2em 0 0.5em 0;
-            text-align: center;
-            font-family: 'Shippori Mincho', serif;
- }
+        a { color: var(--fg); text-decoration: none; }
 
-        .container {
-            width: 100%;
-            margin: 0 auto;
-            padding: 0;
-            background: #efefef;
- }
+        .page { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
 
-        h2 {
-            color: #000;
-            font-family: 'Shippori Mincho', serif;
- }
+        .row { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gutter); }
 
-        a {
-            color: #000;
-            font-family: 'Shippori Mincho', serif;
-            text-decoration: none;
+        .topbar { padding: 1.4rem 0 0 0; font-weight: 700; font-size: 1rem; }
+        .topbar a:hover { color: var(--accent); }
 
- }
+        header { padding: 2.2rem 0 1.2rem 0; border-bottom: 3px solid var(--fg); }
 
-        ul {
-            padding-left: 20px;
-            font-family: 'Shippori Mincho', serif;
- }
+        h1 {
+            grid-column: 1 / -1;
+            font-size: clamp(2.6rem, 7.2vw, 5.6rem);
+            font-weight: 700;
+            line-height: 0.98;
+            letter-spacing: -0.035em;
+        }
 
-        li {
-            margin-bottom: 0.6em;
-            font-size: 1.1em;
- }
+        .links { display: flex; gap: 2.2rem; padding: 1.2rem 0 0 0; font-weight: 700; font-size: 0.95rem; }
+        .links a:hover { color: var(--accent); }
 
-        .title-line, .small-title {
-            display: block;
-            margin-top: 0.2em;
-            font-style: normal;
-            font-size: 0.95em;
-            text-decoration: none;
- }
+        .section {
+            margin: 3.2rem 0 1rem 0;
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+        .links + .section { margin-top: 2.2rem; }
 
-        /* Collapsible Box Styles */
-        #nonRefBox {
-            display: none;
-            margin-top: 10px;
-            border: 1px solid #000;
-            padding: 15px;
-            background-color: #efefef;
-            font-family: 'Shippori Mincho', serif;
- }
+        .paper {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            column-gap: var(--gutter);
+            align-items: center;
+            border-top: 1px solid var(--fg);
+            padding: 0.9rem 0 1rem 0;
+        }
+        .num { grid-column: 1 / 2; font-weight: 700; font-size: 0.95rem; text-align: center; }
+        .body { grid-column: 2 / 12; }
+        .cite { font-size: 0.88rem; line-height: 1.45; }
+        .head { margin-top: 0.3rem; font-size: 1.12rem; line-height: 1.3; }
+        .head a:hover { color: var(--accent); }
+        .details { margin-left: 0.4em; font-size: 0.9rem; font-weight: 400; cursor: pointer; }
+        .details:hover, .details:focus-visible { text-decoration: underline; outline: none; color: var(--accent); }
 
-        .toggle-btn {
-            background-color: #efefef;
-            color: #000;
-            border: 1px solid #000;
-            padding: 8px 14px;
-            font-size: 1em;
-            cursor: pointer;
-            font-family: 'Shippori Mincho', serif;
- }
-
-        .toggle-btn:hover {
-            background-color: #f5f5f5;
- }
-
-        .pubs { display: inline-block; text-align: left; margin: 2em 0 1em 0; padding-left: 20px; font-family: 'Shippori Mincho', serif; }
-        .paper { display: block; }
-        .head { margin-top: 0.2em; }
-        .head .small-title { display: inline; margin-top: 0; }
-        .details { margin-left: 0.2em; font-size: 0.95em; font-weight: 400; cursor: pointer; }
-        .details:hover, .details:focus-visible { text-decoration: underline; outline: none; }
-        .section { margin: 1.6em 0 0.8em 0; font-size: 1.2em; font-weight: bold; font-family: 'Shippori Mincho', serif; }
-        .pubs .section:first-child { margin-top: 0; }
-        .summary {
-            width: 0;
-            min-width: 100%;
-            contain: inline-size;
-            margin: 0.6em 0 0.4em 0;
-            font-size: 0.95em;
- }
-        .summary .blurb { margin: 0 0 0.8em 0; text-align: justify; }
-        .summary .pair { display: flex; gap: 0.8em; margin-top: 0.8em; }
+        .summary { margin: 0.9rem 0 0 0; font-size: 0.95rem; }
+        .summary .blurb { margin: 0 0 0.8rem 0; text-align: justify; hyphens: auto; }
+        .summary .pair { display: flex; gap: 0.8rem; margin-top: 0.8rem; }
         .summary .pair img { flex: 1 1 0; min-width: 0; width: 50%; max-width: 50%; }
         .summary img { box-sizing: border-box; display: block; width: 100%; max-width: 100%; height: auto; margin: 0; }
-        .summary img + img, .summary img + .pair { margin-top: 0.8em; }
+        .summary img + img, .summary img + .pair { margin-top: 0.8rem; }
 
         /* Paper modal (same dimming as the gallery) */
         #paperModal { position: fixed; inset: 0; z-index: 1000; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.7); opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s; }
         #paperModal.open { opacity: 1; visibility: visible; }
-        #paperModal .panel { position: relative; box-sizing: border-box; width: min(860px, 92vw); max-height: 90vh; overflow-y: auto; padding: 1.6em 1.8em 1.4em 1.8em; background: #efefef; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.5); text-align: left; }
-        #paperModal .close { float: right; margin: -0.7em -0.9em 0 0.8em; padding: 0.2em 0.4em; background: none; border: 0; font: inherit; font-size: 1.5em; line-height: 1; color: #000; cursor: pointer; }
-        #paperModal .summary { width: auto; min-width: 0; contain: none; margin: 0.8em 0 0 0; }
-        #paperModal .head .small-title { text-decoration: underline; }
+        #paperModal .panel { position: relative; box-sizing: border-box; width: min(940px, 94vw); max-height: 90vh; overflow-y: auto; padding: 1.4rem 1.8rem 1.6rem 1.8rem; background: #fff; border-top: 3px solid #000; text-align: left; }
+        #paperModal .close { float: right; margin: -0.5rem -0.8rem 0 0.8rem; padding: 0.2rem 0.5rem; background: none; border: 0; font: inherit; font-size: 1.7rem; line-height: 1; color: #000; cursor: pointer; }
+        #paperModal .close:hover { color: var(--accent); }
+        #paperModal .head a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+
+        @media (max-width: 800px) {
+            .paper { grid-template-columns: 2.2rem 1fr; }
+            .num { grid-column: 1; }
+            .body { grid-column: 2; }
+            .links { flex-wrap: wrap; gap: 0.4rem 2rem; }
+        }
     </style>
 </head>
 
 <body>
-    <header>
-        <a href="index.html" style="color: #000; font-size: 2em; font-family: 'Shippori Mincho', serif; font-weight: bold; text-decoration: none;">Thiago Ferreira dos Santos</a>
-    </header>
+    <div class="page">
 
-    <main style="text-align: center;">
-        
-        <h2 style="margin-top: 0.6em; font-size: 1.5em; font-weight: bold; font-family: 'Shippori Mincho', serif;">Publications List</h2>
-        <!--- <div style="font-size: 1.1em; margin-bottom: 0.5em; font-family: 'Shippori Mincho', serif;"></div> --->
-        
-        <div style="margin-bottom: 1.2em; font-size: 1.1em; font-family: 'Shippori Mincho', serif;">
-        
-            <a href="https://scixplorer.org/public-libraries/UyadPkjuT6mamshlVs53_A" target="_blank"><strong>Full ADS/SciX Library</strong></a> |
-            <!--- <a href="https://scixplorer.org/public-libraries/clMHivlqRXKp8JQRs37F0A" target="_blank"><strong>Refereed Only</strong></a> | ---> 
-            <a href="https://scholar.google.com/citations?hl=pt-BR&user=W0BE5PAAAAAJ&view_op=list_works&sortby=pubdate" target="_blank" rel="noopener noreferrer"><strong>Google Scholar</strong></a>
-        
+        <div class="topbar"><a href="index.html">Thiago Ferreira dos Santos</a></div>
+
+        <header>
+            <div class="row">
+                <h1>Publications List</h1>
+            </div>
+        </header>
+
+        <div class="links">
+            <a href="https://scixplorer.org/public-libraries/UyadPkjuT6mamshlVs53_A" target="_blank">Full ADS/SciX Library</a>
+            <!--- <a href="https://scixplorer.org/public-libraries/clMHivlqRXKp8JQRs37F0A" target="_blank">Refereed Only</a> --->
+            <a href="https://scholar.google.com/citations?hl=pt-BR&user=W0BE5PAAAAAJ&view_op=list_works&sortby=pubdate" target="_blank" rel="noopener noreferrer">Google Scholar</a>
         </div>
 
-        <div class="pubs">
-
-        <h3 class="section">First-Author</h3>
+        <h2 class="section">First-Author</h2>
         <div class="paper">
- 7. <strong>Ferreira, T.</strong> & Galarza, J.Y., et al., 2026, AJ, 172, 211.<div class="head"><a class="small-title" href="https://scixplorer.org/abs/2025arXiv251217072F/abstract" target="_blank"><strong>Giant Planets and Eccentric Orbits Are Common Around Galactic Thick Disc Stars</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">7</div>
+            <div class="body">
+                <div class="cite"><strong>Ferreira, T.</strong> & Galarza, J.Y., et al., 2026, AJ, 172, 211.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2025arXiv251217072F/abstract" target="_blank"><strong>Giant Planets and Eccentric Orbits Are Common Around Galactic Thick Disc Stars</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">The Milky Way's thick disc is one of the oldest populations, and its metal-poor, short-lived protoplanetary discs are expected to make planets scarce. We characterised 32 planetary systems around kinematically and chemically confirmed thick disc stars, which brings the known total to 66, and found that a notable fraction are giants on more eccentric orbits than their thin disc counterparts, although detection biases and the small sample size call for caution. We also present two new puffy, low-density giants known around thick disc stars, which is hard to reconcile with billions of years of expected cooling and contraction.</p>            
         <img src="figs/thickdisc_mass_feh.pdf" loading="lazy" decoding="async">
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 6. <strong>Ferreira, T.</strong> & Rice, M., 2026, AJ, 172, 111. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2026AJ....172..111F/abstract" target="_blank"><strong>On the Eccentricity Distribution and Tidal Evolution of Transiting Brown Dwarfs</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">6</div>
+            <div class="body">
+                <div class="cite"><strong>Ferreira, T.</strong> & Rice, M., 2026, AJ, 172, 111.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2026AJ....172..111F/abstract" target="_blank"><strong>On the Eccentricity Distribution and Tidal Evolution of Transiting Brown Dwarfs</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">Brown dwarfs (BDs) on tight orbits sit between hot Jupiters and close stellar binaries, and their eccentricities may hold clues about whether they formed where we see them or migrated inwards. Using a hierarchical Bayesian model, we found that BDs with periods below 16 days are concentrated at low eccentricities, whereas long-period ones are noticeably more excited, which is what tidal circularisation processes would produce. Assuming a single primordial distribution for the whole population, this lets us constrain the tidal quality factor of transiting brown dwarfs to roughly 10<sup>8</sup>, or about 10<sup>7</sup> when tides raised on the host stars are included.</p>
         <img src="figs/ecc_dist.pdf" loading="lazy" decoding="async">
         <div class="pair">
@@ -158,24 +134,28 @@
         <img src="figs/tidalmodel_varyQ_J.pdf" loading="lazy" decoding="async">
         </div>
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 5. <strong>Ferreira, T.</strong>, Bellinger, E.P., Farag, E., Lindsay, C.J., 2026, ApJ, 1001, 41. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2026ApJ..1001...41F/abstract" target="_blank"><strong>Red-Giant Asteroseismology of Low-Mass Population III Stars</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">5</div>
+            <div class="body">
+                <div class="cite"><strong>Ferreira, T.</strong>, Bellinger, E.P., Farag, E., Lindsay, C.J., 2026, ApJ, 1001, 41.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2026ApJ..1001...41F/abstract" target="_blank"><strong>Red-Giant Asteroseismology of Low-Mass Population III Stars</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">Low-mass stars from the first generation may still be alive today, but accretion and internal mixing processes can pollute their surfaces enough to disguise them as ordinary metal-poor stars. Their interiors, however, are harder to hide, so we computed the oscillations of metal-free red giants and introduced a diagnostic, &psi; = &Delta;&nu;/&Delta;&Pi;<sub>1</sub>, that follows how metallicity shapes the star's core. Population III models fall in the distinct region of the &psi;&ndash;&Delta;&Pi;<sub>1</sub> plane, and that signature survives moderate surface pollution, which gives future surveys a concrete way to look for relics of the first stars.</p>
         <div class="pair">
         <img src="figs/dpi_psi_metallicity.pdf" loading="lazy" decoding="async">
         <img src="figs/dpi_psi_metallicity.pdf" loading="lazy" decoding="async">
         </div>
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 4. <strong>Ferreira, T.</strong>, Bellinger, E.P., Farag, E., Lindsay, C.J., 2026, ApJ, 1000, 147. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2026ApJ..1000..147F/abstract" target="_blank"><strong>Evolution of Low-Mass Population III Stars: Convection, Mass Loss, Nucleosynthesis, and Neutrinos</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">4</div>
+            <div class="body">
+                <div class="cite"><strong>Ferreira, T.</strong>, Bellinger, E.P., Farag, E., Lindsay, C.J., 2026, ApJ, 1000, 147.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2026ApJ..1000..147F/abstract" target="_blank"><strong>Evolution of Low-Mass Population III Stars: Convection, Mass Loss, Nucleosynthesis, and Neutrinos</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">Stars below roughly 0.8 solar masses live so long without metals that some could still be around in the Milky Way’s halo or in its satellite dwarf galaxies, yet their evolution has been scarcely mapped in detail. We followed 0.7 to 1 solar-mass models with Modules for Experiments in Stellar Astrophysics (MESA) from the pre-main sequence to the white dwarf phase, varying mass-loss efficiencies, convection schemes and overshooting to test which outcomes are robust. Without metals, these stars are unusually compact, develop no convective envelope on the red giant branch, and their helium flashes ignite off-centre and violently, which sets them apart from even slightly enriched stars. Convective shell mergers then produce nitrogen-rich giants, and in the heavier models short ultraviolet-bright episodes, with effective temperatures of 50,000 to 60,000 K, precede the final white dwarfs of about 0.45 to 0.55 solar masses, which are hotter, more compact and cool faster than their metal-rich analogues. The same flashes and mergers leave sharp bursts of neutrino emission, whilst the carbon, nitrogen and oxygen returned to the surrounding gas is small. Some of these outcomes, such as the shell mergers, depend sensitively on the adopted overshooting and mass-loss prescriptions, so the models are best read as a framework for recognising surviving Population III stars and their descendants.</p>            
         <img src="figs/popIII_hr.pdf" loading="lazy" decoding="async">
         <img src="figs/popIII_kipp_085.pdf" loading="lazy" decoding="async">
@@ -184,22 +164,26 @@
         <img src="figs/popIII_tcrhoc.pdf" loading="lazy" decoding="async">
         </div>
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 3. <strong>Ferreira, T.</strong> & Rice, M., et al., 2024, AJ, 168, 145.<div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024AJ....168..145F/abstract" target="_blank"><strong>SOLES XII. The Aligned Orbit of TOI-2533 b, a Transiting Brown Dwarf Orbiting an F8-type Star</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">3</div>
+            <div class="body">
+                <div class="cite"><strong>Ferreira, T.</strong> & Rice, M., et al., 2024, AJ, 168, 145.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024AJ....168..145F/abstract" target="_blank"><strong>SOLES XII. The Aligned Orbit of TOI-2533 b, a Transiting Brown Dwarf Orbiting an F8-type Star</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">How a brown dwarf (BD) is oriented relative to its star's spin can reveal whether it formed like a planet or like a small stellar companion, but only a handful have been measured. Using NEID spectra of the Rossiter-McLaughlin effect, we found a sky-projected obliquity of -7&deg;&plusmn;14&deg; for TOI-2533 b, which makes it the fifth BD with such a measurement. The orbit is consistent with alignment, and with a mass of about 75 Jupiter masses, near the hydrogen-burning limit, the system fits formation by disc fragmentation, although tidal realignment cannot be totally excluded. </p>            
         <img src="figs/toi2533.pdf" loading="lazy" decoding="async">
         <img src="figs/toi2533_context.pdf" loading="lazy" decoding="async">
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 2. <strong>Ferreira, T.</strong>, Saito, R. K., Minniti, D., et al., 2024, MNRAS, 527, 10737.<div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024MNRAS.52710737F/abstract" target="_blank"><strong>A benchmark white dwarf-ultracool dwarf wide field binary</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">2</div>
+            <div class="body">
+                <div class="cite"><strong>Ferreira, T.</strong>, Saito, R. K., Minniti, D., et al., 2024, MNRAS, 527, 10737.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024MNRAS.52710737F/abstract" target="_blank"><strong>A benchmark white dwarf-ultracool dwarf wide field binary</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">Pairs made of a white dwarf and a very low-mass companion usually come from close binaries that interact, so they say little about how each star evolves on its own. VVV J1438-6158 AB is different, as its two components are separated by about 1,200 au, which makes it one of the widest such pairs known. We characterised a 9,500 K white dwarf of about 0.62 solar masses and an M8 ultra-cool dwarf of about 98 Jupiter masses, with such a large mass ratio suggesting a formation pathway closer to that of ordinary stellar binaries. </p>            
         <div class="pair">
         <img src="figs/wducd_fig1-1.pdf" loading="lazy" decoding="async">
@@ -214,31 +198,38 @@
         <img src="figs/wducd_fig2-3.png" loading="lazy" decoding="async">
         </div>
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 1. <strong>Ferreira, T.</strong>, Saito, R. K., Minniti, D., et al., 2019, MNRAS, 486, 1220.<div class="head"><a class="small-title" href="https://scixplorer.org/abs/2019MNRAS.486.1220F/abstract" target="_blank"><strong>The asymptotic evolution of the stellar merger V1309 Sco: a Blue Straggler in the making?</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">1</div>
+            <div class="body">
+                <div class="cite"><strong>Ferreira, T.</strong>, Saito, R. K., Minniti, D., et al., 2019, MNRAS, 486, 1220.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2019MNRAS.486.1220F/abstract" target="_blank"><strong>The asymptotic evolution of the stellar merger V1309 Sco: a Blue Straggler in the making?</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">V1309 Sco is the best-studied stellar merger case, first mistaken for a nova in 2008. We used VISTA Variables in the Vía Láctea (VVV) and VVV-X near-infrared data to follow it about ten years after the outburst. The star has settled to a nearly constant brightness, and its colour changed from J-Ks = 1.40 in 2010 to 0.42 in 2015. We also found a possible weak signal with a period of 0.49 days, and together these are consistent with the remnant becoming a blue straggler.</p>            
         <img src="figs/v1309sco_lc.png" loading="lazy" decoding="async">
         </div>
+            </div>
         </div>
 
-        <h3 class="section">Co-Author</h3>
-
+        <h2 class="section">Co-Author</h2>
         <div class="paper">
- 8. Winnick, I., et al., (incl. <strong>Ferreira, T.</strong>), accepted for publication in ApJ (Nov 2025; arXiv:2508.16513). <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2025arXiv250816513W/abstract" target="_blank"><strong>Extreme Lithium Depletion in Solar Twins: Challenging Non-Standard Mixing Models</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">8</div>
+            <div class="body">
+                <div class="cite">Winnick, I., et al., (incl. <strong>Ferreira, T.</strong>), accepted for publication in ApJ (Nov 2025; arXiv:2508.16513).</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2025arXiv250816513W/abstract" target="_blank"><strong>Extreme Lithium Depletion in Solar Twins: Challenging Non-Standard Mixing Models</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">Lithium is destroyed in stellar interiors at fairly low temperatures, so its abundance in Sun-like stars is a sensitive tracer of how much material has been mixed below the convective zone over their lifetimes. Following the discovery of HIP 8522, we searched for similar objects and identified six new solar twins whose lithium abundances are far lower than current non-standard mixing models can explain, suggesting that they form a distinct population with an unusual past. We tested planet engulfment, blue straggler formation, and early episodic accretion, and found that engulfment is viable for only one star, that radial velocities reveal no stellar companion but instead two new exoplanets, and that episodic accretion during the pre-main-sequence phase is the most plausible explanation, pending beryllium measurements for the remaining stars.</p>
         <img src="figs/extreme_li_density_plot_all_stars.png" loading="lazy" decoding="async">
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 7. Galarza, J.Y., et al., (incl. <strong>Ferreira, T.</strong>), 2025, ApJ, 983, 70. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2025ApJ...983...70G/abstract" target="_blank"><strong>HIP 8522: A Puzzling Young Solar Twin with the Lowest Detected Lithium Abundance</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">7</div>
+            <div class="body">
+                <div class="cite">Galarza, J.Y., et al., (incl. <strong>Ferreira, T.</strong>), 2025, ApJ, 983, 70.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2025ApJ...983...70G/abstract" target="_blank"><strong>HIP 8522: A Puzzling Young Solar Twin with the Lowest Detected Lithium Abundance</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">Young solar twins usually retain a considerable amount of lithium, with abundances typically between 2.0 and 3.3 dex, which makes HIP 8522 remarkable since we derived an upper limit of only 0.8 dex for a star younger than about 1 Gyr, meaning that roughly 2 dex of lithium appear to be missing. Using high-resolution spectra, we determined its stellar parameters and chemical composition, and then examined several mechanisms that could destroy lithium, including planet engulfment, substellar mergers, and extra mixing processes, none of which account for the depletion satisfactorily. Two scenarios, however, remain plausible, namely that HIP 8522 is a field blue straggler formed by the merger of a close binary, or that it underwent episodic accretion early in its life, and either possibility makes it a valuable test case for models of internal mixing.</p>
         <img src="figs/8522_engulfment.pdf" loading="lazy" decoding="async">
         <div class="pair">
@@ -246,31 +237,37 @@
         <img src="figs/8522_agb_pollution.pdf" loading="lazy" decoding="async">
         </div>
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 6. Fermiano, V., Saito, R.K., et al., (incl. <strong>Ferreira, T.</strong>), 2024, A&A, 690, L7. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024A%26A...690L...7F/abstract" target="_blank"><strong>The young exoplanetary system TOI-4562: Confirming the presence of a third body in the system</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">6</div>
+            <div class="body">
+                <div class="cite">Fermiano, V., Saito, R.K., et al., (incl. <strong>Ferreira, T.</strong>), 2024, A&A, 690, L7.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024A%26A...690L...7F/abstract" target="_blank"><strong>The young exoplanetary system TOI-4562: Confirming the presence of a third body in the system</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">TOI-4562 b is a temperate Jupiter analogue on a 225 day orbit with an eccentricity of 0.76 around a star younger than 700 Myr, so the system is a useful laboratory for studying planetary formation and dynamical evolution before the initial configuration has been altered substantially. We observed a new transit with the 0.6-m Zeiss telescope at the Observatório Pico dos Dias (OPD/LNA) in Minas Gerais, Brazil, and combined it with TESS and archival data to improve the ephemeris, and the resulting timing residuals are consistent with a second giant planet on an outer orbit. This candidate, TOI-4562 c, has a mass of about 5.8 Jupiter masses and a period of roughly 3,990 days, which makes it the longest-period planet found to date through transit timing variations (TTV).</p>
         <img src="figs/4562_ttv.pdf" loading="lazy" decoding="async">
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 5. Galarza, J.Y., et al., (incl. <strong>Ferreira, T.</strong>), 2024, ApJ, 974, 122. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024ApJ...974..122Y/abstract" target="_blank"><strong>Detailed Abundances of the Planet-hosting TOI-1173 A/B System: Possible Evidence of Planet Engulfment</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">5</div>
+            <div class="body">
+                <div class="cite">Galarza, J.Y., et al., (incl. <strong>Ferreira, T.</strong>), 2024, ApJ, 974, 122.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024ApJ...974..122Y/abstract" target="_blank"><strong>Detailed Abundances of the Planet-hosting TOI-1173 A/B System: Possible Evidence of Planet Engulfment</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">Two stars of a wide binary are expected to share the same chemical composition, so any difference between them may reveal planet formation or engulfment episodes, although these ideas had mostly been tested in pairs without known planets. In TOI-1173 A/B, which have a projected separation of about 11,400 au and where only the primary hosts a planet, we used MAROON-X at Gemini North and ARCES at the Apache Point Observatory spectra to compare the two stars, and found that the planet host is enhanced in refractory elements such as iron by more than 0.05 dex, which is a pattern consistent with the engulfment of about 18 Earth masses of rocky material, and the dynamics described in our companion paper support this picture, since the close-in planet may have migrated inwards and disrupted inner rocky planets in the process. </p>
         <img src="figs/1173B_xiru_abundance_vs_elements.pdf" loading="lazy" decoding="async">
         <img src="figs/1173B_xiru_corner.pdf" loading="lazy" decoding="async">
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 4. Galarza, J.Y, et al., (incl. <strong>Ferreira, T.</strong>), 2024, AJ, 168, 91. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024AJ....168...91G/abstract" target="_blank"><strong>TOI-1173 A b: The First Inflated Super-Neptune in a Wide Binary System</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">4</div>
+            <div class="body">
+                <div class="cite">Galarza, J.Y, et al., (incl. <strong>Ferreira, T.</strong>), 2024, AJ, 168, 91.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024AJ....168...91G/abstract" target="_blank"><strong>TOI-1173 A b: The First Inflated Super-Neptune in a Wide Binary System</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">Puffy planets with masses between 20 and 50 Earth masses are rare, and only a handful have been characterised with both transit and radial velocity observations. We reported TOI-1173 A b, a planet on a 7.06-day nearly circular orbit around the G-dwarf primary of a wide binary, with a mass of 27.4 Earth masses, a radius of 9.19 Earth radii and a density of about 0.2 g cm<sup>-3</sup>, making it the first puffy super-Neptune known in a wide binary system. Among the mechanisms we explored for its inflated radius, tidal heating is the most promising, and the present architecture of the system suggests that the planet may have migrated through von Zeipel-Lidov-Kozai (vZLK) oscillations followed by tidal circularisation.</p>
         <img src="figs/1173_massradius.pdf" loading="lazy" decoding="async">
         <div class="pair">
@@ -278,43 +275,48 @@
         <img src="figs/1173_MX.pdf" loading="lazy" decoding="async">
         </div>    
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 3. Saito, R.K., et al., (incl. <strong>Ferreira, T.</strong>), 2024, A&A, 689, A148. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024A%26A...689A.148S/abstract" target="_blank"><strong>The VISTA Variables in the Vía Láctea extended (VVVX) ESO public survey: Completion of the observations and legacy</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">3</div>
+            <div class="body">
+                <div class="cite">Saito, R.K., et al., (incl. <strong>Ferreira, T.</strong>), 2024, A&A, 689, A148.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024A%26A...689A.148S/abstract" target="_blank"><strong>The VISTA Variables in the Vía Láctea extended (VVVX) ESO public survey: Completion of the observations and legacy</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">The inner Galactic bulge and the southern disc are hidden from optical surveys by dust, which is why the VISTA Variables in the Via Láctea (VVV) survey observed them in the near-infrared, and the VVVX extended this work from 562 to 1,700 square degrees whilst adding new epochs between 2016 and March 2023. This paper describes the observing strategy, the data quality and access, and the legacy of the survey, which provides a JHKs catalogue of more than 1.5 billion point sources and a Ks catalogue of about 10 million variable sources. Combined with distance indicators such as red clump stars, RR Lyrae and Cepheids, these data allowed us to build a five-dimensional map of the surveyed region, and they complement Gaia at low Galactic latitudes whilst providing targets for upcoming spectrographs such as MOONS and 4MOST.</p>
         <img src="figs/vvvx_fig01.jpg" loading="lazy" decoding="async">
         <img src="figs/vvvx_jwst.jpg" loading="lazy" decoding="async">
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 2. Botan, E., et al., (incl. <strong>Ferreira, T.</strong>), 2021, MNRAS, 504, 654. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2021MNRAS.504..654B/abstract" target="_blank"><strong>Unveiling short-period binaries in the inner VVV bulge</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">2</div>
+            <div class="body">
+                <div class="cite">Botan, E., et al., (incl. <strong>Ferreira, T.</strong>), 2021, MNRAS, 504, 654.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2021MNRAS.504..654B/abstract" target="_blank"><strong>Unveiling short-period binaries in the inner VVV bulge</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">Eclipsing binaries are valuable because they allow the masses and radii of their components, as well as the distance to the system, to be measured directly, and they therefore help to trace the structure of the Milky Way alongside pulsating stars. We developed a semi-automated strategy to search for them in the VVV light curves over 13.4 square degrees of the inner bulge, and we classified 212 previously unknown eclipsing binaries, six of which are very reddened. A preliminary analysis indicates that they are located in the most obscured regions of the foreground disc and the bulge, which makes this search complementary to those carried out at optical wavelengths.</p>
         <img src="figs/vvv_ebs.jpeg" loading="lazy" decoding="async">
         <img src="figs/vvv_ebs_lcs.jpeg" loading="lazy" decoding="async">
         <img src="figs/vvv_ebs_cmd.jpeg" loading="lazy" decoding="async">
         </div>
+            </div>
         </div>
-
-        <div style="height: 1.5em;"></div>
         <div class="paper">
- 1. Herpich, F.R., et al., (incl. <strong>Ferreira, T.</strong>), 2021, A&A, 647, A169. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2021A%26A...647A.169H/abstract" target="_blank"><strong>VVV survey near-infrared colour catalogue of known variable stars</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
-        <div class="summary" hidden>
+            <div class="num">1</div>
+            <div class="body">
+                <div class="cite">Herpich, F.R., et al., (incl. <strong>Ferreira, T.</strong>), 2021, A&A, 647, A169.</div>
+                <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2021A%26A...647A.169H/abstract" target="_blank"><strong>VVV survey near-infrared colour catalogue of known variable stars</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
+                <div class="summary" hidden>
         <p class="blurb">Most of what is known about variable stars in the Galaxy comes from optical observations, which are strongly limited in the crowded and reddened regions of the bulge and the disc. Cross-matches between the VVV survey and the VSX-AAVSO catalogue plus the Gaia DR2 produce a catalogue with coordinates, ZYJHKs magnitudes, extinctions and Gaia-based distances, including for distance indicators such as RR Lyrae, Cepheids and Miras. About 20% of the stars with verified variability are flagged as non-stellar sources, and more than half of our sample is missing from the VVV variability list, which suggests that current knowledge of variability in the Galaxy is biased towards nearby stars with low extinction, and the catalogue provides a groundwork for future surveys such as the Vera C. Rubin Observatory LSST.</p>
         <img src="figs/vvv_var_diagram_allG.png" loading="lazy" decoding="async">
         <img src="figs/vvv_gaia_new_AKs.png" loading="lazy" decoding="async">
         <img src="figs/vvv_period_class_MAG_Ks.png" loading="lazy" decoding="async">
         </div>
+            </div>
         </div>
 
     </div>
-
-    </main>
 
     <div id="paperModal" role="dialog" aria-modal="true" aria-label="Paper details">
         <div class="panel">
@@ -331,10 +333,8 @@
 
         function openPaper(btn) {
             lastButton = btn;
-            const clone = btn.closest('.paper').cloneNode(true);
+            const clone = btn.closest('.body').cloneNode(true);
             clone.querySelector('.details').remove();
-            const first = clone.firstChild;
-            if (first && first.nodeType === 3) first.textContent = first.textContent.replace(/^\s*\d+\.\s*/, '');
             const summary = clone.querySelector('.summary');
             summary.hidden = false;
             summary.querySelectorAll('img').forEach(function (img) { img.removeAttribute('loading'); });
@@ -343,28 +343,23 @@
             paperModal.classList.add('open');
             document.body.style.overflow = 'hidden';
             modalClose.focus();
- }
+        }
 
         function closePaper() {
             paperModal.classList.remove('open');
             document.body.style.overflow = '';
             if (lastButton) lastButton.focus();
- }
+        }
 
         document.querySelectorAll('.details').forEach(function (el) {
             el.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); openPaper(el); });
             el.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); openPaper(el); }
- });
- });
+            });
+        });
         modalClose.addEventListener('click', closePaper);
         paperModal.addEventListener('click', function (e) { if (e.target === paperModal) closePaper(); });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && paperModal.classList.contains('open')) closePaper(); });
-
-        function toggleBox() {
-            const box = document.getElementById("nonRefBox");
-            box.style.display = box.style.display === "none" ? "block" : "none";
- }
     </script>
 </body>
 </html>
