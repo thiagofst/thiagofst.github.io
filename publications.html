@@ -90,6 +90,11 @@
         /* Paper summary (text, then figure) */
         .pubs { display: inline-block; text-align: left; margin: 2em 0 1em 0; padding-left: 20px; font-family: 'Shippori Mincho', serif; }
         .paper { display: block; }
+        .head { margin-top: 0.2em; }
+        .head .small-title { display: inline; margin-top: 0; }
+        .toggle { position: relative; display: inline-block; width: 0; height: 0; padding: 0; margin-left: 0.6em; background: none; border: 0; border-left: 0.6em solid #000; border-top: 0.38em solid transparent; border-bottom: 0.38em solid transparent; cursor: pointer; vertical-align: middle; transition: transform 0.15s; }
+        .toggle::after { content: ""; position: absolute; top: -0.9em; bottom: -0.9em; left: -0.9em; right: -0.9em; }
+        .toggle[aria-expanded="true"] { transform: rotate(90deg); }
         .summary {
             width: 0;
             min-width: 100%;
@@ -126,17 +131,17 @@
         <div class="pubs">
         
         <div class="paper">
-        15. <strong>Ferreira, T.</strong> & Galarza, J.Y., et al., 2026, AJ, 172, 211.<a class="small-title" href="https://scixplorer.org/abs/2025arXiv251217072F/abstract" target="_blank"><strong>Giant Planets and Eccentric Orbits Are Common Around Galactic Thick Disc Stars</strong></a>
-        <div class="summary">
+        15. <strong>Ferreira, T.</strong> & Galarza, J.Y., et al., 2026, AJ, 172, 211.<div class="head"><a class="small-title" href="https://scixplorer.org/abs/2025arXiv251217072F/abstract" target="_blank"><strong>Giant Planets and Eccentric Orbits Are Common Around Galactic Thick Disc Stars</strong></a><button class="toggle" type="button" aria-expanded="false" aria-label="Show description and figures"></button></div>
+        <div class="summary" hidden>
         <p class="blurb"></p>            
-        <img src="figs/ThickDisc_Mass-FeH.pdf" fetchpriority="high" decoding="async">
+        <img src="figs/ThickDisc_Mass-FeH.pdf" loading="lazy" decoding="async">
         </div>
         </div>
 
         <div style="height: 1.5em;"></div>
         <div class="paper">
-        14. <strong>Ferreira, T.</strong> & Rice, M., 2026, AJ, 172, 111. <a class="small-title" href="https://scixplorer.org/abs/2026AJ....172..111F/abstract" target="_blank"><strong>On the Eccentricity Distribution and Tidal Evolution of Transiting Brown Dwarfs</strong></a>
-        <div class="summary">
+        14. <strong>Ferreira, T.</strong> & Rice, M., 2026, AJ, 172, 111. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2026AJ....172..111F/abstract" target="_blank"><strong>On the Eccentricity Distribution and Tidal Evolution of Transiting Brown Dwarfs</strong></a><button class="toggle" type="button" aria-expanded="false" aria-label="Show description and figures"></button></div>
+        <div class="summary" hidden>
         <p class="blurb"></p>
         <img src="figs/Eccentricity_Distributions.pdf" loading="lazy" decoding="async">
         <div class="pair">
@@ -148,8 +153,8 @@
 
         <div style="height: 1.5em;"></div>
         <div class="paper">
-        13. <strong>Ferreira, T.</strong>, Bellinger, E.P., Farag, E., Lindsay, C.J., 2026, ApJ, 1001, 41. <a class="small-title" href="https://scixplorer.org/abs/2026ApJ..1001...41F/abstract" target="_blank"><strong>Red-Giant Asteroseismology of Low-Mass Population III Stars</strong></a>
-        <div class="summary">
+        13. <strong>Ferreira, T.</strong>, Bellinger, E.P., Farag, E., Lindsay, C.J., 2026, ApJ, 1001, 41. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2026ApJ..1001...41F/abstract" target="_blank"><strong>Red-Giant Asteroseismology of Low-Mass Population III Stars</strong></a><button class="toggle" type="button" aria-expanded="false" aria-label="Show description and figures"></button></div>
+        <div class="summary" hidden>
         <p class="blurb"></p>
         <div class="pair">
         <img src="figs/Vrard_DPi_Psi.pdf" loading="lazy" decoding="async">
@@ -160,8 +165,8 @@
 
         <div style="height: 1.5em;"></div>
         <div class="paper">
-        12. <strong>Ferreira, T.</strong>, Bellinger, E.P., Farag, E., Lindsay, C.J., 2026, ApJ, 1000, 147. <a class="small-title" href="https://scixplorer.org/abs/2026ApJ..1000..147F/abstract" target="_blank"><strong>Evolution of Low-Mass Population III Stars: Convection, Mass Loss, Nucleosynthesis, and Neutrinos</strong></a>
-        <div class="summary">
+        12. <strong>Ferreira, T.</strong>, Bellinger, E.P., Farag, E., Lindsay, C.J., 2026, ApJ, 1000, 147. <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2026ApJ..1000..147F/abstract" target="_blank"><strong>Evolution of Low-Mass Population III Stars: Convection, Mass Loss, Nucleosynthesis, and Neutrinos</strong></a><button class="toggle" type="button" aria-expanded="false" aria-label="Show description and figures"></button></div>
+        <div class="summary" hidden>
         <p class="blurb"></p>            
         <img src="figs/01_HRDiagram.pdf" loading="lazy" decoding="async">
         <img src="figs/Mass_0.85_Kippenhahn_Z0_Sub.pdf" loading="lazy" decoding="async">
@@ -176,6 +181,14 @@
     </main>
 
     <script>
+        document.querySelectorAll('.toggle').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const summary = btn.closest('.paper').querySelector('.summary');
+                const open = btn.getAttribute('aria-expanded') === 'true';
+                btn.setAttribute('aria-expanded', String(!open));
+                summary.hidden = open;
+            });
+        });
         function toggleBox() {
             const box = document.getElementById("nonRefBox");
             box.style.display = box.style.display === "none" ? "block" : "none";
