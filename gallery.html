@@ -18,7 +18,7 @@
             font-size: 17px;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
-        }
+ }
 
         a { color: var(--fg); text-decoration: none; }
 
@@ -38,7 +38,7 @@
             font-weight: 700;
             line-height: 0.98;
             letter-spacing: -0.035em;
-        }
+ }
 
         .photos { display: grid; grid-template-columns: repeat(4, 1fr); column-gap: var(--gutter); row-gap: var(--gutter); align-items: start; padding: 1.6rem 0 0 0; }
         .photos img { display: block; width: 100%; height: auto; cursor: pointer; }
@@ -104,16 +104,17 @@
             modalDesc.textContent = thumb.getAttribute('data-desc');
             photoModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-        };
-    });
+ };
+ });
 
     photoModal.onclick = function(e) {
         if (e.target === photoModal) {
             photoModal.style.display = 'none';
             document.body.style.overflow = '';
-        }
-    };
+ }
+ };
     </script>
 
 </body>
 </html>
+
