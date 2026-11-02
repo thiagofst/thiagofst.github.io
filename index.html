@@ -12,14 +12,14 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-        }
+ }
 
         :root {
             --bg: #fff;
             --fg: #000;
             --accent: #e30613;
             --gutter: 24px;
-        }
+ }
 
         body {
             background: var(--bg);
@@ -28,7 +28,7 @@
             font-size: 17px;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
-        }
+ }
 
         a { color: var(--fg); text-decoration: none; }
 
@@ -36,19 +36,19 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 var(--gutter);
-        }
+ }
 
         /* 12-column grid shared by every row */
         .row {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
             column-gap: var(--gutter);
-        }
+ }
 
         header {
             padding: 3.5rem 0 1.2rem 0;
             border-bottom: 3px solid var(--fg);
-        }
+ }
 
         .site-title {
             grid-column: 1 / -1;
@@ -56,25 +56,25 @@
             font-weight: 700;
             line-height: 0.98;
             letter-spacing: -0.035em;
-        }
+ }
 
         .side {
             grid-column: 1 / 5;
             padding-top: 1.4rem;
-        }
+ }
 
         nav {
             display: flex;
             flex-direction: column;
             border-top: 1px solid var(--fg);
-        }
+ }
 
         nav a {
             font-weight: 700;
             font-size: 0.95rem;
             padding: 0.55rem 0;
             border-bottom: 1px solid var(--fg);
-        }
+ }
 
         nav a:hover, .about a:hover { color: var(--accent); }
 
@@ -82,7 +82,7 @@
             font-weight: 700;
             font-size: 0.95rem;
             margin-top: 1.4rem;
-        }
+ }
 
         .about {
             grid-column: 6 / -1;
@@ -90,7 +90,7 @@
             max-width: 40em;
             text-align: left; /* justify */
             hyphens: auto;
-        }
+ }
 
         .about p { font-size: 1.12rem; line-height: 1.55; }
 
@@ -98,13 +98,13 @@
             text-decoration: underline;
             text-decoration-thickness: 1px;
             text-underline-offset: 0.18em;
-        }
+ }
 
         @media (max-width: 800px) {
             .side, .about { grid-column: 1 / -1; }
             .about { padding-top: 2rem; }
             header { padding-top: 2rem; }
-        }
+ }
     </style>
 </head>
 
@@ -133,16 +133,15 @@
 
             <main class="about">
                 <p>
-        I am a 4th-year PhD candidate in Astrophysics at <a href="https://astronomy.yale.edu">Yale University</a> focusing on primordial stars.
-        Broadly, my research is related to near-field cosmology and the history and structure of the Milky Way, with a particular focus on
-        Population III stars, their supernovae signatures in the spectra of metal-poor stars, evolution and oscillation patterns. 
-        I also investigate the evolution of stellar binaries, exoplanets, and brown dwarfs/sub-stellar companions, specifically in the context of the Milky Way's stellar populations in the thick disc and halo.
-        
-        I received a MPhill degree from Yale University in 2026, completed an MSc in Astronomy at the <a href="https://www.iag.usp.br">Universidade de São Paulo</a> (2023; IAG/USP, Brazil) and a BSc in Physics at the <a href="https://fsc.ufsc.br">Universidade Federal de Santa Catarina</a> (2021; UFSC, Brazil).
-                
+ I am a 4th-year PhD candidate in Astrophysics at <a href="https://astronomy.yale.edu">Yale University</a> focusing on primordial stars.
+ Broadly, my research is related to near-field cosmology and the history and structure of the Milky Way, with a particular focus on
+ Population III stars, their supernova signatures in the spectra of metal-poor stars, evolution and oscillation patterns. 
+ I also investigate the evolution of stellar binaries, exoplanets, and brown dwarfs/sub-stellar companions, specifically in the context of the Milky Way's stellar populations in the thick disc and halo.
+        <br>
+ I received an MPhil degree from Yale University in 2026, completed an MSc in Astronomy at the <a href="https://www.iag.usp.br">Universidade de São Paulo</a> (2023; IAG/USP, Brazil) and a BSc in Physics at the <a href="https://fsc.ufsc.br">Universidade Federal de Santa Catarina</a> (2021; UFSC, Brazil).    
         <br><br>
         
-        I am always happy to discuss my work; feel free to read about my research in my <a href="publications.html">publications page</a>or get in touch via email!
+ I am always happy to discuss my work; feel free to read about my research on my <a href="publications.html">publications page</a>or get in touch via email!
     
     </p>
         
@@ -153,3 +152,4 @@
     </div>
 </body>
 </html>
+
