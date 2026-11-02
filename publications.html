@@ -19,7 +19,7 @@
             font-size: 17px;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
-        }
+ }
 
         a { color: var(--fg); text-decoration: none; }
 
@@ -39,7 +39,7 @@
             font-weight: 700;
             line-height: 0.98;
             letter-spacing: -0.035em;
-        }
+ }
 
         .links { display: flex; gap: 2.2rem; padding: 1.2rem 0 0 0; font-weight: 700; font-size: 0.95rem; }
         .links a:hover { color: var(--accent); }
@@ -50,7 +50,7 @@
             column-gap: var(--gutter);
             margin-top: 3.2rem;
             border-top: 1px solid var(--fg);
-        }
+ }
         .links + .group { margin-top: 2.2rem; }
         .section {
             grid-column: 1 / 4;
@@ -59,7 +59,7 @@
             font-weight: 700;
             letter-spacing: -0.02em;
             line-height: 1.1;
-        }
+ }
         .list { grid-column: 4 / -1; }
         .list .paper:first-child { border-top: 0; }
 
@@ -70,7 +70,7 @@
             align-items: center;
             border-top: 1px solid var(--fg);
             padding: 0.9rem 0 1rem 0;
-        }
+ }
         .num { font-weight: 700; font-size: 0.95rem; text-align: center; }
         .cite { font-size: 0.88rem; line-height: 1.45; }
         .head { margin-top: 0.3rem; font-size: 1.12rem; line-height: 1.3; }
@@ -99,7 +99,7 @@
             .section { padding-bottom: 0.4rem; }
             .paper { grid-template-columns: 2.2rem 1fr; }
             .links { flex-wrap: wrap; gap: 0.4rem 2rem; }
-        }
+ }
     </style>
 </head>
 
@@ -262,7 +262,7 @@
                 <div class="cite">Fermiano, V., Saito, R.K., et al., (incl. <strong>Ferreira, T.</strong>), 2024, A&A, 690, L7.</div>
                 <div class="head"><a class="small-title" href="https://scixplorer.org/abs/2024A%26A...690L...7F/abstract" target="_blank"><strong>The young exoplanetary system TOI-4562: Confirming the presence of a third body in the system</strong> <span class="details" role="button" tabindex="0">[Details]</span></a></div>
                 <div class="summary" hidden>
-        <p class="blurb">TOI-4562 b is a temperate Jupiter analogue on a 225 day orbit with an eccentricity of 0.76 around a star younger than 700 Myr, so the system is a useful laboratory for studying planetary formation and dynamical evolution before the initial configuration has been altered substantially. We observed a new transit with the 0.6-m Zeiss telescope at the Observatório Pico dos Dias (OPD/LNA) in Minas Gerais, Brazil, and combined it with TESS and archival data to improve the ephemeris, and the resulting timing residuals are consistent with a second giant planet on an outer orbit. This candidate, TOI-4562 c, has a mass of about 5.8 Jupiter masses and a period of roughly 3,990 days, which makes it the longest-period planet found to date through transit timing variations (TTV).</p>
+        <p class="blurb">TOI-4562 b is a temperate Jupiter analogue on a 225-day orbit with an eccentricity of 0.76 around a star younger than 700 Myr, so the system is a useful laboratory for studying planetary formation and dynamical evolution before the initial configuration has been altered substantially. We observed a new transit with the 0.6-m Zeiss telescope at the Observatório Pico dos Dias (OPD/LNA) in Minas Gerais, Brazil, and combined it with TESS and archival data to improve the ephemeris; the resulting timing residuals are consistent with a second giant planet on an outer orbit. This candidate, TOI-4562 c, has a mass of about 5.8 Jupiter masses and a period of roughly 3,990 days, which makes it the longest-period planet found to date through transit timing variations (TTV).</p>
         <img src="figs/4562_ttv.pdf" loading="lazy" decoding="async">
         </div>
             </div>
@@ -362,23 +362,24 @@
             paperModal.classList.add('open');
             document.body.style.overflow = 'hidden';
             modalClose.focus();
-        }
+ }
 
         function closePaper() {
             paperModal.classList.remove('open');
             document.body.style.overflow = '';
             if (lastButton) lastButton.focus();
-        }
+ }
 
         document.querySelectorAll('.details').forEach(function (el) {
             el.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); openPaper(el); });
             el.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); openPaper(el); }
-            });
-        });
+ });
+ });
         modalClose.addEventListener('click', closePaper);
         paperModal.addEventListener('click', function (e) { if (e.target === paperModal) closePaper(); });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && paperModal.classList.contains('open')) closePaper(); });
     </script>
 </body>
 </html>
+
