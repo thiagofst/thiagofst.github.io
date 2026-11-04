@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sandbox - Thiago Ferreira</title>
+<link rel="icon" href="data:,">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root { --bg: #fff; --fg: #000; --accent: #e30613; --gutter: 24px; }
+
+body {
+background: var(--bg);
+color: var(--fg);
+font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+font-size: 17px;
+line-height: 1.5;
+-webkit-font-smoothing: antialiased;
+        }
+
+a { color: var(--fg); text-decoration: none; }
+
+.page { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
+
+.row { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gutter); }
+
+.topbar { padding: 1.4rem 0 0 0; font-weight: 700; font-size: 1rem; }
+.topbar a:hover { color: var(--accent); }
+.topbar a { display: block; width: fit-content; line-height: 0; }
+
+header { padding: 2.2rem 0 1.2rem 0; border-bottom: 3px solid var(--fg); }
+
+h1 {
+grid-column: 1 / -1;
+font-size: clamp(2.6rem, 7.2vw, 5.6rem);
+font-weight: 700;
+line-height: 0.98;
+letter-spacing: -0.035em;
+        }
+
+.item {
+display: grid;
+grid-template-columns: repeat(12, 1fr);
+column-gap: var(--gutter);
+align-items: baseline;
+padding: 0.9rem 0 1.1rem 0;
+border-bottom: 1px solid var(--fg);
+        }
+main { margin-top: 2.2rem; border-top: 1px solid var(--fg); }
+.item h2 { grid-column: 1 / 4; font-size: 1.7rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+.item p { grid-column: 4 / 11; font-size: 1.12rem; line-height: 1.55; text-align: left; }
+.item .open { grid-column: 11 / -1; font-weight: 700; font-size: 0.95rem; text-align: right; }
+.item .open:hover { color: var(--accent); }
+
+footer { padding: 1rem 0 2.5rem 0; }
+
+@media (max-width: 800px) {
+.item h2, .item p, .item .open { grid-column: 1 / -1; }
+.item p { margin-top: 0.5rem; }
+.item .open { margin-top: 0.5rem; text-align: left; }
+        }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+<div class="topbar"><a href="index.html" aria-label="Back to home"><svg width="55" height="24" viewBox="1 0 55 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M54 12H2M12 2L2 12l10 10"/></svg></a></div>
+
+<header>
+<div class="row">
+<h1>Sandbox</h1>
+</div>
+</header>
+
+<main>
+<div class="item">
+<h2>Borderline</h2>
+<p>A geography game about countries, their capitals, flags and neighbours.</p>
+<a class="open" href="borderline.html" target="_blank">[Open]</a>
+</div>
+
+<div class="item">
+<h2>HRD</h2>
+<p></p>
+<a class="open" href="hr.html" target="_blank">[Open]</a>
+</div>
+
+<div class="item">
+<h2>Planet Lab</h2>
+<p></p>
+<a class="open" href="planet.html" target="_blank">[Open]</a>
+</div>
+
+<div class="item">
+<h2>Atomarium</h2>
+<p></p>
+<a class="open" href="atoms.html" target="_blank">[Open]</a>
+</div>
+
+</main>
+
+<footer><strong>Thiago Ferreira dos Santos | thiago.dossantos(@)yale.edu</strong></footer>
+
+</div>
+</body>
+</html>
