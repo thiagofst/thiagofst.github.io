@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Planet Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root { --bg:#fff; --panel:#fff; --ink:#000; --ink2:#555; --line:#000; --accent:#e30613; --onacc:#fff; --plotbg:#fff; --hov:#f2f2f2; --grid:#d9d9d9;
+  --display:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace; }
+:root[data-theme="dark"] { --bg:#000; --panel:#000; --ink:#fff; --ink2:#a8a8a8; --line:#d6d6d6; --accent:#ff3b47; --onacc:#000; --plotbg:#000; --hov:#1a1a1a; --grid:#2a2a2a; color-scheme:dark; }
+* { box-sizing:border-box; border-radius:0 !important; }
+[hidden] { display:none !important; }
+html, body { margin:0; height:100%; background:var(--bg); color:var(--ink); font:400 14px/1.4 var(--display); }
+body { display:flex; flex-direction:column; height:100dvh; padding:8px max(8px,env(safe-area-inset-right)) 6px max(8px,env(safe-area-inset-left)); gap:8px; overflow:hidden; }
+button,select,input { font:inherit; color:inherit; } button { cursor:pointer; }
+a { color:inherit; text-decoration:none; }
+header { display:flex; align-items:center; gap:10px 14px; flex-wrap:wrap; flex:none; border-bottom:3px solid var(--ink); padding-bottom:6px; }
+h1 { margin:0; font:700 clamp(1.3rem,2.6vw,2rem)/1.05 var(--display); letter-spacing:-0.035em; }
+.tools { margin-left:auto; display:flex; gap:6px; align-items:center; }
+.btn { background:var(--bg); color:var(--ink); border:1px solid var(--ink); padding:4px 10px; font:500 0.78rem/1.2 var(--mono); display:inline-block; }
+.btn:hover { color:var(--accent); } .btn.on { background:var(--ink); color:var(--bg); }
+#themebtn { display:inline-flex; align-items:center; gap:9px; }
+#themebtn::after { content:""; width:28px; height:12px; border:1px solid var(--ink); background:linear-gradient(90deg,var(--ink) 50%,transparent 50%); }
+:root[data-theme="dark"] #themebtn::after { background:linear-gradient(90deg,transparent 50%,var(--ink) 50%); }
+.main { flex:1; min-height:0; display:grid; gap:8px; }
+.plotwrap { position:relative; background:var(--plotbg); border:1px solid var(--ink); min-height:0; min-width:0; overflow:hidden; }
+.plotwrap canvas { position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:none; }
+.side { display:flex; flex-direction:column; gap:8px; min-height:0; min-width:0; overflow-y:auto; scrollbar-width:thin; }
+.box { border:1px solid var(--ink); background:var(--bg); padding:7px 10px; display:flex; flex-direction:column; gap:6px; flex:none; }
+.box h3 { margin:0; font:700 0.66rem/1 var(--mono); letter-spacing:.1em; text-transform:uppercase; }
+.row { display:flex; gap:5px; flex-wrap:wrap; align-items:center; }
+.ctl { display:grid; grid-template-columns:5.2em 1fr 6.4em; gap:6px; align-items:center; font:500 0.72rem var(--mono); color:var(--ink2); }
+.ctl b { color:var(--ink); font-weight:500; text-align:right; white-space:nowrap; }
+input[type=range] { width:100%; accent-color:var(--ink); margin:0; }
+.chk { display:flex; gap:7px; align-items:center; font-size:0.8rem; color:var(--ink2); cursor:pointer; }
+.chk input { accent-color:var(--ink); margin:0; }
+.seg { display:inline-flex; border:1px solid var(--ink); flex-wrap:wrap; }
+.seg button { background:var(--bg); border:0; padding:5px 9px; font:500 0.74rem var(--mono); color:var(--ink); }
+.seg button.on { background:var(--ink); color:var(--bg); } .seg button:hover:not(.on) { color:var(--accent); }
+.grid2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px 10px; }
+.grid3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px 10px; }
+.kv { display:flex; flex-direction:column; min-width:0; }
+.kv span { font:500 0.6rem var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--ink2); }
+.kv b { font:500 0.82rem var(--mono); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.small { font-size:0.76rem; color:var(--ink2); line-height:1.4; margin:0; }
+.warn { font:500 0.74rem var(--mono); color:var(--accent); margin:0; }
+.tip { position:absolute; pointer-events:none; background:var(--bg); border:1px solid var(--ink); padding:4px 7px; font:500 0.72rem/1.35 var(--mono); white-space:nowrap; z-index:3; }
+@media (max-width:860px) { html,body { height:auto; } body { height:auto; min-height:100dvh; overflow:visible; } .main { grid-template-columns:1fr !important; grid-template-rows:auto auto !important; } .plotwrap { min-height:340px; } .side { overflow:visible; } }
+
+#play{background:var(--accent);color:var(--onacc);border-color:var(--accent);font-weight:700;padding:6px 16px;font-size:.85rem} #play:hover{color:var(--onacc);filter:brightness(1.15)} .ctl{grid-template-columns:4.6em minmax(50px,1fr) auto} .ctl b{font-size:0.7rem} .btn:disabled{opacity:.4} .seg{display:flex;width:100%;flex-wrap:wrap} .seg button{flex:1 1 auto;text-align:center} #modeseg button,#showseg button,#evoseg button{flex:1 1 0} .row .seg{width:auto;flex:1} .box{padding:12px 12px 14px} .box>.small{display:block;margin:12px 0 6px} .box>.small:first-child{margin-top:0} .box .row{margin:8px 0} .box .seg+.seg,.box .row+.seg{margin-top:8px} .ctl{margin:6px 0} .tabs{margin:10px 0} .tabs button{padding:8px 6px;font-size:.74rem} .pane[hidden]{display:none} .pane .box+.box{margin-top:10px} .ctl{grid-template-columns:5.2em minmax(50px,1fr) 9.4em} .val{display:flex;align-items:center;gap:4px;justify-content:flex-start} .num{width:5.4em;text-align:center;height:22px;box-sizing:border-box;font:500 .7rem var(--mono);border:1px solid var(--ink);background:var(--bg);color:var(--ink);padding:2px 4px;border-radius:0} .num:focus{outline:2px solid var(--accent);outline-offset:-2px} .val u,.un{font:500 .64rem var(--mono);text-decoration:none;color:var(--ink2);min-width:2.7em;text-align:left;line-height:22px;padding:0;border:0;background:none} .un{cursor:pointer;text-decoration:underline;text-underline-offset:2px} .un:hover{color:var(--accent)} #hostseg{display:grid;grid-template-columns:1fr 1fr} .dsum{font:700 .68rem var(--mono);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-bottom:6px}
+</style>
+</head>
+<body>
+<header><h1>Planet Lab</h1><div class="tools"><button class="btn" id="themebtn" aria-label="theme"></button></div></header>
+<div class="main" style="grid-template-columns:minmax(0,1fr) 350px">
+  <div class="plotwrap" id="pw"><canvas id="cv"></canvas></div>
+  <div class="side" id="side">
+    <div class="pane" data-p="time">
+    <div class="box" id="timebox">
+      <div class="seg" id="modeseg"><button data-m="main" class="on">Transit &amp; RV</button><button data-m="evo">Evolution</button></div>
+      <div class="row" id="showrow"><div class="seg" id="showseg"><button data-t="zoom" class="on">Zoom on transit</button><button data-t="tl">Whole timeline</button></div></div>
+      <div class="row"><button class="btn" id="play">▶ Play</button><div class="seg" id="spd"><button data-s="0.5">0.5×</button><button data-s="1" class="on">1×</button><button data-s="2">2×</button><button data-s="4">4×</button></div></div>
+      <div class="ctl" style="grid-template-columns:3.4em 1fr 6.6em"><span>Time</span><input type="range" id="tu" min="0" max="1000" value="500"><b id="tuv"></b></div>
+      <div class="row"><button class="btn" id="pin">Freeze as comparison</button><button class="btn" id="unpin">Clear comparison</button></div>
+      <label class="chk"><input type="checkbox" id="dop" checked> Doppler shading</label>
+    </div>
+    <div class="box xb" id="x_evo" hidden><div class="seg" id="evoseg"><button data-e="tide" class="on">Tidal circularisation</button><button data-e="koz">Kozai–Lidov</button></div><div id="c_tide"></div><div id="c_koz" hidden></div><p class="small" id="evonote"></p></div>
+    </div>
+    <div class="pane" data-p="host">
+    <div class="box">
+      <div class="seg" id="hostseg"><button data-h="star">Star</button><button data-h="wd">White dwarf</button><button data-h="binp">Binary, P-type</button><button data-h="bins">Binary, S-type</button></div>
+      <p class="small" id="hostnote" hidden></p>
+      <div id="c_star"></div>
+      <div id="binbox" hidden><span class="small">Companion star</span><div id="c_bin"></div></div></div>
+    </div>
+    <div class="seg tabs" id="tabrow_surface"><button data-p="surface" id="tab_surface">Surface</button></div>
+    <div class="pane" data-p="surface">
+    <div class="box">
+      <div id="actbox"><span class="small">Preset</span>
+        <div class="seg" id="actseg"><button data-a="0">Quiet</button><button data-a="1">Sun-like</button><button data-a="2">Active</button></div>
+        <span class="small">Regions on the star (click one to edit it)</span><div class="row"><div class="seg" id="regseg"></div></div>
+        <div class="row"><button class="btn" id="addspot">+ Spot</button><button class="btn" id="addplage">+ Plage</button><button class="btn" id="delreg">Remove</button></div>
+        <div id="regctl" hidden><div class="seg" id="rtseg"><button data-t="spot">Spot</button><button data-t="plage">Plage</button></div><div id="c_reg"></div></div>
+        <div id="c_act" hidden></div>
+        <label class="chk"><input type="checkbox" id="actonly"> Radial velocity: activity only (hide the planets' orbits)</label></div>
+    </div>
+    </div>
+    <div class="pane" data-p="planets">
+    <div class="box">
+      <div class="row"><div class="seg" id="bodyseg"></div></div><div class="row"><button class="btn" id="addb">+ Add planet</button><button class="btn" id="delb">Remove planet</button></div>
+      <span class="small" id="h_body">Planet</span><div id="c_planet"></div>
+      <span class="small">Orbit</span><div id="c_orbit"></div>
+    </div>
+    </div>
+    <div class="pane" data-p="readout">
+    <div class="box">
+      <div class="grid2" id="kv"></div><p class="warn" id="warn"></p>
+    </div>
+    </div>
+    <div class="seg tabs"><button data-p="systems">Systems</button></div>
+    <div class="pane" data-p="systems">
+    <div class="box">
+      <span class="small">Whole systems</span><div class="seg" id="presets"></div><p class="small" id="pnote"></p></div>
+    </div>
+    <div class="seg tabs"><button data-p="guide">Guide</button></div>
+    <div class="pane" data-p="guide">
+    <div class="box"><div>
+      <p class="small"><b>How to use.</b> Pick a whole system under Systems, choose the host (a single star, a white dwarf, or two stars), then edit the planets. Drag the time bar or press play; drag the 3D view to rotate it. Freeze the system as a comparison, change anything, and the grey dashed curves show what it was before. Add up to six planets. <b>Evolution</b> shows tidal circularisation and Kozai–Lidov cycles for the selected planet.</p>
+      <p class="small"><b>Model.</b> Every planet follows its own Kepler orbit, with no planet–planet interaction. The light curve, the Rossiter–McLaughlin signal and the radial velocity are sums over planets. Orbit and sky coordinates: <a href="https://arxiv.org/abs/1001.2010" target="_blank" rel="noopener">Winn 2010</a>. Transit: quadratic limb darkening integrated in concentric rings. Rossiter–McLaughlin: first-moment shift of the unblocked light of a rigidly rotating star (<a href="https://arxiv.org/abs/astro-ph/0410499" target="_blank" rel="noopener">Ohta, Taruya &amp; Suto 2005</a>); λ &gt; 0 tilts the projected stellar spin axis toward the planet's direction of motion.</p>
+      <p class="small"><b>Two stars.</b> P-type (circumbinary): the planets orbit both stars. S-type: the planet orbits one star and the other is a distant companion. The stars move on their Kepler orbit about the barycentre, a P-type planet orbits the barycentre with the total mass of the binary, an S-type planet orbits its own star, and each planet transits whichever star it crosses. The stars eclipse each other as uniform discs, so their mutual eclipses ignore limb darkening, and the secondary shares the primary's limb darkening and has no spin signal. Stability limits are the fits of Holman &amp; Wiegert 1999 for circular, coplanar orbits (P-type as written in <a href="https://arxiv.org/abs/1505.05749" target="_blank" rel="noopener">Martin, Mazeh &amp; Fabrycky 2015</a>, S-type as in <a href="https://arxiv.org/abs/0908.3328" target="_blank" rel="noopener">Haghighipour 2010</a>; uncertainty about 5%), with μ the companion's mass fraction. Orbits that would pass inside the star or its Roche limit, 2.44 R★(ρ★/ρp)^⅓, are corrected automatically and the readout says what changed. No ellipsoidal variation, reflection or beaming, so very close binaries are out of range.</p>
+      <p class="small"><b>Star surface.</b> Spots and plages sit on a rotating pixel map of the stellar disc (single-star hosts). A spot is a blackbody of Teff minus ΔT, a plage of Teff plus ΔT(μ) = 250.9 − 407.7 μ + 190.9 μ² K (×the scale you set), both at 0.8 µm; the default spot ΔT of 663 K, the plage law, the quiet-Sun convective blueshift of 285 m/s (vertical, projected by μ) and its one-third reduction in magnetic regions are the solar values of <a href="https://arxiv.org/abs/1001.1638" target="_blank" rel="noopener">Meunier, Desort &amp; Lagrange 2010</a>; for other stars they are illustrative, and I apply the same reduction inside spots. The rotation period follows from v sin i, i★ and the radius. The light curve is normalised to the unspotted star, the radial velocity is the planets plus the activity signal (rotation of the flux-weighted disc and blueshift suppression), and a planet crossing a spot shows the bump and the changed Rossiter–McLaughlin shape. Not modelled: differential rotation, spot evolution, penumbrae, and the limb dependence of the blueshift beyond μ.</p>
+      <p class="small"><b>Radii from mass.</b> Planets and stars: the broken power law of <a href="https://arxiv.org/abs/1603.08614" target="_blank" rel="noopener">Chen &amp; Kipping 2017</a>, a mean radius rather than a prediction for any single planet (move the radius slider to override). White dwarfs: the Eggleton relation of Verbunt &amp; Rappaport 1988, as written in <a href="https://arxiv.org/abs/0908.2116" target="_blank" rel="noopener">arXiv:0908.2116</a>, Appendix A. Planet types follow common usage; the period boundaries of the Neptunian desert, ridge and savanna are from <a href="https://arxiv.org/abs/2409.10517" target="_blank" rel="noopener">Castro-González et al. 2024</a>. Presets are generic, not specific systems.</p>
+      <p class="small">Tides: <a href="https://doi.org/10.1016/0019-1035(66)90051-0" target="_blank" rel="noopener">Goldreich &amp; Soter 1966</a> in the form of <a href="https://arxiv.org/abs/0801.0716" target="_blank" rel="noopener">Matsumura et al. 2008</a>. Kozai–Lidov: <a href="https://arxiv.org/abs/0705.4285" target="_blank" rel="noopener">Fabrycky &amp; Tremaine 2007</a>, <a href="https://arxiv.org/abs/1601.07175" target="_blank" rel="noopener">Naoz 2016</a>.</p>
+    </div></div>
+    </div>
+  </div>
+</div>
+<script>
+const $ = id => document.getElementById(id), clamp = (x, a, b) => Math.min(b, Math.max(a, x)), TAU = 2 * Math.PI;
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function setTheme(t, cb) { document.documentElement.dataset.theme = t; lsSet("hr.theme", t); $("themebtn").textContent = t === "dark" ? "☀ Light" : "☾ Dark"; if (cb) cb(); }
+function initTheme(cb) { setTheme(lsGet("hr.theme") === "dark" ? "dark" : "light", cb); $("themebtn").onclick = () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark", cb); }
+function fitCanvas(cv) { const r = cv.parentElement.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1); const w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d)); if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; } return { w, h, d }; }
+function niceTicks(a, b, n) { const span = b - a, raw = span / n, p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p, s = f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10, st = s * p, out = []; for (let v = Math.ceil(a / st - 1e-9) * st; v <= b + 1e-9; v += st) out.push(Math.abs(v) < st * 1e-9 ? 0 : +v.toPrecision(12)); return out; }
+const fmt = (x, d) => { if (!isFinite(x)) return "–"; const a = Math.abs(x); if (a === 0) return "0"; if (a >= 1e5 || a < 1e-3) return x.toExponential(2).replace("e+", "e"); return String(+x.toPrecision(d || 3)); };
+
+const K_ = { GMs: 1.32712440018e20, GMj: 1.2668653e17, GMe: 3.986004e14, G: 6.6743e-11, AU: 1.495978707e11, Rs: 6.957e8, Rj: 7.1492e7, Re: 6.3781e6, c: 299792458 }; // IAU 2015 nominal values
+const RJE = K_.Rj / K_.Re, MJE = K_.GMj / K_.GMe, MSJ = K_.GMs / K_.GMj;
+const HOST0 = { host: "star", Ms: 1, Rs: 1, T: 5772, vsini: 5, u1: 0.4, u2: 0.25, ist: 90, dTs: 663, fsc: 1, vcb: 285, bt: "p", Mb: 0.5, Rb: 0.5, Tc: 3700, Pb: 10, eb: 0.1, wb: 90, bb: 0.2 };
+const BODY0 = { kind: "planet", Rp: 1.2, Mp: 1, P: 3, e: 0, w: 90, b: 0.3, lam: 0, Tb: 0, ph0: 0, auto: true };
+const BK = Object.keys(BODY0), HK = Object.keys(HOST0);
+const KINDS = [["planet", "Planet"], ["star", "Star"], ["wd", "White dwarf"], ["ns", "Neutron star"], ["bh", "Black hole"]], KSHORT = { planet: "planet", star: "star", wd: "WD", ns: "NS", bh: "BH" };
+const KDEF = { planet: { Mp: 1, Tb: 0 }, star: { Mp: 0.3 * MSJ, Tb: 3500 }, wd: { Mp: 0.6 * MSJ, Tb: 8000 }, ns: { Mp: 1.4 * MSJ, Tb: 0 }, bh: { Mp: 10 * MSJ, Tb: 0 } };
+const E_ = x => x / MJE, MS_ = x => x * MSJ; // Earth masses and solar masses to Jupiter masses
+function wdR(M) { const x = Math.min(M, 1.43) / 1.435; return 0.0114 * Math.sqrt(Math.max(1e-6, Math.pow(x, -2 / 3) - Math.pow(x, 2 / 3))); } // R_sun from M_sun: Eggleton relation (Verbunt & Rappaport 1988), large-mass limit
+function mrad(kind, M) { // radius in R_J from mass in M_J
+  const Me = M * MJE;
+  if (kind === "bh") return 2 * K_.GMj * M / (K_.c * K_.c) / K_.Rj;
+  if (kind === "ns") return 12e3 / K_.Rj;
+  if (kind === "wd") return wdR(M / MSJ) * K_.Rs / K_.Rj;
+  let R; if (kind === "star") R = 0.00143 * Math.pow(Me, 0.881); else if (Me < 2.04) R = 1.008 * Math.pow(Me, 0.279); else if (M < 0.414) R = 0.808119 * Math.pow(Me, 0.589); else if (M < 0.08 * MSJ) R = 17.738384 * Math.pow(Me, -0.044); else R = 0.00143 * Math.pow(Me, 0.881); // Chen & Kipping 2017, Table of coefficients
+  return R / RJE;
+}
+const FIXR = k => k === "wd" || k === "ns" || k === "bh";
+// ---- planet classes: [name, body patch, host patch, note]  (typical values, not measurements)
+const KD = { Ms: 0.8, Rs: 0.75, T: 4800 }, FS = { Ms: 1.4, Rs: 1.5, T: 6500, vsini: 10 };
+const CLS = [
+  ["Sub-Earth", { Mp: E_(0.1), P: 12, b: 0.3 }, KD, "A planet substantially less massive than Earth and Venus (here 0.1 Earth masses, about Mars)."],
+  ["Earth analogue", { Mp: E_(1), P: 365.25, e: 0.017, b: 0.3 }, {}, "An Earth-mass planet on an Earth-like orbit around a Sun-like star. Its transit is a ~80 ppm dip; the RV signal is about 9 cm/s."],
+  ["Lava planet", { Mp: E_(2), P: 0.8, b: 0.3 }, { Ms: 0.9, Rs: 0.9, T: 5200 }, "Ultra-short-period rocky planet (P < 1 d) whose surface is mostly molten."],
+  ["Super-Earth", { Mp: E_(4), P: 15, b: 0.3 }, KD, "A planet larger than Earth but smaller than the radius gap, generally thought to be rocky."],
+  ["Chthonian planet", { Mp: E_(10), Rp: 2 / RJE, auto: false, P: 1.2, b: 0.3 }, { Ms: 0.9, Rs: 0.9, T: 5200 }, "The remnant core of a gas giant whose atmosphere was stripped by its star. Mass and radius here are illustrative."],
+  ["Sub-Neptune", { Mp: E_(7), P: 8, b: 0.3 }, KD, "Smaller than Neptune but larger than the radius gap: a rocky core with a thick hydrogen–helium envelope. Among the most common planets in Kepler data."],
+  ["Super-puff", { Mp: E_(5), Rp: 6 / RJE, auto: false, P: 40, b: 0.3 }, KD, "A mass of only a few Earth masses but a radius larger than Neptune's, so the density is extremely low."],
+  ["Hot Neptune (ridge)", { Mp: E_(20), P: 4.5, b: 0.3 }, KD, "Neptune-mass planet inside the Neptunian ridge (P = 3.2–5.7 d; Castro-González et al. 2024)."],
+  ["Warm Neptune (savanna)", { Mp: E_(20), P: 20, b: 0.3 }, KD, "Neptune-mass planet beyond the ridge, in the savanna (P > 5.7 d)."],
+  ["Super-Neptune", { Mp: E_(50), P: 12, b: 0.3 }, KD, "Mass between Neptune's and Saturn's (here 50 Earth masses)."],
+  ["Hot Jupiter", { Mp: 1, P: 3, b: 0.3 }, {}, "Jupiter-like planet orbiting very close to its star (about 0.015–0.5 AU), probably migrated inwards."],
+  ["Ultra-hot Jupiter", { Mp: 1.5, P: 1, b: 0.4 }, FS, "Giant planet with a day-long orbit around an F star: dayside above about 2000 K."],
+  ["Puffy hot Jupiter", { Mp: 0.5, Rp: 1.7, auto: false, P: 3.6, b: 0.3 }, {}, "A gas giant with a very low density (here 0.13 g/cc, below Saturn's 0.69): its radius is inflated."],
+  ["Warm Jupiter", { Mp: 1, P: 30, e: 0.15, b: 0.3 }, {}, "Jupiter-like planet with a 10–200 day orbit, often with mild eccentricity and distant planet companions."],
+  ["Eccentric Jupiter", { Mp: 3, P: 100, e: 0.6, w: 60, b: 0.2 }, {}, "A gas giant on a highly eccentric orbit, perhaps caught mid-migration."],
+  ["Retrograde hot Jupiter", { Mp: 1, P: 3.5, b: 0.3, lam: 160 }, FS, "Hot Jupiter whose orbit is misaligned with the star's spin by more than 90° (here λ = 160°): it orbits backwards."],
+  ["Super-Jupiter", { Mp: 5, P: 15, b: 0.3 }, {}, "A planet more massive than Jupiter (here 5 Jupiter masses)."],
+  ["Jupiter analogue", { Mp: 1, P: 4333, b: 0.3 }, {}, "Jupiter-mass planet with a 12-year orbit: hard to see in transit, visible in radial velocity and astrometry."]];
+// ---- whole systems: [name, host patch, [bodies], note]
+const SYS = [
+  ["Compact chain", { Ms: 0.1, Rs: 0.12, T: 2800, vsini: 1 }, [{ Mp: E_(1), P: 1.5, b: 0.2, ph0: 0 }, { Mp: E_(1), P: 2.25, b: 0.4, ph0: 0.3 }, { Mp: E_(1), P: 3.4, b: 0.3, ph0: 0.6 }, { Mp: E_(1.3), P: 5.1, b: 0.5, ph0: 0.15 }, { Mp: E_(0.8), P: 7.6, b: 0.4, ph0: 0.8 }], "Five Earth-mass planets in a compact chain of near 3:2 periods around a very low-mass star. Generic values; not a specific system."],
+  ["Hot Jupiter + outer giant", {}, [{ Mp: 1, P: 3, b: 0.3 }, { Mp: 3, P: 500, e: 0.3, w: 40, inc: 85, ph0: 0.4 }], "A hot Jupiter with a more massive giant farther out, as seen in many hot-Jupiter systems."],
+  ["Solar-system-like", {}, [{ Mp: E_(0.815), P: 224.7, e: 0.007, inc: 89.9, ph0: 0.2 }, { Mp: E_(1), P: 365.25, e: 0.017, b: 0.2, ph0: 0 }, { Mp: 0.9, P: 4332.6, e: 0.049, b: 0.5, ph0: 0.5 }, { Mp: E_(95), P: 10759, e: 0.057, b: 0.6, ph0: 0.7 }], "Venus-, Earth-, Jupiter- and Saturn-mass planets on near-circular orbits, all seen edge-on for illustration."],
+  ["White dwarf + planet", { host: "wd", Ms: 0.6, T: 10000, u1: 0.3, u2: 0.2, vsini: 1 }, [{ Mp: 1, P: 1.4, b: 0.3 }], "A giant planet transiting a white dwarf: the star is about as big as the Earth, so the planet blocks most of its light."],
+  ["Circumbinary giant (P-type)", { host: "bin", Ms: 1, Rs: 1, T: 5772, Mb: 0.5, Rb: 0.5, Tc: 3700, Pb: 10, eb: 0.1, wb: 90, bb: 0.2, vsini: 3 }, [{ Mp: 1, P: 75, b: 0.2, ph0: 0.1 }], "P-type: a Jupiter-mass planet orbiting two stars (a Sun-like star and an M dwarf, 10-day binary). The planet crosses each star at different, irregular times, and the stars eclipse each other."],
+  ["Tight binary + two planets (P-type)", { host: "bin", Ms: 1, Rs: 1, T: 5772, Mb: 0.5, Rb: 0.5, Tc: 3700, Pb: 4, eb: 0.05, wb: 90, bb: 0.2, vsini: 3 }, [{ Mp: E_(20), P: 30, b: 0.2, ph0: 0.1 }, { Mp: 1, P: 55, b: 0.3, ph0: 0.5 }], "P-type: a 4-day binary with a Neptune-mass planet and a Jupiter-mass planet outside the stability limit. Generic values."],
+  ["Planet in a wide binary (S-type)", { host: "bin", bt: "s", Ms: 1, Rs: 1, T: 5772, Mb: 0.5, Rb: 0.5, Tc: 3700, Pb: 40, eb: 0.1, wb: 90, bb: 0.2, vsini: 3 }, [{ Mp: 1, P: 3, b: 0.3 }], "S-type: the planet orbits only the Sun-like star, and the M dwarf is a distant companion that adds light and moves the star. It must stay close to its star to be stable."]];
+
+// ---- stellar surface presets (illustrative, not specific stars)
+const ACTP = [{ regs: [] },
+  { vsini: 2, regs: [{ rt: "spot", rlat: 20, rlon: 0, rrad: 6 }, { rt: "spot", rlat: -15, rlon: 140, rrad: 4 }, { rt: "plage", rlat: 20, rlon: 10, rrad: 12 }, { rt: "plage", rlat: -15, rlon: 150, rrad: 9 }] },
+  { vsini: 8, regs: [{ rt: "spot", rlat: 40, rlon: 0, rrad: 15 }, { rt: "spot", rlat: -30, rlon: 120, rrad: 12 }, { rt: "spot", rlat: 60, rlon: -120, rrad: 10 }, { rt: "plage", rlat: 40, rlon: 10, rrad: 25 }, { rt: "plage", rlat: -30, rlon: 125, rrad: 20 }] }];
+
+const S = Object.assign({ mode: "main", evo: "tide", tl: false, te0: 0.3, Qp: 1e6, ka: 5, kao: 500, kmo: 0.5, keo: 0, ki: 85, ke: 0.02, u: 0.5, playing: false, speed: 1, dop: true, ref: null, sel: 0, tab: "", rsel: 0, actOnly: false, rt: "spot", rlat: 20, rlon: 0, rrad: 6, inc: 90, pn: "", cls: -1, sys: -1 }, HOST0, BODY0);
+let BODIES = [Object.assign({}, BODY0)];
+let REG = [];
+const RK = ["rt", "rlat", "rlon", "rrad"];
+const hostOf = o => { const h = {}; HK.forEach(k => h[k] = o[k]); h.regs = REG.map(r => Object.assign({}, r)); return h; };
+const pullR = () => { if (REG[S.rsel]) RK.forEach(k => REG[S.rsel][k] = S[k]); };
+const pushR = i => { S.rsel = i; if (REG[i]) RK.forEach(k => S[k] = REG[i][k]); };
+const pull = () => { const b = BODIES[S.sel]; BK.forEach(k => b[k] = S[k]); };
+const push = i => { S.sel = i; BK.forEach(k => S[k] = BODIES[i][k]); };
+const fmtM = v => v >= 13 ? fmt(v / MSJ, 3) + " M☉" : fmt(v, 3) + " M_J (" + fmt(v * MJE, 3) + " M⊕)";
+const fmtR = v => v >= 3 ? fmt(v * K_.Rj / K_.Rs, 3) + " R☉" : v >= 0.01 ? fmt(v, 3) + " R_J (" + fmt(v * RJE, 3) + " R⊕)" : v >= 1e-4 ? fmt(v * K_.Rj / 1e3, 3) + " km" : fmt(v * K_.Rj / 1e3, 2) + " km";
+const SL = { // key, label, min, max, step, log, fmt
+  planet: [["Rp", "Radius", 1e-5, 3, 0.001, 1, fmtR], ["Mp", "Mass", 3e-4, 13, 0.001, 1, fmtM], ["Tb", "Teff", 1500, 40000, 50, 0, v => Math.round(v) + " K"]],
+  orbit: [["P", "Period", 0.3, 2e4, 0.001, 1, v => v >= 730 ? fmt(v / 365.25, 3) + " yr" : fmt(v, 3) + " d"], ["e", "Eccentr.", 0, 0.95, 0.01, 0, v => v.toFixed(2)], ["w", "ω", 0, 360, 1, 0, v => Math.round(v) + "°"], ["b", "b", 0, 1.3, 0.01, 0, v => v.toFixed(2)], ["inc", "i", 30, 90, 0.01, 0, v => v.toFixed(2) + "°"], ["lam", "λ", -180, 180, 1, 0, v => Math.round(v) + "°"], ["ph0", "Offset", 0, 1, 0.01, 0, v => v.toFixed(2) + " P"]],
+  reg: [["rlat", "Latitude", -90, 90, 1, 0, v => Math.round(v) + "°"], ["rlon", "Longitude", -180, 180, 1, 0, v => Math.round(v) + "°"], ["rrad", "Radius", 1, 45, 0.5, 0, v => v.toFixed(1) + "°"]],
+  act: [["ist", "i★", 10, 90, 1, 0, v => Math.round(v) + "°"], ["dTs", "Spot ΔT", 100, 1500, 10, 0, v => Math.round(v) + " K"], ["fsc", "Plage ×", 0, 3, 0.05, 0, v => v.toFixed(2)], ["vcb", "Conv. blue.", 0, 500, 5, 0, v => Math.round(v) + " m/s"]],
+  bin: [["Mb", "Mass", 0.08, 3, 0.01, 0, v => v.toFixed(2) + " M☉"], ["Rb", "Radius", 0.05, 10, 0.001, 1, v => fmt(v, 3) + " R☉"], ["Tc", "Teff", 2300, 12000, 50, 0, v => Math.round(v) + " K"], ["Pb", "Period", 0.5, 2e4, 0.001, 1, v => fmt(v, 3) + " d"], ["eb", "Eccentr.", 0, 0.7, 0.01, 0, v => v.toFixed(2)], ["bb", "b", 0, 1.3, 0.01, 0, v => v.toFixed(2)]],
+  star: [["Ms", "Mass", 0.08, 3, 0.01, 0, v => v.toFixed(2) + " M☉"], ["Rs", "Radius", 0.008, 30, 0.001, 1, v => fmt(v, 3) + " R☉"], ["T", "Teff", 2500, 40000, 50, 0, v => Math.round(v) + " K"], ["vsini", "v sin i", 0.1, 50, 0.1, 0, v => v.toFixed(1) + " km/s"], ["u1", "LD u₁", 0, 1, 0.01, 0, v => v.toFixed(2)], ["u2", "LD u₂", -0.2, 0.6, 0.01, 0, v => v.toFixed(2)]],
+  tide: [["Qp", "Q′", 1e4, 1e8, 0.001, 1, v => fmt(v, 2)], ["te0", "e₀", 0.02, 0.9, 0.01, 0, v => v.toFixed(2)]],
+  koz: [["ka", "a in", 0.5, 10, 0.1, 0, v => v.toFixed(1) + " AU"], ["kao", "a out", 50, 2000, 1, 1, v => Math.round(v) + " AU"], ["kmo", "M out", 0.05, 1.5, 0.01, 0, v => v.toFixed(2) + " M☉"], ["keo", "e out", 0, 0.8, 0.01, 0, v => v.toFixed(2)], ["ki", "i₀", 40, 89, 0.5, 0, v => v.toFixed(1) + "°"], ["ke", "e₀", 0.01, 0.5, 0.01, 0, v => v.toFixed(2)]] };
+const sl = {}, EUNIT = { Rp: false, Mp: false }, EU = { Rp: RJE, Mp: MJE };
+const UNIT = { Rp: "R_J", Mp: "M_J", Tb: "K", P: "d", e: "", w: "°", b: "", inc: "°", lam: "°", ph0: "P", Ms: "M☉", Rs: "R☉", T: "K", vsini: "km/s", u1: "", u2: "", Mb: "M☉", Rb: "R☉", Tc: "K", Pb: "d", eb: "", bb: "", Qp: "", te0: "", ka: "AU", kao: "AU", kmo: "M☉", keo: "", ki: "°", ke: "", rlat: "°", rlon: "°", rrad: "°", ist: "°", dTs: "K", fsc: "", vcb: "m/s" };
+const UE = { Rp: "R⊕", Mp: "M⊕" };
+const numStr = v => String(Number(v.toPrecision(4)));
+function applyVal(k, v) {
+  const { mn, mx } = sl[k]; v = Math.min(mx, Math.max(mn, v));
+  if (k === "inc") S.b = D.rc * Math.cos(v * Math.PI / 180); else S[k] = v;
+  if (k === "Rp") S.auto = false;
+  if (k === "Mp" && (S.auto || FIXR(S.kind))) S.Rp = mrad(S.kind, S.Mp);
+  if (k === "Ms" && S.host === "wd") S.Rs = wdR(S.Ms);
+  S.cls = -1; S.sys = -1; update();
+}
+for (const g in SL) { const box = $("c_" + g); SL[g].forEach(([k, lab, mn, mx, st, lg, f]) => { const d = document.createElement("div"); d.className = "ctl"; d.id = "r_" + k; d.innerHTML = `<span>${lab}</span><input type="range" id="s_${k}"><span class="val"><input type="text" class="num" id="v_${k}" inputmode="decimal" aria-label="${lab}">${EU[k] ? `<button class="un" id="u_${k}" type="button"></button>` : `<u id="u_${k}">${UNIT[k] || ""}</u>`}</span>`; box.appendChild(d); const r = d.querySelector("input[type=range]"); r.min = lg ? Math.log10(mn) : mn; r.max = lg ? Math.log10(mx) : mx; r.step = lg ? 0.001 : st; sl[k] = { r, lg, f, mn, mx };
+  r.oninput = () => { let v = +r.value; applyVal(k, lg ? Math.pow(10, v) : v); };
+  const inp = d.querySelector("input.num"); const commit = () => { let v = parseFloat(inp.value.replace(",", ".")); if (!isFinite(v)) { sync(); return; } if (EU[k] && EUNIT[k]) v /= EU[k]; applyVal(k, v); }; inp.onchange = commit; inp.onkeydown = e => { if (e.key === "Enter") { commit(); inp.blur(); } };
+  if (EU[k]) $("u_" + k).onclick = () => { EUNIT[k] = !EUNIT[k]; sync(); }; }); }
+// ---------------- physics
+function derive(p) {
+  const mu = K_.GMs * p.Ms + K_.GMj * p.Mp, Ps = p.P * 86400, a = Math.cbrt(mu * Ps * Ps / (4 * Math.PI * Math.PI)), R = p.Rs * K_.Rs, aR = a / R, k = p.Rp * K_.Rj / R;
+  const e = p.e, w = p.w * Math.PI / 180, fc = Math.PI / 2 - w, rc = aR * (1 - e * e) / (1 + e * Math.sin(w)), cosi = Math.min(1, p.b / rc), inc = Math.acos(cosi);
+  const Ec = 2 * Math.atan2(Math.sqrt(1 - e) * Math.sin(fc / 2), Math.sqrt(1 + e) * Math.cos(fc / 2)), Mc = Ec - e * Math.sin(Ec);
+  const astar = a * K_.GMj * p.Mp / mu, K = 2 * Math.PI * astar * Math.sin(inc) / (Ps * Math.sqrt(1 - e * e));
+  return { p, k, aR, a, e, w, fc, rc, inc, cosi, Mc, K, Pd: p.P, bad: p.b / rc > 1, inside: aR * (1 - e) < 1 + k, mu };
+}
+function kep(M, e) { M = ((M % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI); let E = e < 0.8 ? M : Math.PI; for (let i = 0; i < 30; i++) { const d = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); E -= d; if (Math.abs(d) < 1e-12) break; } return E; }
+function pos(D, t) { // t in days from conjunction
+  const E = kep(D.Mc + 2 * Math.PI * t / D.Pd, D.e), f = 2 * Math.atan2(Math.sqrt(1 + D.e) * Math.sin(E / 2), Math.sqrt(1 - D.e) * Math.cos(E / 2)), r = D.aR * (1 - D.e * Math.cos(E)), th = D.w + f;
+  const X = -r * Math.cos(th), Y = -r * Math.sin(th) * Math.cos(D.inc), Z = r * Math.sin(th) * Math.sin(D.inc);
+  return { X, Y, Z, d: Math.hypot(X, Y), f, r, th, rv: D.K * (Math.cos(th) + D.e * Math.cos(D.w)) };
+}
+const NR = 220, RR = new Float64Array(NR), WI = new Float64Array(NR); let FT = 1, ldkey = "";
+let LU1 = 0, LU2 = 0; function setLD(u1, u2) { LU1 = u1; LU2 = u2; FT = Math.PI * (1 - u1 / 3 - u2 / 6); }
+const Ild = (u1, u2, r) => { const mu = Math.sqrt(Math.max(0, 1 - r * r)); return 1 - u1 * (1 - mu) - u2 * (1 - mu) * (1 - mu); };
+function occ(D, s) { // [flux deficit as a fraction of the host's flux, RM velocity m/s]
+  if (s.Z <= 0 || s.d >= 1 + D.k) return [0, 0];
+  const k = D.k, d = s.d, lam = D.p.lam * Math.PI / 180, xp = s.X * Math.cos(lam) - s.Y * Math.sin(lam), yp = s.X * Math.sin(lam) + s.Y * Math.cos(lam), pc = Math.atan2(yp, xp);
+  const r0 = Math.max(0, d - k), r1 = Math.min(1, d + k), N = 240, dr = (r1 - r0) / N; let df = 0, mom = 0; // rings only where the planet is, so the integral stays smooth
+  for (let j = 0; j < N; j++) { const r = r0 + (j + 0.5) * dr; let al; if (d < 1e-9) al = r < k ? Math.PI : 0; else { const c = (r * r + d * d - k * k) / (2 * r * d); al = c >= 1 ? 0 : c <= -1 ? Math.PI : Math.acos(c); } if (al === 0) continue; const w = Ild(LU1, LU2, r) * 2 * Math.PI * r * dr; df += w * al / Math.PI; mom += w * r * Math.cos(pc) * Math.sin(al) / Math.PI; }
+  const den = 1 - df / FT; return [df / FT, den < 1e-3 ? 0 : -(mom / FT) * D.p.vsini * 1000 / den];
+}
+// self-lensing by a compact lens in front of the star (Agol 2002): for R_E << R_star and the lens inside the stellar disc, dF/F = 2 pi rho^2 I(d) / F_total, rho = R_E / R_star
+function lensF(D, s, Rsm, bl) { const M = D.p.Mp * K_.GMj, dls = Math.abs(s.Z) * Rsm, RE = Math.sqrt(4 * M * dls / (K_.c * K_.c)), rho = RE / Rsm; if (rho > 0.8) return 0; const d = s.d, w = Math.max(rho, 0.01); if (d < 1) return 2 * Math.PI * rho * rho * Ild(D.p.u1, D.p.u2, d) / FT; return 2 * Math.PI * rho * rho * Ild(D.p.u1, D.p.u2, 0.999) / FT * Math.exp(-Math.pow((d - 1) / (2 * w), 2)); }
+function contacts(D) {
+  const k = D.k, sg = Math.sqrt(1 - D.e * D.e) / (1 + D.e * Math.sin(D.w)), sini = Math.sin(D.inc);
+  let Te = D.Pd / Math.PI * (1 + k) / (D.aR * Math.max(sini, 1e-3)) * sg; Te = Math.min(Te, D.Pd * 0.5); const tw = Math.min(D.Pd / 2, 2.6 * Te + 1e-6), out = {};
+  for (const [name, q] of [["14", 1 + k], ["23", 1 - k]]) {
+    if (q <= 0) continue; const g = t => { const s = pos(D, t); return s.Z > 0 ? s.d - q : 1; }; let first = null, last = null, N = 3000, prev = g(-tw);
+    for (let i = 1; i <= N; i++) { const t0 = -tw + 2 * tw * (i - 1) / N, t1 = -tw + 2 * tw * i / N, c = g(t1); if (prev > 0 && c <= 0 && first === null) { let a = t0, b2 = t1; for (let m = 0; m < 40; m++) { const mid = (a + b2) / 2; g(mid) > 0 ? a = mid : b2 = mid; } first = (a + b2) / 2; } if (prev <= 0 && c > 0) { let a = t0, b2 = t1; for (let m = 0; m < 40; m++) { const mid = (a + b2) / 2; g(mid) <= 0 ? a = mid : b2 = mid; } last = (a + b2) / 2; } prev = c; }
+    if (first !== null && last !== null) out[name] = [first, last];
+  }
+  out.Te = Te; return out;
+}
+// ---- whole system
+// ---- stellar surface: spots and plages on a pixel map of the disc (primary star of a single-star host only)
+function makeAct(host) {
+  const N = 72, px = [], py = [], pz = [], pm = [], pI = [], pf = [], u1 = host.u1, u2 = host.u2; let F0 = 0, Vq = 0;
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { const x = -1 + (i + 0.5) * 2 / N, y = -1 + (j + 0.5) * 2 / N, r2 = x * x + y * y; if (r2 >= 1) continue; const z = Math.sqrt(1 - r2), I = 1 - u1 * (1 - z) - u2 * (1 - z) * (1 - z); px.push(x); py.push(y); pz.push(z); pm.push(z); pI.push(I); F0 += I; Vq += -host.vcb * z * I;
+    const dT = 250.9 - 407.7 * z + 190.9 * z * z; pf.push(planck(8e-7, host.T + dT * host.fsc) / planck(8e-7, host.T)); } // plage excess temperature vs mu: Meunier et al. 2010
+  const ist = host.ist * Math.PI / 180, vsi = host.vsini * 1000, Prot = 2 * Math.PI * host.Rs * K_.Rs / (vsi / Math.sin(ist)) / 86400;
+  const regs = host.regs.map(r => { const la = r.rlat * Math.PI / 180, ro = r.rrad * Math.PI / 180; return { spot: r.rt === "spot", sl: Math.sin(la), cl: Math.cos(la), lon: r.rlon * Math.PI / 180, cr: Math.cos(ro), dw: Math.max(1e-4, Math.sin(ro) * 3 / N) }; });
+  const sn = new Float64Array(px.length), cn = new Float64Array(px.length), c0 = new Float64Array(px.length), s0 = new Float64Array(px.length); for (let j = 0; j < px.length; j++) { sn[j] = py[j] * Math.cos(ist) * 0 + py[j] * Math.sin(ist) + pz[j] * Math.cos(ist); cn[j] = Math.sqrt(Math.max(0, 1 - sn[j] * sn[j])); const l0 = Math.atan2(py[j] * Math.cos(ist) - pz[j] * Math.sin(ist), px[j]); c0[j] = Math.cos(l0); s0[j] = Math.sin(l0); }
+  return { n: px.length, sn, cn, c0, s0, px, py, pz, pI, pf, F0, Vq: Vq / F0, Prot, ny: Math.sin(ist), nz: Math.cos(ist), vsi, vcb: host.vcb, fs: planck(8e-7, host.T - host.dTs) / planck(8e-7, host.T), regs };
+}
+function actFactors(A, T, fa, ata) { // brightness factor and magnetic fraction per pixel at time T (soft region edges, so the curves stay smooth)
+  const ph = 2 * Math.PI * T / A.Prot, R = A.regs, nr = R.length, cs = new Float64Array(nr), sn_ = new Float64Array(nr);
+  for (let q = 0; q < nr; q++) { const a = ph - Math.PI / 2 + R[q].lon; cs[q] = Math.cos(a); sn_[q] = Math.sin(a); } // cos(lon - lon_r) with lon = lon0 - ph + pi/2
+  for (let j = 0; j < A.n; j++) { const sn = A.sn[j], cn = A.cn[j], c0 = A.c0[j], s0 = A.s0[j]; let f = 1, at = 0;
+    for (let q = 0; q < nr; q++) { const r = R[q], t = Math.min(1, Math.max(0, (sn * r.sl + cn * r.cl * (c0 * cs[q] + s0 * sn_[q]) - r.cr) / r.dw + 0.5)); if (t <= 0) continue; if (r.spot) { f = f + (A.fs - f) * t; at = Math.max(at, t); } else { f = f * (1 + (A.pf[j] - 1) * t * (at > 0.5 ? 0 : 1)); at = Math.max(at, t); } }
+    fa[j] = f; ata[j] = at; }
+}
+const ACT_FA = new Float64Array(8000), ACT_AT = new Float64Array(8000);
+function evalAct(SY, T, full) {
+  const A = SY.act; let rvK = 0; SY.Dl.forEach((Dd, i) => { rvK += pos(Dd, T - SY.t0[i]).rv; }); actFactors(A, T, ACT_FA, ACT_AT);
+  let Ft = 0, Sv = 0; for (let j = 0; j < A.n; j++) { const w = A.pI[j] * ACT_FA[j], v = A.vsi * A.px[j] - A.vcb * A.pz[j] * (1 - ACT_AT[j] / 3); Ft += w; Sv += w * v; } // plage and spot blueshift: attenuated by a third (Meunier et al. 2010)
+  const Vact = Sv / Ft - A.Vq; if (full === false) return { F: 1, V: 0, rv: (S.actOnly ? 0 : rvK) + Vact, rvB: 0 };
+  let Fo = 0, So = 0; SY.Dl.forEach((Dd, i) => { const s = pos(Dd, T - SY.t0[i]); if (s.Z <= 0 || s.d >= 1 + Dd.k) return; const lam = Dd.p.lam * Math.PI / 180, xp = s.X * Math.cos(lam) - s.Y * Math.sin(lam), yp = s.X * Math.sin(lam) + s.Y * Math.cos(lam), k2 = Dd.k * Dd.k;
+    for (let j = 0; j < A.n; j++) { const dx = A.px[j] - xp, dy = A.py[j] - yp; const dd = dx * dx + dy * dy; if (dd < (Dd.k + 0.04) * (Dd.k + 0.04)) { const cov = Math.min(1, Math.max(0, (Dd.k - Math.sqrt(dd)) / 0.03 + 0.5)); if (cov <= 0) continue; const w = cov * A.pI[j] * ACT_FA[j]; Fo += w; So += w * (A.vsi * A.px[j] - A.vcb * A.pz[j] * (1 - ACT_AT[j] / 3)); } } });
+  const Fv = Ft - Fo, Vtot = Fv > 1e-9 ? (Sv - So) / Fv - A.Vq : Vact;
+  return { F: Fv / A.F0, V: Vtot - Vact, rv: (S.actOnly ? 0 : rvK) + Vact, rvB: 0 };
+}
+function buildSY(host, bodies, sel) {
+  const bin = host.host === "bin", stype = bin && host.bt === "s", mtot = host.Ms + (bin && !stype ? host.Mb : 0);
+  const Dl = bodies.map(b => derive(Object.assign({}, host, b, { Ms: mtot }))), t0 = bodies.map(b => b.ph0 * b.P);
+  let B = null;
+  if (bin) { const Db = derive(Object.assign({}, host, { Mp: host.Mb * MSJ, Rp: host.Rb * K_.Rs / K_.Rj, P: host.Pb, e: host.eb, w: host.wb, b: host.bb, lam: 0 })), kB = host.Rb / host.Rs; B = { stype, tph: stype ? 0.27 * host.Pb : 0, Db, q: host.Mb / mtot, kB, LB: kB * kB * planck(8e-7, host.Tc) / planck(8e-7, host.T) }; }
+  return { Dl, t0, L: bodies.map(() => 0), sel, host, bodies, bin: B, act: host.host === "star" && host.regs && host.regs.length ? makeAct(host) : null };
+}
+// circumbinary: positions of the two stars about the barycentre (units of the primary's radius) at time T
+function binState(SY, T) { const B = SY.bin, rel = pos(B.Db, T + B.tph), q = B.q; return { rel, A: [-q * rel.X, -q * rel.Y, -q * rel.Z], B: [(1 - q) * rel.X, (1 - q) * rel.Y, (1 - q) * rel.Z] }; }
+function evalBin(SY, T) {
+  const B = SY.bin, st = binState(SY, T), rel = st.rel, kB = B.kB, off = B.stype ? st.A : [0, 0, 0]; let defA = 0, defB = 0, rm = 0, rvP = 0;
+  SY.Dl.forEach((Dp, i) => { const sp0 = pos(Dp, T - SY.t0[i]), sp = { X: sp0.X + off[0], Y: sp0.Y + off[1], Z: sp0.Z + off[2] }; rvP += sp0.rv;
+    if (sp.Z > st.A[2]) { const sA = { X: sp.X - st.A[0], Y: sp.Y - st.A[1], Z: 1 }; sA.d = Math.hypot(sA.X, sA.Y); const o = occ(Dp, sA); defA += o[0]; rm += o[1]; }
+    if (sp.Z > st.B[2]) { const sB = { X: (sp.X - st.B[0]) / kB, Y: (sp.Y - st.B[1]) / kB, Z: 1 }; sB.d = Math.hypot(sB.X, sB.Y); const o = occ({ k: Dp.k / kB, p: { lam: 0, vsini: 0 } }, sB); defB += o[0]; } });
+  const dAB = Math.hypot(rel.X, rel.Y), eclA = rel.Z > 0 ? ovl(dAB, kB) / Math.PI : 0, eclB = rel.Z <= 0 ? ovl(dAB, kB) / (Math.PI * kB * kB) : 0;
+  const FA = 1 - defA - eclA, FB = B.LB * (1 - defB - eclB), rvA = rel.rv;
+  return { F: (FA + FB) / (1 + B.LB), V: rm, rv: rvA + rvP, rvB: -rvA * SY.host.Ms / SY.host.Mb + rvP };
+}
+function evalAt(SY, tau, full) {
+  const T = tau + SY.t0[SY.sel]; if (SY.bin) return evalBin(SY, T); if (SY.act) return evalAct(SY, T, full); let def = 0, rm = 0, rv = 0;
+  for (let i = 0; i < SY.Dl.length; i++) { const D_ = SY.Dl[i], s = pos(D_, T - SY.t0[i]); rv += s.rv; if (full === false) continue; if (s.Z > 0) { const o = occ(D_, s); def += o[0]; rm += o[1]; } }
+  return { F: 1 - def, V: rm, rv, rvB: 0 };
+}
+function sysCurves(SY, t0, t1, n, full) { setLD(SY.host.u1, SY.host.u2); const t = [], F = [], V = [], R = [], RB = []; for (let i = 0; i < n; i++) { const tt = t0 + (t1 - t0) * i / (n - 1), o = evalAt(SY, tt, full); t.push(tt); F.push(o.F); V.push(o.V); R.push(o.rv); RB.push(o.rvB); } return { t, F, V, R, RB }; }
+
+function pool(c, bins) { const n = c.t.length, o = { t: [], F: [], V: [], R: [], RB: [] }, per = Math.ceil(n / bins); for (let a = 0; a < n; a += per) { let imin = a, imax = a, iv = a; const e = Math.min(n, a + per); for (let i = a; i < e; i++) { if (c.F[i] < c.F[imin]) imin = i; if (c.F[i] > c.F[imax]) imax = i; if (Math.abs(c.V[i]) > Math.abs(c.V[iv])) iv = i; } [...new Set([imin, imax, iv, a])].sort((p, q) => p - q).forEach(i => { o.t.push(c.t[i]); o.F.push(c.F[i]); o.V.push(c.V[i]); o.R.push(c.R[i]); o.RB.push(c.RB[i]); }); } return o; }
+
+// ---------------- state -> derived
+let SY = null, SYr = null, D = null, CT = null, WIN = 0, SPAN = 0, LC = null, LCr = null, RVz = null, RVzr = null;
+const tcol = T => { const t = T / 100; let r, g, b; if (t <= 66) { r = 255; g = 99.47 * Math.log(t) - 161.12; } else { r = 329.7 * Math.pow(t - 60, -0.1332); g = 288.12 * Math.pow(t - 60, -0.0755); } if (t >= 66) b = 255; else if (t <= 19) b = 0; else b = 138.52 * Math.log(t - 10) - 305.04; return "rgb(" + [r, g, b].map(v => Math.round(clamp(v, 0, 255))).join(",") + ")"; }; // Tanner Helland blackbody colour fit
+function clampBodies() {
+  const h = hostOf(S), bin = h.host === "bin", stype = bin && h.bt === "s", mtot = h.Ms + (bin && !stype ? h.Mb : 0), msgs = [];
+  const rhoS = h.Ms * K_.GMs / K_.G / (4 / 3 * Math.PI * Math.pow(h.Rs * K_.Rs, 3));
+  let ab = 0, acP = 0, acS = 0; if (bin) { const Dn = derive(Object.assign({}, h, { Mp: h.Mb * MSJ, Rp: 1e-3, P: h.Pb, e: h.eb, w: h.wb, b: 0, lam: 0 })), mu = h.Mb / (h.Ms + h.Mb), eb = h.eb; ab = Dn.a; acP = ab * (1.60 + 5.10 * eb + 4.12 * mu - 4.27 * eb * mu - 2.22 * eb * eb - 5.09 * mu * mu + 4.61 * eb * eb * mu * mu); acS = ab * (0.464 - 0.380 * mu - 0.631 * eb + 0.586 * mu * eb + 0.150 * eb * eb - 0.198 * mu * eb * eb); }
+  BODIES.forEach((b, i) => {
+    const rhoP = b.Mp * K_.GMj / K_.G / (4 / 3 * Math.PI * Math.pow(b.Rp * K_.Rj, 3)), roche = 2.44 * Math.cbrt(rhoS / rhoP), tag = BODIES.length > 1 ? "planet " + (i + 1) + ": " : "";
+    const geo = () => derive(Object.assign({}, h, b, { Ms: mtot }));
+    let d0 = geo(), Rmin = Math.max(1 + d0.k, roche) * 1.05;
+    if (d0.aR * (1 - b.e) < Rmin) { const em = 1 - Rmin / d0.aR; if (em >= 0) { b.e = Math.max(0, Math.floor(em * 100) / 100); msgs.push(tag + "eccentricity limited to " + b.e.toFixed(2) + ": the periastron would be inside the star or its Roche limit"); } else { b.e = 0; b.P *= Math.pow(Rmin / d0.aR, 1.5) * 1.01; msgs.push(tag + "period raised to " + fmt(b.P, 3) + " d: the orbit would be inside the star or its Roche limit"); } d0 = geo(); }
+    if (bin && !stype && d0.a * (1 - b.e) < acP) { b.P *= Math.pow(acP / (d0.a * (1 - b.e)), 1.5) * 1.01; msgs.push(tag + "period raised to " + fmt(b.P, 3) + " d: inside the circumbinary stability limit"); }
+    if (stype && d0.a * (1 + b.e) > acS) { b.P *= Math.pow(acS / (d0.a * (1 + b.e)), 1.5) * 0.99; msgs.push(tag + "period shortened to " + fmt(b.P, 3) + " d: outside the S-type stability limit"); d0 = geo(); if (d0.aR * (1 - b.e) < Rmin) msgs.push(tag + "no stable orbit left: the binary is too tight"); }
+  });
+  for (let i = 0; i < BODIES.length; i++) for (let j = 0; j < BODIES.length; j++) { if (i === j) continue; const p = derive(Object.assign({}, h, BODIES[i], { Ms: mtot })), q = derive(Object.assign({}, h, BODIES[j], { Ms: mtot })); if (p.a < q.a && p.a * (1 + p.e) > q.a * (1 - q.e)) msgs.push("planets " + (i + 1) + " and " + (j + 1) + " have crossing orbits"); }
+  S.clampMsg = [...new Set(msgs)].join("; ");
+}
+function recompute() {
+  pull(); pullR(); clampBodies(); push(S.sel); SY = buildSY(hostOf(S), BODIES, S.sel); D = SY.Dl[S.sel]; S.inc = D.inc * 180 / Math.PI; CT = contacts(D);
+  const T14 = CT["14"] ? CT["14"][1] - CT["14"][0] : 0, Pmax = Math.max(...BODIES.map(b => b.P));
+  SPAN = S.tl ? Math.min(Math.max(Pmax * 1.02, SY.act ? 2.05 * SY.act.Prot : 0), 20000) : 0; WIN = S.tl ? SPAN / 2 : (T14 > 0 ? 0.9 * T14 : Math.max(CT.Te, 0.05));
+  const n = S.tl ? (SY.act ? 1600 : 30000) : 500; LC = sysCurves(SY, -WIN, WIN, n, true); if (S.tl && !SY.act) LC = pool(LC, 1400);
+  RVz = S.tl ? null : sysCurves(SY, -D.Pd / 2, D.Pd / 2, SY.act ? 260 : 500, false);
+  if (S.ref) { SYr = buildSY(S.ref.host, S.ref.bodies, S.ref.sel); LCr = sysCurves(SYr, -WIN, WIN, n, true); if (S.tl && !SYr.act) LCr = pool(LCr, 1400); RVzr = S.tl ? null : sysCurves(SYr, -SYr.Dl[SYr.sel].Pd / 2, SYr.Dl[SYr.sel].Pd / 2, 500, false); } else { SYr = null; LCr = null; RVzr = null; }
+}
+const tNow = () => S.mode === "evo" ? S.u : (S.u * 2 - 1) * WIN;
+function sync() {
+  for (const k in sl) { const { r, lg } = sl[k]; const val = S[k]; r.value = lg ? Math.log10(Math.max(val, 1e-12)) : val; const inp = $("v_" + k); if (document.activeElement !== inp) inp.value = numStr(val * (EUNIT[k] ? EU[k] : 1)); if (EU[k]) $("u_" + k).textContent = EUNIT[k] ? UE[k] : UNIT[k]; }
+  $("tabrow_surface").hidden = S.host !== "star"; if (S.tab === "surface" && S.host !== "star") S.tab = ""; document.querySelectorAll("#side .tabs button").forEach(b => b.classList.toggle("on", b.dataset.p === S.tab)); document.querySelectorAll(".pane").forEach(p => p.hidden = !["time","host","planets","readout"].includes(p.dataset.p) && p.dataset.p !== S.tab); $("actonly").checked = S.actOnly; document.querySelectorAll("#actseg button").forEach(b => b.classList.toggle("on", b.dataset.a === String(S.actp))); document.querySelectorAll("#rtseg button").forEach(b => b.classList.toggle("on", b.dataset.t === S.rt)); $("regctl").hidden = !REG.length; $("c_act").hidden = !REG.length;
+  const rs_ = $("regseg"); rs_.innerHTML = ""; REG.forEach((g, i) => { const x = document.createElement("button"); x.textContent = (g.rt === "spot" ? "Spot " : "Plage ") + (i + 1); x.className = i === S.rsel ? "on" : ""; x.onclick = () => { pullR(); pushR(i); update(); }; rs_.appendChild(x); });
+  $("r_Tb").hidden = true; $("binbox").hidden = S.host !== "bin"; sl.Rs.r.disabled = S.host === "wd"; $("r_Rs").style.opacity = S.host === "wd" ? 0.45 : 1;
+  $("tu").value = Math.round(S.u * 1000); $("dop").checked = S.dop;
+    document.querySelectorAll("#presets button").forEach(b => b.classList.toggle("on", b.dataset.i === String(S.sys)));
+  document.querySelectorAll("#modeseg button").forEach(b => b.classList.toggle("on", b.dataset.m === S.mode));
+  document.querySelectorAll("#hostseg button").forEach(b => b.classList.toggle("on", b.dataset.h === (S.host === "bin" ? "bin" + S.bt : S.host)));
+    document.querySelectorAll("#showseg button").forEach(b => b.classList.toggle("on", (b.dataset.t === "tl") === S.tl));
+  $("x_evo").hidden = S.mode !== "evo"; $("showrow").hidden = S.mode !== "main" || !!(SY && SY.bin && !SY.bin.stype); $("hostnote").hidden = S.host !== "bin"; $("hostnote").textContent = S.bt === "s" ? "S-type: the planet orbits one star of a wide binary. The other star adds light and moves the host." : "P-type (circumbinary): the planets orbit both stars."; $("addb").disabled = BODIES.length >= 6; $("delb").disabled = BODIES.length <= 1;
+  const bs = $("bodyseg"); bs.innerHTML = ""; BODIES.forEach((b, i) => { const x = document.createElement("button"); x.textContent = "Planet " + (i + 1); x.className = i === S.sel ? "on" : ""; x.onclick = () => { pull(); push(i); update(); }; bs.appendChild(x); });
+  $("h_body").textContent = "Planet " + (S.sel + 1); $("pnote").textContent = S.pn;
+  document.querySelectorAll("#evoseg button").forEach(b => b.classList.toggle("on", b.dataset.e === S.evo)); $("c_tide").hidden = S.evo !== "tide"; $("c_koz").hidden = S.evo !== "koz";
+  $("evonote").textContent = S.evo === "tide" ? "Planet tide only (constant-Q′ equilibrium formula, orbital angular momentum conserved). Real circularisation also involves the star and a poorly known Q′ (typically 10⁵ to a few 10⁶ for giant planets, Matsumura et al. 2008): treat the clock as an order of magnitude." : "A distant companion star tilts the planet’s orbit back and forth against its own, trading inclination for eccentricity. When the periastron gets close to the star, tides can shrink the orbit: this is a route to hot Jupiters (HD 80606 b is the textbook case). Octupole terms are ignored.";
+  $("pin").classList.toggle("on", !!S.ref);
+}
+function readout() {
+  const T14 = CT["14"] ? (CT["14"][1] - CT["14"][0]) * 24 : 0, T23 = CT["23"] ? (CT["23"][1] - CT["23"][0]) * 24 : 0;
+  let dmax = 0, vmax = 0, fmax = 0; LC.F.forEach((f, i) => { dmax = Math.max(dmax, 1 - f); fmax = Math.max(fmax, f - 1); vmax = Math.max(vmax, Math.abs(LC.V[i])); });
+  const rhos = S.Ms * K_.GMs / K_.G / (4 / 3 * Math.PI * Math.pow(S.Rs * K_.Rs, 3)) / 1000, rhop = S.Mp * K_.GMj / K_.G / (4 / 3 * Math.PI * Math.pow(S.Rp * K_.Rj, 3)) / 1000;
+  const Teq = S.T * Math.sqrt(S.Rs * K_.Rs / (2 * D.a)), dp = x => x >= 0.01 ? (x * 100).toPrecision(3) + " %" : x >= 1e-6 ? Math.round(x * 1e6) + " ppm" : x.toExponential(1);
+  const Ps = D.Pd * 86400, fM = Ps * Math.pow(D.K, 3) * Math.pow(1 - D.e * D.e, 1.5) / (2 * Math.PI * K_.G) / 1.98841e30, compact = S.kind === "wd" || S.kind === "ns" || S.kind === "bh";
+  const RE = Math.sqrt(4 * S.Mp * K_.GMj * D.a / (K_.c * K_.c)) / (S.Rs * K_.Rs);
+  const rho = x => x >= 1 ? fmt(x, 3) : x >= 1e-3 ? fmt(x, 3) : x.toExponential(1);
+  const kv = [["Depth (k²)", dp(D.k * D.k)], ["Max dip (all bodies)", dmax > 0 ? dp(dmax) : "none"], ["T₁₄", T14 > 0 && D.k < 50 ? fmt(T14, 3) + " h" : "–"], ["T₂₃", T23 > 0 ? fmt(T23, 3) + " h" : "–"], ["a", fmt(D.a / K_.AU, 3) + " AU"], ["a / R★", fmt(D.aR, 3)], ["i", D.bad ? "–" : (D.inc * 180 / Math.PI).toFixed(2) + "°"], ["Host ρ", fmt(rhos, 3) + " g/cc"], ["RV semi-ampl. K", D.K >= 1 ? fmt(D.K, 3) + " m/s" : fmt(D.K * 100, 3) + " cm/s"], ["RM amplitude", vmax > 0 ? (vmax >= 1 ? fmt(vmax, 3) + " m/s" : fmt(vmax * 100, 3) + " cm/s") : "–"], ["Body ρ", S.kind === "bh" ? "–" : fmt(rhop, 3) + " g/cc"]];
+  if (S.host === "star") kv.push(["Teq (A = 0)", Math.round(Teq) + " K"]); if (SY.act) kv.push(["Rotation period", fmt(SY.act.Prot, 3) + " d"]);
+  let acr = 0; if (SY.bin) { const mu = S.Mb / (S.Ms + S.Mb), eb = S.eb, ab = SY.bin.Db.a; acr = SY.bin.stype ? ab * (0.464 - 0.380 * mu - 0.631 * eb + 0.586 * mu * eb + 0.150 * eb * eb - 0.198 * mu * eb * eb) : ab * (1.60 + 5.10 * eb + 4.12 * mu - 4.27 * eb * mu - 2.22 * eb * eb - 5.09 * mu * mu + 4.61 * eb * eb * mu * mu); kv.push(["Binary a", fmt(ab / K_.AU, 3) + " AU"]); kv.push([SY.bin.stype ? "Max stable a" : "Min stable a", fmt(acr / K_.AU, 3) + " AU"]); }
+  $("kv").innerHTML = kv.map(([a, b]) => `<div class="kv"><span>${a}</span><b>${b}</b></div>`).join("");
+  $("warn").textContent = D.inside ? "This orbit intersects the host." : D.bad ? "Orbit geometry gives |cos i| > 1: b was capped." : S.clampMsg ? "Adjusted: " + S.clampMsg + "." : !SY.bin && !CT["14"] ? "No transit for this geometry." : "";
+}
+function finalize(b, host) { if (b.inc != null) { const D0 = derive(Object.assign({}, host, b)); b.b = D0.rc * Math.cos(b.inc * Math.PI / 180); delete b.inc; } return b; }
+function loadClass(i) { const c = CLS[i]; const keep = { ph0: S.ph0 }; const bp = Object.assign({}, BODY0, keep, c[1]); if (c[2] && Object.keys(c[2]).length) Object.assign(S, c[2]); const h = hostOf(S); bp.kind = "planet"; if (bp.auto !== false) bp.Rp = mrad(bp.kind, bp.Mp); BK.forEach(k => S[k] = bp[k]); S.cls = i; S.sys = -1; S.pn = c[3]; }
+function loadSys(i) { const c = SYS[i], host = Object.assign({}, HOST0, c[1]); if (host.host === "wd") host.Rs = wdR(host.Ms); Object.assign(S, host); S.tl = host.host === "bin" && host.bt !== "s"; S.u = 0.5; REG = []; S.actp = 0; S.actOnly = false; BODIES = c[2].map(b => { const bp = Object.assign({}, BODY0, b); if (bp.auto !== false) bp.Rp = mrad(bp.kind, bp.Mp); return bp; }); BODIES.forEach(b => finalize(b, host)); push(0); S.sys = i; S.cls = -1; S.pn = c[3]; S.ref = null; }
+
+// ================= extension panels =================
+const KB = 1.380649e-23, MU = 1.66053907e-27, GSI = 6.6743e-11, YR = 3.15576e7;
+const planck = (l, T) => 1 / (Math.pow(l, 5) * (Math.exp(1.4388e-2 / (l * T)) - 1));
+function ovl(d, k) { if (d >= 1 + k) return 0; if (d <= Math.abs(1 - k)) return Math.PI * Math.min(1, k) * Math.min(1, k); const a = Math.acos((d * d + k * k - 1) / (2 * d * k)), b = Math.acos((d * d + 1 - k * k) / (2 * d)); return k * k * a + b - 0.5 * Math.sqrt((-d + k + 1) * (d + k - 1) * (d - k + 1) * (d + k + 1)); }
+function lap(s, j, al) { const N = 4000, h = 2 * Math.PI / N; let t = 0; for (let k = 0; k < N; k++) { const p = k * h; t += Math.cos(j * p) * Math.pow(1 - 2 * al * Math.cos(p) + al * al, -s); } return t * h / Math.PI; }
+// frame helper: returns mappers
+function XF(C, x0, y0, x1, y1, xr, yr, o) {
+  const { ctx, ink, ink2, grid } = C; o = o || {}; const X = v => x0 + (v - xr[0]) / (xr[1] - xr[0]) * (x1 - x0), Y = v => y1 - (v - yr[0]) / (yr[1] - yr[0]) * (y1 - y0);
+  ctx.strokeStyle = grid; ctx.fillStyle = ink2; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  for (const t of (o.xt || niceTicks(xr[0], xr[1], 7))) { const xx = X(t); if (xx < x0 - 1 || xx > x1 + 1) continue; ctx.beginPath(); ctx.moveTo(xx, y0); ctx.lineTo(xx, y1); ctx.stroke(); ctx.fillText(o.xf ? o.xf(t) : fmt(t, 3), xx, y1 + 11); }
+  ctx.textAlign = "right"; for (const t of (o.yt || niceTicks(yr[0], yr[1], 4))) { const yy = Y(t); if (yy < y0 - 1 || yy > y1 + 1) continue; ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(x1, yy); ctx.stroke(); ctx.fillText(o.yf ? o.yf(t) : fmt(t, 3), x0 - 5, yy); }
+  ctx.strokeStyle = ink; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0); ctx.fillStyle = ink; ctx.textAlign = "left"; if (o.title) ctx.fillText(o.title, x0, y0 - 11); if (o.xl) { ctx.textAlign = "center"; ctx.fillText(o.xl, (x0 + x1) / 2, y1 + 24); }
+  return { X, Y };
+}
+function PL(C, F, xs, ys, col, lw, dash, clipBox) { const { ctx } = C; ctx.save(); if (clipBox) { ctx.beginPath(); ctx.rect(...clipBox); ctx.clip(); } ctx.strokeStyle = col; ctx.lineWidth = lw || 1.8; ctx.setLineDash(dash || []); ctx.beginPath(); xs.forEach((x, i) => { const px = F.X(x), py = F.Y(ys[i]); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.stroke(); ctx.restore(); }
+
+// ---------------- drawing
+const cv = $("cv"), ctx = cv.getContext("2d"); let layout = null, box3 = null, MPL = null; const V3 = { az: -0.62, el: 0.42 };
+const mix = (a, b, t) => { const pa = a.match(/\d+/g).map(Number), pb = b.match(/\d+/g).map(Number); return "rgb(" + pa.map((x, i) => Math.round(x + (pb[i] - x) * t)).join(",") + ")"; };
+function hexrgb(h) { h = h.trim(); if (h[0] === "#") { if (h.length === 4) h = "#" + h[1] + h[1] + h[2] + h[2] + h[3] + h[3]; return "rgb(" + [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)).join(",") + ")"; } return h; }
+const PAL = ["", "#1f6feb", "#1a9850", "#9b30d9", "#e08a00", "#7a7a7a"];
+function bcol(i, acc, ink) { const b = BODIES[i]; if (b.kind === "bh") return ink; if ((b.kind === "star" || b.kind === "wd") && b.Tb > 0) return tcol(b.Tb); return i === S.sel ? acc : PAL[i % 6] || acc; }
+function drawMain() {
+  const { w, h, d } = fitCanvas(cv), ink = hexrgb(css("--ink")), ink2 = css("--ink2"), acc = css("--accent"), bg = hexrgb(css("--plotbg")), grid = css("--grid"), mono = css("--mono");
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h); ctx.scale(d, d); const W = w / d, H = h / d;
+  ctx.font = "500 11px " + mono; ctx.textBaseline = "middle"; layout = null; box3 = null; MPL = null;
+  const s = Math.max(120, Math.min(W * 0.34, (H - 96) / 2)), lx = 10, tau = tNow(), T = (S.mode === "evo" ? 0 : tau) + SY.t0[S.sel];
+  const cur = SY.Dl.map((Dd, i) => pos(Dd, T - SY.t0[i])), c0 = cur[S.sel], bs = SY.bin ? binState(SY, T) : null;
+  // ---- sky view
+  const sy = 24; ctx.fillStyle = ink; ctx.textAlign = "left"; ctx.fillText("SKY VIEW", lx, 11); ctx.strokeStyle = ink; ctx.strokeRect(lx, sy, s, s);
+  const kmax = Math.max(1, ...SY.Dl.map(q => q.k)), half = Math.max(1.75, kmax * 1.25 + 0.6, bs && !SY.bin.stype ? 1.25 * Math.max(SY.bin.q, 1 - SY.bin.q) * SY.bin.Db.aR * (1 + S.eb) : 0);
+  const cx = lx + s / 2, cy = sy + s / 2, rs = s / 2 / half, sx = X => cx + X * rs, syf = Y => cy - Y * rs, lam = S.lam * Math.PI / 180;
+  ctx.save(); ctx.beginPath(); ctx.rect(lx, sy, s, s); ctx.clip();
+  const Bp = bs ? (SY.bin.stype ? [bs.rel.X, bs.rel.Y, bs.rel.Z] : bs.B) : null, drawB = () => { ctx.fillStyle = tcol(S.Tc); ctx.beginPath(); ctx.arc(sx(Bp[0]), syf(Bp[1]), Math.max(1.8, SY.bin.kB * rs), 0, TAU); ctx.fill(); ctx.strokeStyle = ink; ctx.lineWidth = 1.2; ctx.stroke(); ctx.lineWidth = 1; };
+  if (bs && bs.rel.Z <= 0) drawB(); ctx.save(); if (bs && !SY.bin.stype) ctx.translate(sx(bs.A[0]) - cx, syf(bs.A[1]) - cy);
+  const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, rs), hot = S.host === "wd" || S.T > 7000; for (let i = 0; i <= 8; i++) { const r = i / 8 * 0.999, mu = Math.sqrt(1 - r * r), I = 1 - S.u1 * (1 - mu) - S.u2 * (1 - mu) * (1 - mu); gr.addColorStop(i / 8, mix("rgb(30,16,8)", tcol(S.T), Math.min(1, I * 1.05))); }
+  ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, rs, 0, TAU); ctx.fill();
+  if (S.dop) { ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rs, 0, TAU); ctx.clip(); const g2 = ctx.createLinearGradient(cx - Math.cos(lam) * rs, cy - Math.sin(lam) * rs, cx + Math.cos(lam) * rs, cy + Math.sin(lam) * rs); g2.addColorStop(0, "rgba(40,110,255,0.75)"); g2.addColorStop(0.5, "rgba(128,128,128,0)"); g2.addColorStop(1, "rgba(255,40,50,0.75)"); ctx.globalAlpha = clamp(S.vsini / 25, 0.18, 0.6); ctx.fillStyle = g2; ctx.fillRect(lx, sy, s, s); ctx.restore(); }
+  if (SY.act) { const A = SY.act, ph = 2 * Math.PI * T / A.Prot; ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rs, 0, TAU); ctx.clip();
+    [...SY.host.regs.filter(r => r.rt !== "spot"), ...SY.host.regs.filter(r => r.rt === "spot")].forEach(r => { const la = r.rlat * Math.PI / 180, lo = r.rlon * Math.PI / 180, ro = r.rrad * Math.PI / 180, pts = []; let vis = false;
+      for (let a2 = 0; a2 < 360; a2 += 10) { const th = a2 * Math.PI / 180, lat = Math.asin(Math.sin(la) * Math.cos(ro) + Math.cos(la) * Math.sin(ro) * Math.cos(th)), L = lo + Math.atan2(Math.sin(th) * Math.sin(ro) * Math.cos(la), Math.cos(ro) - Math.sin(la) * Math.sin(lat)) + ph - Math.PI / 2, cl = Math.cos(lat); let x = cl * Math.cos(L), y = cl * Math.sin(L) * A.nz + Math.sin(lat) * A.ny; const z = -cl * Math.sin(L) * A.ny + Math.sin(lat) * A.nz; if (z >= 0) vis = true; else { const h2 = Math.hypot(x, y) || 1; x /= h2; y /= h2; } pts.push([x, y]); }
+      if (!vis) return; ctx.beginPath(); pts.forEach((p, i) => ctx[i ? "lineTo" : "moveTo"](cx + p[0] * rs, cy - p[1] * rs)); ctx.closePath(); ctx.fillStyle = r.rt === "spot" ? "rgba(20,8,4,0.88)" : "rgba(255,250,225,0.55)"; ctx.fill(); });
+    ctx.restore(); }
+  ctx.strokeStyle = ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, rs, 0, TAU); ctx.stroke(); ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]); ctx.strokeStyle = ink2; ctx.beginPath(); ctx.moveTo(cx, cy + s / 2); ctx.lineTo(cx, sy); ctx.stroke(); ctx.setLineDash([]);
+  const ax = Math.sin(lam), ay = Math.cos(lam), L = Math.min(s * 0.47, rs * 1.3 + 12); ctx.strokeStyle = ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx - ax * L * 0.9, cy + ay * L * 0.9); ctx.lineTo(cx + ax * L, cy - ay * L); ctx.stroke(); ctx.lineWidth = 1;
+  const tx = cx + ax * L, ty = cy - ay * L, an = Math.atan2(-ay, ax); ctx.fillStyle = ink; ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx - 9 * Math.cos(an - 0.4), ty - 9 * Math.sin(an - 0.4)); ctx.lineTo(tx - 9 * Math.cos(an + 0.4), ty - 9 * Math.sin(an + 0.4)); ctx.fill();
+  if (Math.abs(S.lam) > 1) { ctx.strokeStyle = acc; ctx.lineWidth = 2; ctx.beginPath(); const r0 = s * 0.2; ctx.arc(cx, cy, r0, -Math.PI / 2, -Math.PI / 2 + lam, lam < 0); ctx.stroke(); ctx.lineWidth = 1; ctx.fillStyle = acc; ctx.textAlign = "center"; ctx.fillText("λ", cx + Math.sin(lam / 2) * (r0 + 11), cy - Math.cos(lam / 2) * (r0 + 11)); }
+  ctx.restore(); if (bs && bs.rel.Z > 0) drawB();
+  ctx.strokeStyle = acc; ctx.setLineDash([2, 3]); ctx.beginPath(); let started = false; const span = S.mode === "main" && !S.tl ? 2 * WIN : D.Pd * 0.4; for (let i = 0; i <= 400; i++) { const t = (i / 400 - 0.5) * span, p = pos(D, t); if (p.Z > 0 && Math.abs(p.X) < half * 1.4 && Math.abs(p.Y) < half * 1.4) { started ? ctx.lineTo(sx(p.X), syf(p.Y)) : ctx.moveTo(sx(p.X), syf(p.Y)); started = true; } else started = false; } ctx.stroke(); ctx.setLineDash([]);
+  SY.Dl.forEach((Dd, i) => { const c = cur[i], pr = Math.max(i === S.sel ? 2.6 : 2, Dd.k * rs), px = sx(c.X), py = syf(c.Y), col = bcol(i, acc, ink); if (c.Z > 0) { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(px, py, pr, 0, TAU); ctx.fill(); if (BODIES[i].kind === "bh") { ctx.strokeStyle = bg; ctx.beginPath(); ctx.arc(px, py, pr + 1.5, 0, TAU); ctx.stroke(); } } else { ctx.strokeStyle = col; ctx.setLineDash([2, 2]); ctx.beginPath(); ctx.arc(px, py, pr, 0, TAU); ctx.stroke(); ctx.setLineDash([]); } if (i === S.sel) { ctx.strokeStyle = ink; ctx.beginPath(); ctx.arc(px, py, pr + 4, 0, TAU); ctx.stroke(); } ctx.fillStyle = ink; ctx.textAlign = "left"; if (SY.Dl.length > 1) ctx.fillText(i + 1, px + pr + 5, py - pr - 3); });
+  ctx.restore();
+  ctx.fillStyle = ink2; ctx.textAlign = "left"; ctx.fillText("dashed: orbit normal · bar: spin axis", lx + 4, sy + s - 8);
+  // ---- 3D view
+  const oy = sy + s + 34; ctx.fillStyle = ink; ctx.textAlign = "left"; ctx.fillText("3D VIEW · DRAG TO ROTATE", lx, oy - 12); ctx.strokeStyle = ink; ctx.strokeRect(lx, oy, s, s); box3 = { x: lx, y: oy, s };
+  const multi = SY.Dl.length > 1 || !!SY.bin, Rm = Math.max(...SY.Dl.map(q => q.aR * (1 + q.e))), ocx = lx + s / 2, ocy = oy + s / 2, sc3 = (s / 2 - 22) / Rm, caz = Math.cos(V3.az), saz = Math.sin(V3.az), cel = Math.cos(V3.el), sel = Math.sin(V3.el), CAM = 4 * Rm;
+  const pj = (X, Y, Z) => { if (multi) { const r = Math.hypot(X, Y, Z) || 1, f0 = Math.sqrt(Rm / r); X *= f0; Y *= f0; Z *= f0; } const x1 = X * caz + Z * saz, z1 = -X * saz + Z * caz, y2 = Y * cel - z1 * sel, z2 = Y * sel + z1 * cel, f = CAM / (CAM - z2); return [ocx + x1 * sc3 * f, ocy - y2 * sc3 * f, z2, f]; };
+  const orb = (Dd, f) => { const r = Dd.aR * (1 - Dd.e * Dd.e) / (1 + Dd.e * Math.cos(f)), th = Dd.w + f; return [-r * Math.cos(th), -r * Math.sin(th) * Math.cos(Dd.inc), r * Math.sin(th) * Math.sin(Dd.inc)]; };
+  ctx.save(); ctx.beginPath(); ctx.rect(lx, oy, s, s); ctx.clip();
+  const NO = 200, ops = SY.Dl.map(Dd => { const op = []; for (let i = 0; i <= NO; i++) op.push(pj(...orb(Dd, i / NO * TAU))); return op; });
+  const seg = (op, front, sel_) => { ctx.strokeStyle = front ? (sel_ ? ink : ink2) : ink2; ctx.lineWidth = front ? (sel_ ? 1.8 : 1.1) : 1; ctx.setLineDash(front ? [] : [3, 3]); ctx.beginPath(); let on = false; for (let i = 0; i < op.length; i++) { const f = op[i][2] >= 0; if (f === front) { on ? ctx.lineTo(op[i][0], op[i][1]) : ctx.moveTo(op[i][0], op[i][1]); on = true; } else on = false; } ctx.stroke(); ctx.setLineDash([]); ctx.lineWidth = 1; };
+  const o0 = pj(0, 0, 0), ob = pj(0, 0, Rm * 1.12), sr3 = Math.max(5, Math.min(s * 0.12, rs / half * 0 + sc3 * o0[3] * (multi ? 0.6 : 1)));
+  const P3 = cur.map(c => pj(c.X, c.Y, c.Z)), pr3 = SY.Dl.map((Dd, i) => Math.max(3.5, Math.min(14, Dd.k * sc3 * P3[i][3] * (multi ? 0 : 1) + (multi ? 3.5 : 0))));
+  const planet3 = i => { const g = ctx.createRadialGradient(P3[i][0] - pr3[i] * 0.35, P3[i][1] - pr3[i] * 0.35, pr3[i] * 0.1, P3[i][0], P3[i][1], pr3[i]); const col = bcol(i, acc, ink); g.addColorStop(0, "rgba(255,255,255,0.9)"); g.addColorStop(0.25, col); g.addColorStop(1, "rgba(0,0,0,0.55)"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(P3[i][0], P3[i][1], pr3[i], 0, TAU); ctx.fill(); };
+  ops.forEach((op, i) => seg(op, false, i === S.sel)); SY.Dl.forEach((_, i) => { if (P3[i][2] < 0) planet3(i); });
+  ctx.strokeStyle = ink2; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(o0[0], o0[1]); ctx.lineTo(ob[0], ob[1]); ctx.stroke(); ctx.setLineDash([]);
+  const gs = ctx.createRadialGradient(o0[0] - sr3 * 0.3, o0[1] - sr3 * 0.3, sr3 * 0.1, o0[0], o0[1], sr3); gs.addColorStop(0, "rgb(255,255,255)"); gs.addColorStop(0.45, tcol(S.T)); gs.addColorStop(1, mix("rgb(30,16,8)", tcol(S.T), 0.45)); if (bs) { [[SY.bin.stype ? [0, 0, 0] : bs.A, 6, S.T], [SY.bin.stype ? [bs.rel.X, bs.rel.Y, bs.rel.Z] : bs.B, 4.5, S.Tc]].forEach(([q, r, Tt]) => { const p = pj(q[0], q[1], q[2]); ctx.fillStyle = tcol(Tt); ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, TAU); ctx.fill(); ctx.strokeStyle = ink; ctx.stroke(); }); } else { ctx.fillStyle = gs; ctx.beginPath(); ctx.arc(o0[0], o0[1], sr3, 0, TAU); ctx.fill(); ctx.strokeStyle = ink; ctx.stroke(); }
+  const ax3 = [Math.sin(lam), Math.cos(lam), 0], ap = pj(ax3[0] * 2.2, ax3[1] * 2.2, 0), am = pj(-ax3[0] * 2.2, -ax3[1] * 2.2, 0), L3 = Math.max(1, (sr3 * 2.3) / Math.hypot(ap[0] - o0[0], ap[1] - o0[1]));
+  const apx = o0[0] + (ap[0] - o0[0]) * L3, apy = o0[1] + (ap[1] - o0[1]) * L3, amx = o0[0] + (am[0] - o0[0]) * L3, amy = o0[1] + (am[1] - o0[1]) * L3;
+  ctx.strokeStyle = ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(amx, amy); ctx.lineTo(apx, apy); ctx.stroke(); ctx.lineWidth = 1; { const an3 = Math.atan2(apy - o0[1], apx - o0[0]); ctx.fillStyle = ink; ctx.beginPath(); ctx.moveTo(apx, apy); ctx.lineTo(apx - 8 * Math.cos(an3 - 0.4), apy - 8 * Math.sin(an3 - 0.4)); ctx.lineTo(apx - 8 * Math.cos(an3 + 0.4), apy - 8 * Math.sin(an3 + 0.4)); ctx.fill(); }
+  ops.forEach((op, i) => seg(op, true, i === S.sel)); SY.Dl.forEach((_, i) => { if (P3[i][2] >= 0) planet3(i); });
+  ctx.fillStyle = ink2; ctx.textAlign = "left"; ctx.fillText("to observer", Math.min(ob[0] + 5, lx + s - 70), clamp(ob[1], oy + 10, oy + s - 8)); ctx.fillText(multi ? "orbit sizes compressed (√r)" : "bar: spin axis", lx + 4, oy + s - 8);
+  ctx.restore();
+  // ---- graphs
+  const gx0 = lx + s + 62, gx1 = W - 16, avail = H - 24 - 40 - 2 * 26, hLC = avail * 0.36, hRM = avail * 0.28, hRV = avail * 0.36;
+  const y1 = 24, y2 = y1 + hLC + 26, y3 = y2 + hRM + 26; layout = { gx0, gx1, y1, y2, y3, hLC, hRM, hRV };
+  if (S.mode === "evo") { layout = null; drawEvo({ ctx, gx0, gx1, W, H, ink, ink2, acc, bg, grid, mono }); return; }
+  const tl = S.tl, xr = tl ? [-WIN, WIN] : [-WIN * 24, WIN * 24], tx_ = t => tl ? t : t * 24, xA = v => gx0 + (v - xr[0]) / (xr[1] - xr[0]) * (gx1 - gx0);
+  function frame(y, hh, yr, ytitle, ylab, xlab) {
+    ctx.strokeStyle = grid; ctx.fillStyle = ink2; ctx.textAlign = "center"; for (const t of niceTicks(xr[0], xr[1], 8)) { ctx.beginPath(); ctx.moveTo(xA(t), y); ctx.lineTo(xA(t), y + hh); ctx.stroke(); if (xlab) ctx.fillText(fmt(t, 3), xA(t), y + hh + 11); }
+    ctx.textAlign = "right"; for (const t of niceTicks(yr[0], yr[1], 4)) { const yy = y + hh - (t - yr[0]) / (yr[1] - yr[0]) * hh; ctx.beginPath(); ctx.moveTo(gx0, yy); ctx.lineTo(gx1, yy); ctx.stroke(); ctx.fillText(ylab(t), gx0 - 5, yy); }
+    ctx.strokeStyle = ink; ctx.strokeRect(gx0, y, gx1 - gx0, hh); ctx.fillStyle = ink; ctx.textAlign = "left"; ctx.fillText(ytitle, gx0, y - 11);
+    return v => y + hh - (v - yr[0]) / (yr[1] - yr[0]) * hh;
+  }
+  function line(xs, ys, X, Y, col, dash, lw) { ctx.strokeStyle = col; ctx.lineWidth = lw || 1.8; ctx.setLineDash(dash || []); ctx.beginPath(); xs.forEach((x, i) => { const px = X(tx_(x)), py = Y(ys[i]); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.stroke(); ctx.setLineDash([]); ctx.lineWidth = 1; }
+  const clipG = (y, hh) => { ctx.save(); ctx.beginPath(); ctx.rect(gx0, y, gx1 - gx0, hh); ctx.clip(); };
+  let lo = 0, hi = 0; LC.F.forEach(f => { lo = Math.max(lo, 1 - f); hi = Math.max(hi, f - 1); }); if (LCr) LCr.F.forEach(f => { lo = Math.max(lo, 1 - f); hi = Math.max(hi, f - 1); });
+  const big = Math.max(lo, hi), ppm = big < 0.004, sc1 = ppm ? 1e6 : 100, yrL = big <= 1e-12 ? [-1, 1] : [-(lo * 1.18 + 0.02 * big) * sc1, (hi * 1.2 + 0.06 * big) * sc1];
+  const YL = frame(y1, hLC, yrL, "LIGHT CURVE: ΔF/F (" + (ppm ? "ppm" : "%") + ")", t => fmt(t, 3), false);
+  clipG(y1, hLC); ctx.strokeStyle = grid; ctx.beginPath(); ctx.moveTo(gx0, YL(0)); ctx.lineTo(gx1, YL(0)); ctx.stroke(); if (LCr) line(LCr.t, LCr.F.map(f => (f - 1) * sc1), xA, YL, ink2, [5, 4], 1.5); line(LC.t, LC.F.map(f => (f - 1) * sc1), xA, YL, ink, null, 2); ctx.restore();
+  if (CT["14"] && !tl) { ctx.strokeStyle = ink2; ctx.setLineDash([2, 3]); for (const t of CT["14"].concat(CT["23"] || [])) { const xx = xA(tx_(t)); if (xx >= gx0 && xx <= gx1) { ctx.beginPath(); ctx.moveTo(xx, y1); ctx.lineTo(xx, y1 + hLC); ctx.stroke(); } } ctx.setLineDash([]); }
+  let vm = 0.3; LC.V.forEach(v => vm = Math.max(vm, Math.abs(v))); if (LCr) LCr.V.forEach(v => vm = Math.max(vm, Math.abs(v)));
+  const YR = frame(y2, hRM, [-vm * 1.2, vm * 1.2], "ROSSITER–McLAUGHLIN: RV ANOMALY (m/s)", t => fmt(t, 3), false);
+  clipG(y2, hRM); ctx.strokeStyle = ink2; ctx.beginPath(); ctx.moveTo(gx0, YR(0)); ctx.lineTo(gx1, YR(0)); ctx.stroke(); if (LCr) line(LCr.t, LCr.V, xA, YR, ink2, [5, 4], 1.5); line(LC.t, LC.V, xA, YR, acc, null, 2); ctx.restore();
+  // RV: full orbit of the selected body (zoom) or the whole timeline
+  const RVs = tl ? LC : RVz, xrV = tl ? [-WIN, WIN] : [-D.Pd / 2, D.Pd / 2], XV = t => gx0 + (t - xrV[0]) / (xrV[1] - xrV[0]) * (gx1 - gx0);
+  let km = 0.05; RVs.R.forEach(v => km = Math.max(km, Math.abs(v))); if (RVzr || (tl && LCr)) (tl ? LCr : RVzr).R.forEach(v => km = Math.max(km, Math.abs(v))); RVs.RB.forEach(v => km = Math.max(km, Math.abs(v))); const yrV = [-km * 1.2, km * 1.2];
+  ctx.strokeStyle = grid; ctx.fillStyle = ink2; ctx.textAlign = "center"; for (const t of niceTicks(xrV[0], xrV[1], 8)) { const xx = XV(t); ctx.beginPath(); ctx.moveTo(xx, y3); ctx.lineTo(xx, y3 + hRV); ctx.stroke(); ctx.fillText(fmt(t, 3), xx, y3 + hRV + 11); }
+  ctx.textAlign = "right"; for (const t of niceTicks(yrV[0], yrV[1], 4)) { const yy = y3 + hRV - (t - yrV[0]) / (yrV[1] - yrV[0]) * hRV; ctx.beginPath(); ctx.moveTo(gx0, yy); ctx.lineTo(gx1, yy); ctx.stroke(); ctx.fillText(fmt(t, 3), gx0 - 5, yy); }
+  ctx.strokeStyle = ink; ctx.strokeRect(gx0, y3, gx1 - gx0, hRV); ctx.fillStyle = ink; ctx.textAlign = "left"; ctx.fillText(SY.Dl.length > 1 ? "RADIAL VELOCITY OF THE HOST, ALL BODIES (m/s)" : "HOST'S RADIAL VELOCITY (m/s)", gx0, y3 - 11); ctx.textAlign = "center"; ctx.fillText(tl ? "days from mid-transit of the selected body" : "days from mid-transit of the selected body: its full orbit", (gx0 + gx1) / 2, y3 + hRV + 24);
+  const YV = v => y3 + hRV - (v - yrV[0]) / (yrV[1] - yrV[0]) * hRV, lineV = (T_, V_, col, dash, lw) => { ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.setLineDash(dash || []); ctx.beginPath(); T_.forEach((t, i) => { const px = XV(t), py = YV(V_[i]); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.stroke(); ctx.setLineDash([]); ctx.lineWidth = 1; };
+  clipG(y3, hRV); if (RVzr || (tl && LCr)) { const q = tl ? LCr : RVzr; lineV(q.t, q.R, ink2, [5, 4], 1.5); } lineV(RVs.t, RVs.R, ink, null, 2); if (SY.bin) lineV(RVs.t, RVs.RB, acc, [3, 3], 1.5); ctx.restore();
+  if (CT["14"] && !tl) { ctx.fillStyle = ink; ctx.globalAlpha = 0.12; const a = XV(CT["14"][0]), b = XV(CT["14"][1]); ctx.fillRect(a - 1, y3, Math.max(2, b - a + 2), hRV); ctx.globalAlpha = 1; }
+  ctx.strokeStyle = acc; ctx.lineWidth = 1.5; const mxv = xA(tx_(tau)); [[y1, hLC], [y2, hRM]].forEach(([y, hh]) => { ctx.beginPath(); ctx.moveTo(mxv, y); ctx.lineTo(mxv, y + hh); ctx.stroke(); });
+  const mv = XV(tau); ctx.beginPath(); ctx.moveTo(mv, y3); ctx.lineTo(mv, y3 + hRV); ctx.stroke(); ctx.lineWidth = 1; ctx.fillStyle = acc;
+  const nowv = evalAt(SY, tau); ctx.beginPath(); ctx.arc(mv, YV(nowv.rv), 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(mxv, YL((nowv.F - 1) * sc1), 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(mxv, YR(nowv.V), 4, 0, TAU); ctx.fill();
+  if (SY.bin) { ctx.fillStyle = ink2; ctx.textAlign = "right"; ctx.fillText("dashed: the companion star's own RV", gx1 - 6, y3 + 12); }
+  $("tuv").textContent = tl ? fmt(tau, 3) + " d" : fmt(tau * 24, 3) + " h";
+}
+// ---- mass-period diagram
+const MP = { P0: 0.1, P1: 1e5, M0: 0.1, M1: 3e7 };
+function draw() { drawMain(); }
+function update() { recompute(); sync(); readout(); draw(); }
+
+// ---- evolution
+let EV = { key: "", tide: null, koz: null };
+function tideSeries() {
+  const key = [S.Qp, D.a, S.te0, S.Rp, S.Mp, S.Ms].join(); if (EV.key === key && EV.tide) return EV.tide;
+  const Ms = S.Ms * K_.GMs / GSI, Mp = S.Mp * K_.GMj / GSI, Rp = S.Rp * K_.Rj, Kc = 63 / 4 * Math.sqrt(GSI * Ms * Ms * Ms) * Math.pow(Rp, 5) / (S.Qp * Mp), a0 = D.a, af = a0 * (1 - S.te0 * S.te0), e0 = S.te0, out = { lt: [], e: [], a: [], tau0: 1 / (Kc * Math.pow(a0, -6.5)) / YR };
+  let e = e0, x = Math.log(1e4 * YR); const x1 = Math.log(1e11 * YR), NS = 6000, dx = (x1 - x) / NS, f = (xx, ee) => { const aa = af / (1 - ee * ee); return -ee * Kc * Math.pow(aa, -6.5) * Math.exp(xx); };
+  for (let i = 0; i <= NS; i++) { if (i % 15 === 0) { out.lt.push(Math.log10(Math.exp(x) / YR)); out.e.push(e); out.a.push(af / (1 - e * e)); } const k1 = f(x, e), k2 = f(x + dx / 2, e + dx / 2 * k1), k3 = f(x + dx / 2, e + dx / 2 * k2), k4 = f(x + dx, e + dx * k3); e = Math.max(0, e + dx / 6 * (k1 + 2 * k2 + 2 * k3 + k4)); x += dx; }
+  EV.key = key; EV.tide = out; return out;
+}
+function kozSeries() {
+  const key = [S.ki, S.ke].join(); if (EV.kkey === key && EV.koz) return EV.koz; const o = { t: [], e: [], i: [], w: [] }; let s = [S.ke, S.ki * Math.PI / 180, 0.7]; const dt = 0.004, rhs = s => { const e = s[0], i = s[1], w = s[2], j = Math.sqrt(1 - e * e); return [2 * e * j * Math.sin(i) ** 2 * Math.sin(2 * w), -2 * e * e * Math.sin(i) * Math.cos(i) * Math.sin(2 * w) / j, 0.8 / j * (2 * (1 - e * e) + 5 * Math.sin(w) ** 2 * (e * e - Math.sin(i) ** 2))]; };
+  for (let n = 0; n <= 6000; n++) { if (n % 4 === 0) { o.t.push(n * dt); o.e.push(s[0]); o.i.push(s[1] * 180 / Math.PI); o.w.push(s[2]); } const k1 = rhs(s), k2 = rhs(s.map((x, q) => x + dt / 2 * k1[q])), k3 = rhs(s.map((x, q) => x + dt / 2 * k2[q])), k4 = rhs(s.map((x, q) => x + dt * k3[q])); s = s.map((x, q) => x + dt / 6 * (k1[q] + 2 * k2[q] + 2 * k3[q] + k4[q])); s[0] = clamp(s[0], 0, 0.9995); }
+  EV.kkey = key; EV.koz = o; return o;
+}
+function ellipse(C, cx, cy, sz, e, w, col, fill) { const { ctx } = C, a = sz / (1 + e), c = a * e; ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.beginPath(); for (let i = 0; i <= 200; i++) { const f = i / 200 * TAU, r = a * (1 - e * e) / (1 + e * Math.cos(f)), x = cx + r * Math.cos(f + w), y = cy - r * Math.sin(f + w); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke(); ctx.lineWidth = 1; ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(cx, cy, 4, 0, TAU); ctx.fill(); }
+function drawEvo(C) {
+  const { ctx, gx0, gx1, H, ink, ink2, acc } = C, y0 = 30, y1 = H - 70, mid = gx0 + (gx1 - gx0) * 0.38;
+  if (S.evo === "tide") {
+    const T = tideSeries(), frac = S.u, li = Math.round(frac * (T.lt.length - 1)), e = T.e[li];
+    const F = XF(C, mid + 50, y0, gx1, y1, [4, 11], [0, S.te0 * 1.1], { title: "ECCENTRICITY vs TIME (planet tide only)", xl: "log₁₀ time (yr)" }); PL(C, F, T.lt, T.e, acc, 2.2); const xx = F.X(T.lt[li]); ctx.strokeStyle = ink; ctx.beginPath(); ctx.moveTo(xx, y0); ctx.lineTo(xx, y1); ctx.stroke();
+    const cx = gx0 + (mid - gx0) / 2, cy = (y0 + y1) / 2, sz = Math.min(mid - gx0, y1 - y0) * 0.45; ctx.fillStyle = ink; ctx.textAlign = "left"; ctx.fillText("ORBIT FROM ABOVE (ghost = start)", gx0, y0 - 11); ellipse(C, cx, cy, sz, S.te0, D.w, ink2); ellipse(C, cx, cy, sz * T.a[li] / T.a[0] * 0.999, e, D.w, acc);
+    ctx.fillStyle = ink; ctx.textAlign = "left"; ctx.fillText("t = " + fmt(Math.pow(10, T.lt[li]), 3) + " yr · e = " + e.toFixed(3) + " · a = " + fmt(T.a[li] / K_.AU, 3) + " AU", gx0, y1 + 20);
+    ctx.fillStyle = ink2; ctx.fillText("Starts at e₀ on this system's orbit. Time at start: " + (T.tau0 > 0 ? fmt(T.tau0, 3) + " yr" : "–") + " (Q′ = " + fmt(S.Qp, 2) + "). Angular momentum is conserved, so the orbit shrinks.", gx0, y1 + 36);
+    $("tuv").textContent = "t = 1e" + T.lt[li].toFixed(1) + " yr";
+  } else {
+    const K = kozSeries(), li = Math.round(S.u * (K.t.length - 1)), n1 = 2 * Math.PI / (365.25 * 86400 * Math.sqrt(Math.pow(S.ka, 3) / S.Ms)), a2 = S.kao * K_.AU, t0 = 16 / 15 * Math.pow(a2, 3) * n1 / (K_.GMs * S.kmo) * Math.pow(1 - S.keo * S.keo, 1.5) / YR, tmax = K.t[K.t.length - 1];
+    const F = XF(C, mid + 50, y0, gx1, (y0 + y1) / 2 - 10, [0, tmax], [0, 1], { title: "e (red) and mutual inclination / 90° (black)" });
+    PL(C, F, K.t, K.e, acc, 2.2); PL(C, F, K.t, K.i.map(v => v / 90), ink, 1.6); const xx = F.X(K.t[li]); ctx.strokeStyle = ink2; ctx.beginPath(); ctx.moveTo(xx, y0); ctx.lineTo(xx, (y0 + y1) / 2 - 10); ctx.stroke();
+    const qs = K.e.map(e => S.ka * (1 - e)), qmin = Math.min(...qs), qr = [Math.log10(Math.max(qmin * 0.7, 1e-3)), Math.log10(S.ka * 1.2)]; const F2 = XF(C, mid + 50, (y0 + y1) / 2 + 30, gx1, y1, [0, tmax], qr, { title: "PERIASTRON a(1 − e) (AU)", xl: "time in Kozai units (1 unit ≈ " + (t0 < 1e6 ? fmt(t0, 3) + " yr" : fmt(t0 / 1e6, 3) + " Myr") + ")", yt: niceTicks(qr[0], qr[1], 4).map(Math.round).filter((v, i, a) => a.indexOf(v) === i), yf: v => fmt(Math.pow(10, v), 2) }); PL(C, F2, K.t, qs.map(Math.log10), ink, 1.8);
+    const yTide = Math.log10(0.05); if (yTide > qr[0]) { ctx.strokeStyle = acc; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(mid + 50, F2.Y(yTide)); ctx.lineTo(gx1, F2.Y(yTide)); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = acc; ctx.textAlign = "left"; ctx.fillText("0.05 AU", mid + 56, F2.Y(yTide) - 8); }
+    ctx.strokeStyle = ink2; ctx.beginPath(); ctx.moveTo(F2.X(K.t[li]), (y0 + y1) / 2 + 30); ctx.lineTo(F2.X(K.t[li]), y1); ctx.stroke();
+    const cx = gx0 + (mid - gx0) / 2, cy = (y0 + y1) / 2 - 20, sz = Math.min(mid - gx0, y1 - y0) * 0.4; ctx.fillStyle = ink; ctx.textAlign = "left"; ctx.fillText("ORBIT (in its own plane)", gx0, y0 - 11); ellipse(C, cx, cy, sz, K.e[li], K.w[li], acc);
+    const ang = K.i[li] * Math.PI / 180, gy = y1 - 110; ctx.strokeStyle = ink2; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx - 55, gy); ctx.lineTo(cx + 55, gy); ctx.stroke(); ctx.strokeStyle = acc; ctx.beginPath(); ctx.moveTo(cx - 55 * Math.cos(ang), gy + 55 * Math.sin(ang)); ctx.lineTo(cx + 55 * Math.cos(ang), gy - 55 * Math.sin(ang)); ctx.stroke(); ctx.lineWidth = 1; ctx.fillStyle = ink2; ctx.fillText("tilt between the two orbit planes", cx - 70, gy + 30);
+    ctx.fillStyle = ink; ctx.textAlign = "left"; ctx.fillText("e = " + K.e[li].toFixed(3) + " · i = " + K.i[li].toFixed(1) + "° · q = " + fmt(S.ka * (1 - K.e[li]), 2) + " AU", gx0, y1 + 20);
+    ctx.fillStyle = ink2; ctx.fillText("Quadrupole test-particle equations, no tides. e_max = √(1 − 5/3 cos²i₀).", gx0, y1 + 36);
+    $("tuv").textContent = "τ = " + K.t[li].toFixed(2);
+  }
+}
+
+function drawExt(C) { drawEvo(C); }
+// ---------------- UI
+SYS.forEach((p, i) => { const b = document.createElement("button"); b.textContent = p[0]; b.dataset.i = i; b.onclick = () => { loadSys(i); update(); }; $("presets").appendChild(b); });
+document.querySelectorAll("#hostseg button").forEach(b => b.onclick = () => { if (b.dataset.h === "binp") { loadSys(SYS.findIndex(q => q[0].startsWith("Circumbinary giant"))); update(); return; } if (b.dataset.h === "bins") { loadSys(SYS.findIndex(q => q[0].startsWith("Planet in a wide"))); update(); return; } S.tl = false; S.u = 0.5; REG = []; S.actp = 0; S.host = b.dataset.h; if (S.host === "wd") { S.Ms = 0.6; S.Rs = wdR(0.6); S.T = 10000; S.u1 = 0.3; S.u2 = 0.2; S.vsini = 1; } else Object.assign(S, HOST0); S.cls = -1; S.sys = -1; update(); });
+$("addb").onclick = () => { if (BODIES.length >= 6) return; pull(); const b = Object.assign({}, BODY0, { P: Math.max(S.P * 2.2, 3), Mp: E_(10), ph0: 0.3 }); b.Rp = mrad("planet", b.Mp); BODIES.push(b); push(BODIES.length - 1); S.cls = -1; S.sys = -1; update(); };
+$("delb").onclick = () => { if (BODIES.length <= 1) return; BODIES.splice(S.sel, 1); push(Math.max(0, S.sel - 1)); S.cls = -1; S.sys = -1; update(); };
+document.querySelectorAll("#showseg button").forEach(b => b.onclick = () => { S.tl = b.dataset.t === "tl"; S.u = 0.5; update(); });
+document.querySelectorAll("#modeseg button").forEach(b => b.onclick = () => { S.mode = b.dataset.m; S.u = S.mode === "evo" ? 0 : 0.5; update(); });
+document.querySelectorAll("#evoseg button").forEach(b => b.onclick = () => { S.evo = b.dataset.e; S.u = 0; update(); });
+$("tu").oninput = e => { S.u = e.target.value / 1000; draw(); };
+$("dop").onchange = e => { S.dop = e.target.checked; draw(); };
+$("pin").onclick = () => { pull(); S.ref = { host: hostOf(S), bodies: BODIES.map(b => Object.assign({}, b)), sel: S.sel }; update(); };
+$("unpin").onclick = () => { S.ref = null; update(); };
+let last = 0, drag = false; function loop(ts) { if (S.playing && !drag && S.mode !== "mp") { S.u += Math.min(ts - last, 60) * S.speed / 9000; if (S.u > 1) S.u -= 1; $("tu").value = Math.round(S.u * 1000); draw(); } last = ts; requestAnimationFrame(loop); }
+document.querySelectorAll("#spd button").forEach(b => b.onclick = () => { S.speed = +b.dataset.s; document.querySelectorAll("#spd button").forEach(x => x.classList.toggle("on", x === b)); });
+try { if (matchMedia("(prefers-reduced-motion: reduce)").matches) { S.playing = false; $("play").textContent = "▶ Play"; } } catch (e) {}
+$("play").onclick = () => { S.playing = !S.playing; $("play").textContent = S.playing ? "❚❚ Pause" : "▶ Play"; };
+const newReg = t => { pullR(); REG.push({ rt: t, rlat: 15, rlon: ((REG.length * 70) % 360) - 180, rrad: t === "spot" ? 6 : 10 }); pushR(REG.length - 1); S.actp = -1; if (REG.length === 1) S.tl = true; S.u = 0.5; update(); };
+document.querySelectorAll("#actseg button").forEach(b => b.onclick = () => { const p = ACTP[+b.dataset.a]; REG = p.regs.map(r => Object.assign({}, r)); S.actp = +b.dataset.a; if (p.vsini) S.vsini = p.vsini; S.ist = 90; S.rsel = 0; if (REG.length) { pushR(0); S.tl = true; } S.u = 0.5; update(); });
+$("addspot").onclick = () => newReg("spot"); $("addplage").onclick = () => newReg("plage");
+$("delreg").onclick = () => { if (!REG.length) return; REG.splice(S.rsel, 1); S.actp = -1; pushR(Math.max(0, S.rsel - 1)); update(); };
+document.querySelectorAll("#rtseg button").forEach(b => b.onclick = () => { S.rt = b.dataset.t; S.actp = -1; update(); });
+$("actonly").onchange = e => { S.actOnly = e.target.checked; update(); };
+document.querySelectorAll("#side .tabs button").forEach(b => b.onclick = () => { S.tab = S.tab === b.dataset.p ? "" : b.dataset.p; sync(); });
+let rot = null, mpd = null;
+const scrub = e => { if (!layout) return; const r = cv.getBoundingClientRect(), x = e.clientX - r.left; if (x < layout.gx0 - 4) return; S.u = clamp((x - layout.gx0) / (layout.gx1 - layout.gx0), 0, 1); draw(); $("tu").value = Math.round(S.u * 1000); };
+const in3 = e => { if (!box3) return false; const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; return x >= box3.x && x <= box3.x + box3.s && y >= box3.y && y <= box3.y + box3.s; };
+cv.onpointerdown = e => { cv.setPointerCapture(e.pointerId); if (in3(e)) { rot = { x: e.clientX, y: e.clientY }; return; } drag = true; scrub(e); };
+cv.onpointermove = e => { if (rot) { V3.az += (e.clientX - rot.x) * 0.01; V3.el = clamp(V3.el + (e.clientY - rot.y) * 0.01, -1.5, 1.5); rot = { x: e.clientX, y: e.clientY }; draw(); } else if (drag) scrub(e); };
+cv.onpointerup = () => { drag = false; rot = null; mpd = null; }; cv.ondblclick = e => { if (in3(e)) { V3.az = -0.62; V3.el = 0.42; draw(); } };
+loadClass(CLS.findIndex(q => q[0] === "Hot Jupiter")); BODIES = [Object.assign({}, BODY0)]; BODIES[0] = Object.assign({}, BODY0); BK.forEach(k => BODIES[0][k] = S[k]); initTheme(() => { if (D) draw(); }); update(); addEventListener("resize", draw); requestAnimationFrame(loop);
+
+</script>
+</body>
+</html>
