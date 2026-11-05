@@ -54,6 +54,9 @@ main { margin-top: 2.2rem; border-top: 1px solid var(--fg); }
 .item .open { grid-column: 11 / -1; font-weight: 700; font-size: 0.95rem; text-align: right; }
 .item .open:hover { color: var(--accent); }
 
+.split { height: 3.6rem; }
+.split + .item { border-top: 3px solid var(--fg); padding-top: 1.1rem; }
+
 footer { padding: 1rem 0 2.5rem 0; }
 
 @media (max-width: 800px) {
@@ -81,6 +84,8 @@ footer { padding: 1rem 0 2.5rem 0; }
 <p>A geography game about countries, their capitals, flags and neighbours</p>
 <a class="open" href="borderline.html" target="_blank">[Open]</a>
 </div>
+
+<div class="split"></div>
 
 <div class="item">
 <h2>HRD</h2>
