@@ -5,52 +5,61 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sandbox - Thiago Ferreira</title>
 <link rel="icon" href="data:,">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#fff;--fg:#000;--red:#e30613;--g:24px}
-body{background:var(--bg);color:var(--fg);font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.4;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-.page{max-width:1280px;margin:0 auto;padding:0 var(--g)}
-.bar{display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--g);padding:20px 0 14px;font-weight:700;font-size:.9rem;border-bottom:8px solid var(--fg)}
-.bar a:hover{color:var(--red)}
-.bar .a{grid-column:1/4}.bar .b{grid-column:4/9}.bar .c{grid-column:9/-1;text-align:right}
-.hero{display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--g);padding:3vw 0 2.4vw;align-items:end}
-h1{grid-column:1/-1;font-weight:900;font-size:clamp(3.6rem,15.5vw,14rem);letter-spacing:-.07em;line-height:.8;margin-left:-.04em}
-h1 i{font-style:normal;color:var(--red)}
-.hero p{grid-column:10/-1;font-weight:700;font-size:1.05rem;line-height:1.25;padding-bottom:.6vw}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--fg);border-left:1px solid var(--fg)}
-.cell{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:clamp(260px,26vw,340px);padding:16px 18px 18px;border-right:1px solid var(--fg);border-bottom:1px solid var(--fg);transition:background .18s,color .18s}
-a.cell:hover{background:var(--red);color:#fff}
-.cell .t{display:flex;justify-content:space-between;align-items:flex-start;font-weight:700}
-.cell .n{font-size:.95rem}
-.cell .ar{font-size:2.2rem;line-height:.8;font-weight:400;transition:transform .2s}
-a.cell:hover .ar{transform:translate(5px,-5px)}
-.cell p{font-size:1rem;line-height:1.35;max-width:26ch;margin-bottom:.9rem;min-height:2.7em}
-.cell h2{font-weight:900;font-size:clamp(2rem,3.6vw,3.2rem);letter-spacing:-.045em;line-height:.95}
-.cell.red{background:var(--red);color:#fff;border-color:var(--fg)}
-.cell.red .big{font-weight:900;font-size:clamp(2rem,3.6vw,3.2rem);letter-spacing:-.045em;line-height:.95}
-.cell.red small{font-weight:700;font-size:.95rem;line-height:1.3;display:block}
-.cell.red a:hover{text-decoration:underline}
-@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.hero p{grid-column:1/-1;margin-top:1rem}h1{grid-column:1/-1}.bar .b{display:none}.bar .a{grid-column:1/7}.bar .c{grid-column:7/-1}}
-@media(max-width:560px){.grid{grid-template-columns:1fr}.cell{min-height:200px}}
+:root{--bg:#fff;--fg:#000;--accent:#e30613;--gutter:24px}
+body{background:var(--bg);color:var(--fg);font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--fg);text-decoration:none}
+.page{max-width:1200px;margin:0 auto;padding:0 var(--gutter)}
+.row{display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--gutter)}
+.topbar{padding:1.4rem 0 0 0}
+.topbar a{display:block;width:fit-content;line-height:0}
+.topbar a:hover{color:var(--accent)}
+header{padding:3.4rem 0 1rem 0;border-bottom:8px solid var(--fg)}
+h1{grid-column:1/-1;font-size:clamp(3.4rem,15vw,12.5rem);font-weight:700;line-height:.82;letter-spacing:-.06em;margin-left:-.05em}
+main{margin-top:0}
+.item{display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--gutter);align-items:baseline;padding:1.1rem 0 1.3rem 0;border-bottom:1px solid var(--fg);transition:background .15s,color .15s}
+.item .n{grid-column:1/2;font-weight:700;font-size:1rem}
+.item h2{grid-column:2/7;font-size:clamp(1.9rem,3.4vw,2.9rem);font-weight:700;letter-spacing:-.04em;line-height:1}
+.item p{grid-column:7/12;font-size:1.05rem;line-height:1.45}
+.item .open{grid-column:12/-1;font-weight:700;font-size:.95rem;text-align:right}
+.item:hover{background:var(--accent);color:#fff}
+.item:hover a{color:#fff}
+.item:hover .n,.item:hover h2,.item:hover p,.item:hover .open{transform:translateX(10px)}
+.item:hover .open{transform:none}
+.item .n,.item h2,.item p{transition:transform .2s}
+.split{height:3.6rem}
+.split+.item{border-top:3px solid var(--fg)}
+footer{padding:1rem 0 2.5rem 0}
+.item>.cover{position:absolute;inset:0}
+.item{position:relative}
+@media(max-width:800px){.item .n{grid-column:1/2}.item h2{grid-column:2/-1}.item p{grid-column:2/-1;margin-top:.5rem}.item .open{grid-column:2/-1;margin-top:.5rem;text-align:left}.item:hover .n,.item:hover h2,.item:hover p{transform:none}}
 </style>
 </head>
 <body>
 <div class="page">
-<div class="bar"><a class="a" href="index.html" aria-label="Back to home">← Home</a><span class="b"></span><span class="c">05</span></div>
 
-<div class="hero"><h1>Sandbox<i>.</i></h1></div>
+<div class="topbar"><a href="index.html" aria-label="Back to home"><svg width="55" height="24" viewBox="1 0 55 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M54 12H2M12 2L2 12l10 10"/></svg></a></div>
 
-<main class="grid">
-<a class="cell" href="sandbox/borderline.html" target="_blank"><div class="t"><span class="n">01</span><span class="ar">↗</span></div><div><p>A geography game about countries, their capitals, flags and neighbours</p><h2>Borderline</h2></div></a>
-<a class="cell" href="sandbox/hr.html" target="_blank"><div class="t"><span class="n">02</span><span class="ar">↗</span></div><div><p>An interactive tool for exploring the Hertzsprung-Russell diagram</p><h2>HRD</h2></div></a>
-<a class="cell" href="sandbox/planet.html" target="_blank"><div class="t"><span class="n">03</span><span class="ar">↗</span></div><div><p>Simulations of transit and radial-velocity curves of exoplanets</p><h2>Planet Lab</h2></div></a>
-<a class="cell" href="sandbox/atoms.html" target="_blank"><div class="t"><span class="n">04</span><span class="ar">↗</span></div><div><p></p><h2>Atomarium</h2></div></a>
-<a class="cell" href="sandbox/cosmichistory.html" target="_blank"><div class="t"><span class="n">05</span><span class="ar">↗</span></div><div><p>A timeline of the universe</p><h2>Cosmic History</h2></div></a>
-<div class="cell red"><div class="t"><span class="n">Thiago Ferreira dos Santos</span></div><small>thiago.dossantos(@)yale.edu</small></div>
+<header><div class="row"><h1>Sandbox</h1></div></header>
+
+<main>
+<div class="item"><a class="cover" href="sandbox/borderline.html" target="_blank" aria-label="Open Borderline"></a><span class="n">01</span><h2>Borderline</h2><p>A geography game about countries, their capitals, flags and neighbours</p><span class="open">[Open]</span></div>
+
+<div class="split"></div>
+
+<div class="item"><a class="cover" href="sandbox/hr.html" target="_blank" aria-label="Open HRD"></a><span class="n">02</span><h2>HRD</h2><p>An interactive tool for exploring the Hertzsprung-Russell diagram</p><span class="open">[Open]</span></div>
+
+<div class="item"><a class="cover" href="sandbox/planet.html" target="_blank" aria-label="Open Planet Lab"></a><span class="n">03</span><h2>Planet Lab</h2><p>Simulations of transit and radial-velocity curves of exoplanets</p><span class="open">[Open]</span></div>
+
+<div class="item"><a class="cover" href="sandbox/atoms.html" target="_blank" aria-label="Open Atomarium"></a><span class="n">04</span><h2>Atomarium</h2><p></p><span class="open">[Open]</span></div>
+
+<div class="item"><a class="cover" href="sandbox/cosmichistory.html" target="_blank" aria-label="Open Cosmic History"></a><span class="n">05</span><h2>Cosmic History</h2><p>A timeline of the universe</p><span class="open">[Open]</span></div>
 </main>
-<div style="height:3rem"></div>
+
+<footer><strong>Thiago Ferreira dos Santos | thiago.dossantos(@)yale.edu</strong></footer>
+
 </div>
 </body>
 </html>
