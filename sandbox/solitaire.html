@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Solitaire</title>
+<style>
+:root{--bg:#f1f0ec;--ink:#111;--red:#d8321f;--rule:#111;--dim:#6b6b66;--gap:1.6%}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:500 12px/1.2 "Helvetica Neue",Helvetica,Arial,"Liberation Sans",sans-serif;overflow-x:hidden}
+#app{max-width:860px;margin:0 auto;padding:18px 14px 28px}
+header{display:grid;grid-template-columns:1fr auto;align-items:end;border-top:6px solid var(--ink);padding-top:10px;margin-bottom:16px}
+header b{font-size:30px;line-height:.95;font-weight:700;letter-spacing:-.03em}
+.bar{display:flex;gap:0;align-items:center;text-transform:uppercase;letter-spacing:.08em;font-size:11px}
+#stat{margin-right:18px;color:var(--dim);font-variant-numeric:tabular-nums}
+button{font:inherit;text-transform:uppercase;letter-spacing:.08em;color:var(--ink);background:transparent;border:0;border-bottom:2px solid transparent;border-radius:0;padding:4px 0;margin-left:16px;cursor:pointer}
+button:hover{border-bottom-color:var(--red)}button:disabled{opacity:.3;cursor:default;border-color:transparent}
+.row{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--gap);margin-bottom:var(--gap)}
+.pile{position:relative;aspect-ratio:5/7;border:1px solid var(--ink);background:transparent}
+.tab{border:0;aspect-ratio:auto;min-height:0}
+.tab .slot{position:absolute;left:0;right:0;top:0;aspect-ratio:5/7;border:1px solid var(--ink)}
+.card{position:absolute;left:0;width:100%;aspect-ratio:5/7;background:#fbfaf7;color:var(--ink);border:1px solid var(--ink)}
+.card.r{color:var(--red)}
+.card.down{background:var(--ink)}
+.card .c{position:absolute;left:8%;top:5%;font-weight:700;font-size:calc(var(--cw)*.24);line-height:1;letter-spacing:-.04em}
+.card .c i{font-style:normal;display:block;font-size:.7em;margin-top:2px;font-weight:400}
+.card .m{position:absolute;right:9%;bottom:6%;font-size:calc(var(--cw)*.42);line-height:1}
+.pile .hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(var(--cw)*.4);color:var(--ink);opacity:.25}
+.ghost{position:fixed;z-index:50;pointer-events:none}
+.ghost .card{position:absolute;box-shadow:6px 6px 0 rgba(0,0,0,.18)}
+.row>.pile>.card{left:-1px;margin-top:-1px;width:calc(100% + 2px)}
+#stock{cursor:pointer}
+#stock .card.down{background:var(--ink)}
+#win{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:flex-end;flex-direction:column;gap:18px;padding:8vw;background:var(--red);color:#fbfaf7;z-index:100}
+#win div{font-size:min(18vw,150px);font-weight:700;letter-spacing:-.05em;line-height:.85}
+#win button{color:#fbfaf7;margin:0;font-size:13px;border-bottom:2px solid #fbfaf7}
+#win.on{display:flex}
+</style></head><body>
+<div id="app">
+ <header><span></span>
+  <div class="bar"><span id="stat"></span><button id="draw"></button><button id="undo">Undo</button><button id="new">New</button></div></header>
+ <div class="row" id="top"></div>
+ <div class="row" id="tab"></div>
+</div>
+<div id="win"><div>Solved.</div><button id="again">New game</button></div>
+<script>
+const SU=['♠','♥','♦','♣'],RK=['','A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const red=s=>s==1||s==2;
+let S,hist=[],drawN=+(localStorage.getItem('sol-draw')||1),moves=0,cw=100,busy=false;
+const $=id=>document.getElementById(id);
+const topRow=$('top'),tab=$('tab');
+
+function deal(){
+  const d=[];for(let s=0;s<4;s++)for(let r=1;r<=13;r++)d.push({s,r,up:false});
+  for(let i=d.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[d[i],d[j]]=[d[j],d[i]]}
+  S={t:[],stock:[],waste:[],f:[[],[],[],[]]};
+  for(let i=0;i<7;i++){const p=d.splice(0,i+1);p[i].up=true;S.t.push(p)}
+  S.stock=d;hist=[];moves=0;$('win').classList.remove('on');render();
+}
+const snap=()=>{hist.push(JSON.stringify(S));if(hist.length>300)hist.shift()};
+function undo(){if(!hist.length||busy)return;S=JSON.parse(hist.pop());moves=Math.max(0,moves-1);render()}
+
+function pileEl(id,cls){const e=document.createElement('div');e.className='pile '+(cls||'');e.dataset.p=id;return e}
+function cardEl(c,y){
+  const e=document.createElement('div');e.className='card'+(red(c.s)?' r':'')+(c.up?'':' down');
+  if(c.up)e.innerHTML='<div class="c">'+RK[c.r]+'<i>'+SU[c.s]+'</i></div><div class="m">'+SU[c.s]+'</div>';
+  e.style.top=y+'px';return e;
+}
+function build(){
+  topRow.innerHTML='';tab.innerHTML='';
+  const st=pileEl('s','');st.id='stock';topRow.appendChild(st);
+  topRow.appendChild(pileEl('w',''));
+  topRow.appendChild(document.createElement('div'));
+  for(let i=0;i<4;i++)topRow.appendChild(pileEl('f'+i,''));
+  for(let i=0;i<7;i++)tab.appendChild(pileEl('t'+i,'tab'));
+}
+function render(){
+  if(!topRow.children.length)build();
+  cw=topRow.children[0].getBoundingClientRect().width||100;
+  document.documentElement.style.setProperty('--cw',cw+'px');
+  const [st,w,,...fs]=topRow.children;
+  st.innerHTML=S.stock.length?'':'<div class="hint">↺</div>';
+  if(S.stock.length)st.appendChild(cardEl({up:false},0));
+  w.innerHTML='';
+  const wc=S.waste.slice(-Math.min(drawN,3));const wl=S.waste.length;
+  wc.forEach((c,i)=>{const e=cardEl(c,0);e.dataset.i=wl-wc.length+i;e.style.left=(i*cw*.22)+'px';e.style.width=cw+'px';w.appendChild(e)});
+  fs.forEach((p,i)=>{p.innerHTML='';const a=S.f[i];
+    if(!a.length)p.innerHTML='<div class="hint">'+SU[i]+'</div>';
+    else{const e=cardEl(a[a.length-1],0);e.dataset.i=a.length-1;p.appendChild(e)}});
+  [...tab.children].forEach((p,i)=>{
+    p.innerHTML='<div class="slot"></div>';let y=0;
+    S.t[i].forEach((c,k)=>{const e=cardEl(c,y);e.dataset.i=k;p.appendChild(e);y+=cw*(c.up?.3:.13)});
+    p.style.height=(y+cw*1.4-(S.t[i].length?cw*(S.t[i][S.t[i].length-1].up?.3:.13):0))+'px';
+  });
+  $('stat').textContent=moves+' moves';
+  $('undo').disabled=!hist.length;
+  $('draw').textContent='Draw '+drawN;
+  if(S.f.every(a=>a.length==13))win();
+}
+function win(){$('win').classList.add('on')}
+
+const pileArr=id=>id=='s'?S.stock:id=='w'?S.waste:id[0]=='f'?S.f[+id[1]]:S.t[+id[1]];
+function canTab(c,i){const p=S.t[i];if(!p.length)return c.r==13;const t=p[p.length-1];return t.up&&t.r==c.r+1&&red(t.s)!=red(c.s)}
+function canFound(c,i){if(c.s!=i)return false;const a=S.f[i];return c.r==a.length+1}
+
+function move(from,idx,to){
+  const src=pileArr(from),cards=src.slice(idx);
+  if(!cards.length)return false;
+  if(to[0]=='f'){if(cards.length!=1||!canFound(cards[0],+to[1]))return false}
+  else if(to[0]=='t'){if(!canTab(cards[0],+to[1]))return false}
+  else return false;
+  if(from==to)return false;
+  snap();
+  src.splice(idx);pileArr(to).push(...cards);
+  if(from[0]=='t'&&src.length&&!src[src.length-1].up)src[src.length-1].up=true;
+  moves++;render();return true;
+}
+function autoTarget(from,idx){
+  const c=pileArr(from)[idx];
+  if(idx==pileArr(from).length-1&&canFound(c,c.s))return 'f'+c.s;
+  for(let i=0;i<7;i++){if('t'+i==from)continue;
+    if(canTab(c,i)){
+      // avoid pointless king shuffles
+      if(c.r==13&&from[0]=='t'&&idx==0)continue;return 't'+i}}
+  return null;
+}
+function drawStock(){
+  snap();
+  if(S.stock.length){for(let k=0;k<drawN&&S.stock.length;k++){const c=S.stock.pop();c.up=true;S.waste.push(c)}}
+  else if(S.waste.length){S.stock=S.waste.reverse();S.stock.forEach(c=>c.up=false);S.waste=[]}
+  else{hist.pop();return}
+  moves++;render();
+}
+
+// pointer handling
+let drag=null;
+document.addEventListener('pointerdown',e=>{
+  if(busy||e.button>0)return;
+  const pl=e.target.closest('.pile');if(!pl)return;
+  const id=pl.dataset.p;
+  if(id=='s'){drawStock();return}
+  const cd=e.target.closest('.card');if(!cd||cd.classList.contains('down')||cd.dataset.i==null)return;
+  const idx=+cd.dataset.i;
+  if(id=='w'&&idx!=S.waste.length-1)return;
+  const r=cd.getBoundingClientRect();
+  drag={id,idx,x0:e.clientX,y0:e.clientY,dx:e.clientX-r.left,dy:e.clientY-r.top,moved:false,g:null};
+});
+document.addEventListener('pointermove',e=>{
+  if(!drag)return;
+  if(!drag.moved&&Math.hypot(e.clientX-drag.x0,e.clientY-drag.y0)>6){
+    drag.moved=true;
+    const src=pileArr(drag.id),cards=src.slice(drag.idx);
+    const g=document.createElement('div');g.className='ghost';g.style.width=cw+'px';
+    cards.forEach((c,k)=>{const el=cardEl(c,k*cw*.3);el.style.width=cw+'px';g.appendChild(el)});
+    document.body.appendChild(g);drag.g=g;
+    // hide originals
+    const pl=document.querySelector('[data-p="'+drag.id+'"]');
+    pl.querySelectorAll('.card').forEach(el=>{if(+el.dataset.i>=drag.idx)el.style.visibility='hidden'});
+  }
+  if(drag.moved){drag.g.style.left=(e.clientX-drag.dx)+'px';drag.g.style.top=(e.clientY-drag.dy)+'px'}
+});
+document.addEventListener('pointerup',e=>{
+  if(!drag)return;const d=drag;drag=null;
+  if(!d.moved){const t=autoTarget(d.id,d.idx);if(t)move(d.id,d.idx,t);return}
+  d.g.style.display='none';
+  let el=document.elementFromPoint(e.clientX,e.clientY);let pl=el&&el.closest('.pile');
+  if(!pl){ // fallback: nearest pile by ghost centre
+    const gx=e.clientX-d.dx+cw/2,gy=e.clientY-d.dy+cw*.7;
+    el=document.elementFromPoint(gx,gy);pl=el&&el.closest('.pile');
+  }
+  d.g.remove();
+  const ok=pl&&move(d.id,d.idx,pl.dataset.p);
+  if(!ok)render();
+});
+document.addEventListener('pointercancel',()=>{if(drag){if(drag.g)drag.g.remove();drag=null;render()}});
+
+$('new').onclick=deal;$('again').onclick=deal;$('undo').onclick=undo;
+$('draw').onclick=()=>{drawN=drawN==1?3:1;localStorage.setItem('sol-draw',drawN);deal()};
+addEventListener('keydown',e=>{if(e.key=='z'||e.key=='u')undo();if(e.key=='n')deal()});
+addEventListener('resize',()=>render());
+
+// auto-finish once everything is face up and the stock is empty
+setInterval(()=>{
+  if(busy||drag||$('win').classList.contains('on'))return;
+  if(S.stock.length||S.waste.length||S.t.some(p=>p.some(c=>!c.up)))return;
+  for(let i=0;i<7;i++){const p=S.t[i];if(p.length){const c=p[p.length-1];if(canFound(c,c.s)){move('t'+i,p.length-1,'f'+c.s);return}}}
+},90);
+try{deal()}catch(e){document.body.append(String(e))}
+</script></body></html>
