@@ -90,10 +90,23 @@ function render(){
     S.t[i].forEach((c,k)=>{const e=cardEl(c,y);e.dataset.i=k;p.appendChild(e);y+=cw*(c.up?.3:.13)});
     p.style.height=(y+cw*1.4-(S.t[i].length?cw*(S.t[i][S.t[i].length-1].up?.3:.13):0))+'px';
   });
-  $('stat').textContent=moves+' moves';
+  const sk=!S.f.every(a=>a.length==13)&&stuck();$('stat').textContent=sk?'No moves left':moves+' moves';$('stat').style.color=sk?'var(--red)':'';
   $('undo').disabled=!hist.length;
   $('draw').textContent='Draw '+drawN;
   if(S.f.every(a=>a.length==13))win();
+}
+
+function stuck(){
+  const place=(c,from,idx)=>{
+    if(canFound(c,c.s)&&(from=='w'||idx==S.t[+from[1]].length-1))return true;
+    for(let i=0;i<7;i++){if('t'+i==from)continue;if(canTab(c,i)){
+      if(from=='w')return true;
+      const p=S.t[+from[1]];if(idx>0&&!p[idx-1].up)return true;}}
+    return false};
+  for(const c of S.stock.concat(S.waste))if(place(c,'w',0))return false;
+  for(let i=0;i<7;i++){const p=S.t[i];for(let k=0;k<p.length;k++)if(p[k].up&&place(p[k],'t'+i,k))return false;
+    if(!p.length&&S.stock.concat(S.waste).some(c=>c.r==13))return false}
+  return true;
 }
 function win(){$('win').classList.add('on')}
 
