@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sky Garden</title>
+<style>
+  :root { --ink: #14110f; --ground: #f1e9d6; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 24px; }
+  #garden { width: min(100%, calc(100vh - 110px), 900px); aspect-ratio: 1; }
+  #garden svg { width: 100%; height: 100%; display: block; }
+  select { font: 13px Inter, system-ui, sans-serif; padding: 7px 8px; border: 1px solid var(--ink); background: transparent; color: var(--ink); border-radius: 0; }
+  button { font: 13px Inter, system-ui, sans-serif; padding: 7px 14px; border: 1px solid var(--ink); background: var(--ink); color: var(--ground); cursor: pointer; border-radius: 0; }
+  .info { position: fixed; top: 16px; right: 16px; z-index: 5; outline: none; }
+  .info b { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border: 1px solid var(--ink); border-radius: 50%; font: 13px Inter, system-ui, sans-serif; font-weight: 400; cursor: default; }
+  .info div { display: none; position: absolute; top: 32px; right: 0; width: min(320px, calc(100vw - 32px)); background: var(--ink); color: var(--ground); padding: 12px 14px; font: 13px/1.5 Inter, system-ui, sans-serif; }
+  .info:hover div, .info:focus div { display: block; }
+</style>
+</head>
+<body>
+<div class="info" tabindex="0"><b>?</b><div>
+
+  IN PROGRESS
+
+</div></div>
+<div id="garden"></div>
+<div><select id="field"></select> <button id="plant">Generate</button> <button id="upload">Upload</button> <button id="save">Save</button><input id="file" type="file" accept=".json,.csv" hidden></div>
+<script>
+const NSTARS = 350;
+const VIEW = 1000;
+const N_ROSETTE = 16, N_BED = 60, N_WIND = 14;
+const DRIFT_DIST = 110, DRIFT_MIN = 3;
+const GROUND = '#f1e9d6', INK = '#14110f';
+// Gaia DR3 stars [ra, dec, G, BP-RP]
+const SAMPLE_VIEW = [56.75, 24.12, 1];
+const SAMPLE = [[56.87125,24.10493,2.896,0.148],[57.29069,24.05321,3.616,-0.036],[56.219,24.11313,3.698,-0.088],[56.4568,24.36754,3.863,-0.014],[56.58167,23.94814,4.173,-0.011],[56.30216,24.46706,4.261,-0.107],[57.29683,24.1365,5.203,-0.033],[57.08683,23.42104,5.428,-0.067],[56.20099,24.28927,5.441,-0.021],[57.02711,24.98829,5.605,2.194],[56.29068,24.83906,5.64,-0.08],[56.47708,24.55431,5.752,-0.023],[57.43147,23.71165,6.159,-0.05],[56.83776,24.11607,6.299,0.009],[57.23749,23.85687,6.385,0.515],[56.51218,24.5277,6.425,-0.017],[57.34072,24.38075,6.605,-0.033],[56.74759,24.51991,6.803,0.035],[57.49199,23.84849,6.806,0.055],[56.87281,24.28813,6.816,0.101],[56.82126,23.72663,6.866,0.674],[57.71855,23.96127,6.93,0.137],[57.1255,24.34532,6.94,0.182],[56.83746,23.80314,6.998,0.042],[56.40755,24.33546,7.249,0.259],[56.85182,23.91448,7.287,0.042],[56.55736,24.19656,7.335,1.348],[56.61376,24.2548,7.353,0.134],[56.90428,23.60885,7.406,1.412],[57.61701,24.49539,7.409,0.208],[57.32011,24.39593,7.526,0.133],[57.48591,24.34879,7.546,0.09],[56.85036,24.58823,7.633,0.305],[56.86189,23.67813,7.747,0.217],[56.46525,24.03868,7.834,0.266],[55.92315,23.64896,7.86,0.485],[57.35837,24.2475,7.956,0.234],[56.35903,24.03494,8.016,0.312],[56.64259,23.62382,8.04,0.54],[56.00122,24.55679,8.042,0.272],[57.4206,23.34137,8.094,0.273],[57.30088,23.88659,8.102,0.296],[56.08424,24.87491,8.106,1.975],[56.10726,24.3945,8.122,0.383],[57.191,23.52549,8.135,3.11],[55.93027,24.37439,8.198,0.348],[57.05658,24.31821,8.214,0.501],[56.56678,24.18973,8.229,0.444],[56.8307,24.13892,8.244,0.354],[56.34307,23.20462,8.321,0.807],[56.76766,23.99501,8.332,0.411],[57.18299,23.25962,8.337,0.385],[57.29459,23.26716,8.387,1.972],[56.92531,23.54373,8.425,1.393],[56.76491,24.81976,8.479,0.502],[56.27734,24.26331,8.548,0.469],[56.39369,24.46311,8.55,0.498],[56.81909,24.12816,8.624,0.637],[55.8084,23.72345,8.763,2.042],[56.86058,24.65842,8.81,0.257],[56.98403,23.19193,8.852,1.897],[56.21358,23.26872,8.886,0.548],[56.27211,23.70247,8.888,0.537],[56.33702,24.92187,8.901,0.621],[56.09822,24.13244,8.972,0.652],[56.20145,23.58992,8.985,1.82],[57.44131,24.24581,9.011,1.729],[57.14508,24.18098,9.012,0.672],[57.38645,23.3802,9.035,0.587],[57.47791,24.21829,9.145,0.254],[56.60781,25.01797,9.155,2.283],[57.56523,24.66675,9.199,0.51],[56.66399,24.10299,9.2,0.623],[56.42258,24.28839,9.32,0.724],[56.7911,23.78255,9.345,0.712],[57.30049,23.40843,9.358,0.664],[56.79199,24.27645,9.377,0.645],[56.56679,24.18943,9.409,0.403],[56.42559,24.90579,9.424,0.823],[56.5251,23.21898,9.427,1.608],[57.3893,24.62974,9.428,1.525],[55.92875,23.59457,9.43,0.685],[57.02996,24.14186,9.441,0.719],[56.87016,24.55691,9.514,2.373],[57.472,23.5306,9.52,1.452],[55.99511,23.88253,9.54,0.735],[56.35063,24.88578,9.57,0.685],[56.4356,24.71387,9.579,2.395],[56.97908,23.43716,9.587,1.513],[56.4175,24.62703,9.593,0.736],[56.7175,23.21052,9.614,1.349],[56.49771,25.05158,9.616,0.541],[56.16992,24.81833,9.715,0.706],[56.84993,23.91427,9.739,0.833],[56.96895,23.94102,9.761,0.708],[56.63406,24.87052,9.761,0.646],[56.89786,24.53605,9.769,1.714],[57.48778,23.95309,9.775,0.656],[56.71066,23.239,9.785,0.74],[55.98053,24.25029,9.79,1.466],[57.76372,23.90344,9.791,1.394],[57.01891,23.38245,9.822,1.323],[56.76492,24.63714,9.88,1.572],[57.10912,24.04818,9.903,0.734],[56.85692,23.54205,9.922,1.657],[56.60061,23.32341,9.95,1.515],[56.40306,24.90192,9.952,1.576],[55.73272,23.87632,9.955,1.245],[56.52406,24.9929,9.962,0.725],[56.39758,24.08301,9.985,0.826],[57.07052,23.63658,9.992,0.74],[56.54195,23.33979,9.995,0.796],[57.49118,23.84795,10.005,null],[55.69136,24.27116,10.022,1.442],[56.6571,23.78751,10.045,0.901],[56.04136,24.24703,10.08,0.794],[55.99806,24.14774,10.096,1.46],[56.66166,24.95944,10.108,0.802],[56.99019,25.01332,10.116,1.458],[57.66706,23.93284,10.162,0.78],[56.99701,24.09915,10.188,0.763],[57.14389,23.43459,10.21,0.79],[56.05379,24.40428,10.232,0.864],[56.82106,23.91416,10.234,1.718],[57.48947,23.84688,10.235,0.907],[57.0714,23.89015,10.246,0.798],[56.91618,24.00334,10.251,1.546],[56.23508,24.4324,10.275,0.832],[56.59455,24.56995,10.297,0.822],[57.29899,24.63638,10.305,0.806],[56.10123,24.42621,10.321,3.213],[56.57506,23.48646,10.364,1.126],[56.72404,23.58335,10.388,0.815],[56.43516,24.22011,10.393,0.921],[56.91862,24.36436,10.402,0.847],[56.72892,24.79613,10.408,0.834],[56.09844,23.66898,10.42,1.64],[56.06873,24.27271,10.42,0.896],[56.45668,24.42659,10.423,1.551],[57.17737,24.33131,10.429,1.478],[57.27555,23.78104,10.431,1.032],[57.70421,24.42973,10.431,1.327],[56.52559,25.01684,10.437,0.898],[57.4191,24.03751,10.437,1.252],[56.47726,24.25265,10.441,2.874],[56.68408,24.31273,10.445,0.621],[57.6426,24.34681,10.453,0.944],[56.35409,23.19229,10.458,1.054],[56.0838,24.79596,10.473,0.871],[56.53194,24.06171,10.475,0.822],[56.01486,24.50404,10.53,0.904],[57.20321,24.63483,10.566,0.751],[56.33119,24.1801,10.568,0.782],[55.9073,23.53579,10.576,0.867],[57.1057,24.87795,10.579,0.83],[56.22443,23.92109,10.59,1.042],[56.20478,24.16327,10.594,2.061],[56.0581,24.7792,10.6,0.887],[55.88324,23.67385,10.641,0.889],[57.148,23.81914,10.665,1.707],[56.25475,24.58499,10.672,2.398],[56.81716,23.81889,10.674,0.975],[56.74839,24.38436,10.692,0.627],[57.00286,23.87882,10.703,1.575],[57.20406,24.26717,10.706,1.069],[56.14684,24.06275,10.715,2.008],[57.11219,24.99437,10.716,1.411],[56.84482,23.55442,10.722,0.84],[57.29092,23.61276,10.725,0.648],[56.96237,24.36739,10.731,1.728],[56.29073,24.48433,10.741,0.849],[57.07381,25.04764,10.745,0.918],[57.38809,23.7952,10.747,0.887],[56.51666,24.04543,10.777,1.55],[56.63298,23.86168,10.782,0.969],[56.00257,23.54374,10.823,0.984],[57.61846,24.51787,10.837,0.924],[56.08556,24.77266,10.848,1.108],[57.53404,24.12326,10.86,1.254],[56.61848,24.43374,10.873,0.961],[56.06106,24.10191,10.878,1.281],[57.63131,24.50929,10.912,0.654],[57.58721,24.46655,10.915,0.92],[56.72912,24.92221,10.917,0.92],[56.74847,24.33129,10.918,1.521],[57.23379,24.02389,10.921,1.476],[57.35474,23.79501,10.925,2.85],[56.95059,23.21788,10.946,0.945],[56.16417,24.5106,10.97,0.832],[56.85953,24.66006,10.972,0.708],[57.12933,24.27414,10.99,1.411],[56.06126,24.10144,11.056,1.291],[56.57755,24.87067,11.081,1.416],[57.54239,24.22931,11.089,1.328],[56.4245,24.43132,11.091,1.004],[57.29451,23.52984,11.099,1.401],[55.96137,24.24729,11.109,0.999],[57.35031,23.83904,11.115,0.981],[56.8712,24.43301,11.125,1.726],[55.9494,24.03906,11.126,1.053],[56.54023,24.9093,11.142,2.898],[57.05241,23.99914,11.145,2.087],[56.05257,24.73752,11.157,0.854],[56.05452,24.03062,11.167,1.01],[56.00092,24.20072,11.169,1.146],[56.82751,24.45372,11.171,1.413],[57.36986,23.71198,11.177,0.999],[56.18337,24.231,11.193,1.008],[56.04683,23.37912,11.194,1.033],[56.69277,23.15142,11.201,1.248],[55.89349,23.76171,11.202,1.058],[57.02303,24.86499,11.205,0.606],[56.02026,24.27532,11.209,1.053],[57.44389,23.74467,11.211,0.859],[57.61015,23.57238,11.229,0.747],[57.3572,24.93745,11.242,1.051],[57.52542,24.21512,11.242,0.873],[56.98168,23.46484,11.248,1.092],[56.75601,23.49474,11.274,1.005],[56.10958,24.5895,11.283,1.08],[57.61589,24.34791,11.292,1.378],[56.99745,24.09881,11.297,null],[57.3572,24.93737,11.298,1.058],[57.3571,23.8085,11.316,1.17],[56.91816,24.14926,11.319,1.348],[57.55403,24.62869,11.323,0.657],[57.24759,23.88629,11.331,1.598],[57.44143,23.78116,11.337,0.715],[56.62478,23.18337,11.342,0.989],[57.00716,24.0879,11.345,1.786],[56.43979,24.98747,11.35,1.386],[57.45992,23.70539,11.353,1.02],[56.46132,23.62083,11.357,1.761],[57.58294,23.95134,11.36,1.474],[56.23561,24.78772,11.373,1.578],[56.75064,25.09151,11.389,1.92],[56.30213,24.125,11.393,1.462],[57.22902,24.14136,11.395,0.835],[57.37113,23.88491,11.395,1.726],[56.32344,24.72456,11.398,1.006],[56.79969,25.11625,11.399,0.908],[56.54908,24.62212,11.406,1.054],[57.72644,23.83463,11.408,1.16],[57.72961,24.19725,11.426,1.027],[56.75119,23.98353,11.437,1.354],[56.17221,24.39943,11.458,1.038],[57.08249,24.84792,11.458,0.802],[56.64282,24.13809,11.465,0.963],[57.25982,23.25224,11.473,1.048],[57.40236,24.29586,11.476,1.065],[57.1645,23.7784,11.506,1.528],[56.98328,23.69598,11.511,0.83],[56.3716,24.24539,11.512,2.03],[56.91984,24.13802,11.513,1.108],[57.10511,23.63629,11.527,0.899],[55.82953,24.25308,11.528,2.565],[56.35215,23.48674,11.549,1.26],[56.65748,24.74748,11.587,1.102],[56.02242,24.39672,11.591,2.364],[56.64547,23.96275,11.593,0.768],[57.16418,24.68257,11.598,0.888],[57.06219,23.65157,11.607,1.357],[55.98696,24.53258,11.613,1.424],[57.00495,23.64318,11.619,0.866],[56.63926,23.84729,11.623,1.638],[56.85547,23.6311,11.631,1.654],[57.07983,24.06155,11.641,1.421],[56.08114,24.26068,11.655,1.035],[57.325,24.41479,11.656,0.803],[56.43013,24.26994,11.674,0.948],[57.32991,24.25332,11.679,1.36],[56.26375,23.83921,11.684,1.111],[56.92959,24.28208,11.69,1.0],[57.41339,24.22745,11.699,1.414],[57.76234,23.9581,11.72,1.582],[57.02059,24.07176,11.744,1.576],[57.16837,24.45555,11.765,0.804],[55.88202,24.65278,11.775,0.875],[56.03113,24.51991,11.804,2.061],[57.29831,24.38541,11.814,0.821],[56.07079,23.37419,11.815,1.525],[57.02958,24.47403,11.815,1.247],[57.29901,24.23547,11.823,0.994],[55.99639,24.45453,11.831,0.848],[56.3224,24.88848,11.834,0.995],[55.89442,24.59381,11.852,1.871],[56.05316,24.03159,11.86,1.278],[55.83155,24.41597,11.866,0.953],[56.19239,24.73018,11.866,1.396],[57.43938,24.34847,11.869,1.208],[55.72925,24.12511,11.869,0.734],[56.39994,24.50019,11.872,0.812],[56.89151,24.5042,11.872,1.57],[57.05533,23.25269,11.877,0.869],[56.78573,24.87159,11.897,0.979],[57.42625,24.4628,11.9,1.182],[56.58177,23.52136,11.901,1.324],[56.92525,25.08471,11.91,1.503],[56.00905,23.6,11.914,1.405],[56.41428,23.7541,11.926,1.623],[57.51817,24.67124,11.926,0.85],[57.29121,23.8681,11.937,0.862],[57.66125,24.19589,11.938,0.748],[56.74562,24.08917,11.941,0.97],[57.70223,24.5634,11.943,2.38],[56.35829,23.43002,11.943,1.269],[57.42279,24.41493,11.944,0.836],[56.53251,24.86669,11.95,1.316],[56.66421,24.02948,11.957,1.201],[56.66778,23.49754,11.962,1.419],[57.16573,23.29941,11.97,0.802],[56.89811,24.21536,11.989,1.446],[56.661,23.99546,11.993,1.637],[56.77834,23.71495,11.995,1.216],[57.13756,23.90983,11.998,1.346],[56.98843,24.76332,12.023,1.38],[56.08538,23.51777,12.035,1.663],[56.33837,23.72727,12.072,1.538],[57.10068,24.86133,12.078,1.428],[57.53013,24.01924,12.078,1.28],[56.30298,23.29625,12.086,1.022],[56.20406,24.05462,12.098,1.21],[56.054,24.55737,12.101,0.992],[57.16063,23.54692,12.105,0.897],[57.33325,23.59476,12.108,1.359],[55.76784,24.48568,12.109,0.942],[56.47598,24.80186,12.123,0.978],[56.46507,23.43177,12.127,1.207],[57.11021,24.3077,12.129,0.537],[56.5116,23.73718,12.134,1.713],[56.50882,24.83899,12.136,0.835],[56.29628,23.89463,12.144,1.399],[55.84341,24.48616,12.158,1.011],[56.92157,24.68539,12.162,0.861],[57.50121,24.35949,12.19,0.788],[56.82874,23.31304,12.19,1.486],[56.34254,23.47151,12.191,1.307],[56.81378,24.19313,12.193,0.985],[56.78391,24.52609,12.204,1.605],[57.22689,23.83366,12.214,1.012],[56.80648,23.71409,12.216,1.262],[57.03083,23.86522,12.222,0.936],[57.78154,24.35831,12.226,1.497],[56.82536,24.39057,12.229,1.483],[57.11689,23.30056,12.242,1.319],[57.35074,23.47703,12.246,1.412],[56.98598,23.43419,12.249,0.931],[56.3676,23.39876,12.28,0.987],[57.64418,24.50757,12.287,1.271],[56.64611,23.99108,12.289,1.371]].map(a => ({ ra: a[0], dec: a[1], g: a[2], c: a[3] }));
+
+const STOPS = [
+  [-0.5, '#1b2fbf'], [0.2, '#1f8a9e'], [0.6, '#f2c230'],
+  [1.0, '#e0861b'], [1.5, '#e8481c'], [2.0, '#c91f4a'], [3.0, '#7d1a63']
+];
+
+function hex2rgb(h) { return [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); }
+function colour(bprp) {
+  if (bprp == null || isNaN(bprp)) return '#8a8577';
+  if (bprp <= STOPS[0][0]) return STOPS[0][1];
+  for (let i = 1; i < STOPS.length; i++) {
+    if (bprp <= STOPS[i][0]) {
+      const [x0, c0] = STOPS[i - 1], [x1, c1] = STOPS[i];
+      const t = (bprp - x0) / (x1 - x0), a = hex2rgb(c0), b = hex2rgb(c1);
+      return 'rgb(' + a.map((v, k) => Math.round(v + (b[k] - v) * t)).join(',') + ')';
+    }
+  }
+  return STOPS[STOPS.length - 1][1];
+}
+function shade(c, f) {
+  const m = c.startsWith('#') ? hex2rgb(c) : c.match(/\d+/g).map(Number);
+  return 'rgb(' + m.map(v => Math.max(0, Math.min(255, Math.round(v * f)))).join(',') + ')';
+}
+
+function mulberry(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+const ACC = ['#f2c230', '#c91f4a', '#f1e9d6', '#1f8a9e', '#e8481c', '#7d1a63', '#1b2fbf'];
+const RED = '#a63d2a';
+const EDGE = ' stroke="' + GROUND + '" stroke-width="2.5"';
+let DARK = INK, SEED = 7, MODE = 'organic';
+
+function pt(v) { return v.toFixed(1); }
+function pick(rnd, a) { return a[Math.floor(rnd() * a.length)]; }
+
+function smooth(pts) {
+  if (MODE === 'geometric') return 'M' + pts.map(p => pt(p[0]) + ',' + pt(p[1])).join('L') + 'Z';
+  const n = pts.length;
+  let d = 'M' + pts[0].map(pt).join(',');
+  for (let i = 0; i < n; i++) {
+    const p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+    const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    d += 'C' + [c1, c2, p2].map(p => p.map(pt).join(',')).join(' ');
+  }
+  return d + 'Z';
+}
+
+function blob(cx, cy, r, rnd) {
+  const g = MODE === 'geometric', n = g ? 4 + Math.floor(rnd() * 3) : 9, rot = rnd() * 6.283, el = 0.75 + rnd() * 0.5, pts = [];
+  for (let i = 0; i < n; i++) {
+    const a = rot + i / n * 6.283, rr = r * (g ? 0.9 + rnd() * 0.3 : 0.72 + rnd() * 0.56);
+    pts.push([cx + Math.cos(a) * rr * el, cy + Math.sin(a) * rr / el]);
+  }
+  return smooth(pts);
+}
+
+function petal(l, w) { return 'M0,0Q' + pt(l * 0.45) + ',' + pt(-w) + ' ' + pt(l) + ',0Q' + pt(l * 0.45) + ',' + pt(w) + ' 0,0Z'; }
+
+// plant form from colour class: blue radial, white fan, yellow lobes, orange palm, red leaf chain, deep red nested bed
+const FORM = [0, 1, 3, 5, 7, 2], BEDK = [0, 2, 3, 4, 0, 7];
+function glyph(x, y, r, col, rnd, st) {
+  const k = st && FORM[st.cls] != null ? FORM[st.cls] : pick(rnd, [0, 0, 1, 3, 5, 7]), acc = pick(rnd, ACC), dk = shade(col, 0.6), lt = shade(col, 0.78);
+  let s = '<g transform="translate(' + pt(x) + ',' + pt(y) + ') rotate(' + pt(st ? Math.atan2(VIEW / 2 - y, VIEW / 2 - x) * 57.2958 : rnd() * 360) + ')" stroke="' + GROUND + '" stroke-width="1.6">';
+  if (k === 0) {
+    const n = st ? 6 + Math.round(st.t * 8) : 6 + Math.floor(rnd() * 9), w = r * (0.18 + rnd() * 0.22);
+    for (let i = 0; i < n; i++) s += '<path transform="rotate(' + pt(i / n * 360) + ')" d="' + petal(r * 1.7 * (0.8 + rnd() * 0.4), w) + '" fill="' + (i % 2 ? col : lt) + '"/>';
+    s += '<circle r="' + pt(r * 0.2) + '" fill="' + acc + '"/>';
+  } else if (k === 1) {
+    const n = 5 + Math.floor(rnd() * 5), span = 150 + rnd() * 60;
+    for (let i = 0; i < n; i++) s += '<path transform="rotate(' + pt(-span / 2 + i / (n - 1) * span) + ')" d="' + petal(r * 1.6, r * 0.5) + '" fill="' + (i % 2 ? col : lt) + '"/>';
+    s += '<circle r="' + pt(r * 0.25) + '" fill="' + acc + '"/>';
+  } else if (k === 2) {
+    const sd = Math.floor(rnd() * 1e6);
+    [[1, col], [0.76, acc], [0.52, dk], [0.28, GROUND]].forEach(([f, c]) => s += '<path d="' + blob(0, 0, r * f * 1.15, mulberry(sd)) + '" fill="' + c + '"/>');
+  } else if (k === 3) {
+    const n = 5 + Math.floor(rnd() * 4);
+    for (let i = 0; i < n; i++) { const a = i / n * 6.2832; s += '<circle cx="' + pt(Math.cos(a) * r * 0.65) + '" cy="' + pt(Math.sin(a) * r * 0.65) + '" r="' + pt(r * 0.5) + '" fill="' + (i % 2 ? col : lt) + '"/>'; }
+    s += '<circle r="' + pt(r * 0.35) + '" fill="' + acc + '"/>';
+  } else if (k === 4) {
+    let d = '';
+    for (let i = 0; i <= 70; i++) { const t = i / 70, a = t * 6.2832 * 2.4, rr = r * 1.3 * t; d += (i ? 'L' : 'M') + pt(Math.cos(a) * rr) + ',' + pt(Math.sin(a) * rr); }
+    s += '<path d="' + d + '" fill="none" stroke="' + col + '" stroke-width="' + pt(r * 0.42) + '" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<path d="' + d + '" fill="none" stroke="' + acc + '" stroke-width="' + pt(r * 0.1) + '" stroke-linecap="round"/>';
+  } else if (k === 5) {
+    const m = 3 + Math.floor(rnd() * 4);
+    for (let i = 0; i < m; i++) s += '<path transform="translate(' + pt(-r * 0.6) + ',' + pt((i - (m - 1) / 2) * r * 0.42) + ') rotate(' + pt((rnd() - 0.5) * 24) + ')" d="' + petal(r * 2.2, r * 0.26) + '" fill="' + (i % 2 ? col : lt) + '"/>';
+  } else if (k === 6) {
+    const n = 8 + Math.floor(rnd() * 5);
+    for (let i = 0; i < n; i++) { const a = i / n * 6.2832; s += '<circle cx="' + pt(Math.cos(a) * r * 0.85) + '" cy="' + pt(Math.sin(a) * r * 0.85) + '" r="' + pt(r * 0.32) + '" fill="' + (i % 2 ? col : lt) + '"/>'; }
+    s += '<circle r="' + pt(r * 0.62) + '" fill="' + acc + '"/><circle r="' + pt(r * 0.3) + '" fill="' + dk + '"/>';
+  } else {
+    const n = 3 + Math.floor(rnd() * 3);
+    let cx = 0, cy = 0, a = 0;
+    for (let i = 0; i < n; i++) {
+      s += '<ellipse cx="' + pt(cx) + '" cy="' + pt(cy) + '" rx="' + pt(r * 0.5) + '" ry="' + pt(r * 0.8) + '" transform="rotate(' + pt(a) + ' ' + pt(cx) + ' ' + pt(cy) + ')" fill="' + (i % 2 ? col : lt) + '"/>';
+      a += (rnd() - 0.5) * 90; cx += Math.sin(a * 0.01745) * r * 0.9; cy -= Math.cos(a * 0.01745) * r * 0.9;
+    }
+  }
+  return s + '</g>';
+}
+
+function bed(x, y, r, col, rnd, st) {
+  const sd = Math.floor(rnd() * 1e6), k = st && BEDK[st.cls] != null ? BEDK[st.cls] : pick(rnd, [0, 0, 2, 3, 4, 7]), acc = pick(rnd, ACC), dk = shade(col, 0.62), shape = blob(x, y, r, mulberry(sd));
+  if (k === 7) {
+    const l = r * 2, w = r * 0.8, ang = pt(rnd() * 360);
+    return '<g transform="translate(' + pt(x) + ',' + pt(y) + ') rotate(' + ang + ')"' + EDGE + '><path d="' + petal(l, w) + '" fill="' + col + '"/><path d="M0,0L' + pt(l * 0.95) + ',0" stroke="' + dk + '" stroke-width="2" fill="none"/></g>';
+  }
+  let s = '<path d="' + shape + '" fill="' + col + '"' + EDGE + '/>';
+  if (k === 0) s += '<path d="' + blob(x + (rnd() - 0.5) * r * 0.3, y + (rnd() - 0.5) * r * 0.3, r * 0.45, rnd) + '" fill="' + dk + '"/>';
+  else if (k === 1) [0.7, 0.42].forEach(f => s += '<path d="' + blob(x, y, r * f, mulberry(sd)) + '" fill="none" stroke="' + dk + '" stroke-width="1.8"/>');
+  else if (k === 2) s += '<path d="' + shape + '" fill="url(#stripes)"/>';
+  else if (k === 3) s += '<path d="' + shape + '" fill="url(#hatch)"/>';
+  else if (k === 4) s += '<path d="' + shape + '" fill="url(#stipple)"/>';
+  else if (k === 5) s += '<path d="' + shape + '" fill="url(#scales)"/>';
+  else s += '<circle cx="' + pt(x) + '" cy="' + pt(y) + '" r="' + pt(r * 0.45) + '" fill="none" stroke="' + acc + '" stroke-width="3"/><circle cx="' + pt(x) + '" cy="' + pt(y) + '" r="' + pt(r * 0.14) + '" fill="' + acc + '"/>';
+  return s;
+}
+
+function envelope(g, rnd) {
+  const nb = MODE === 'geometric' ? 8 : 10, cx = g.reduce((a, s) => a + s.x, 0) / g.length, cy = g.reduce((a, s) => a + s.y, 0) / g.length;
+  let rad = Array(nb).fill(26);
+  for (const s of g) {
+    const dx = s.x - cx, dy = s.y - cy, k = Math.floor((Math.atan2(dy, dx) + Math.PI) / 6.2832 * nb) % nb;
+    rad[k] = Math.max(rad[k], Math.hypot(dx, dy) + 20 + s.r * 2);
+  }
+  for (let it = 0; it < 2; it++) rad = rad.map((v, i) => (rad[(i + nb - 1) % nb] + 2 * v + rad[(i + 1) % nb]) / 4);
+  return smooth(rad.map((r, i) => {
+    const a = (i + 0.5) / nb * 6.2832 - Math.PI, j = 0.94 + rnd() * 0.12;
+    return [cx + Math.cos(a) * r * j, cy + Math.sin(a) * r * j];
+  }));
+}
+
+function cls(c) { return c == null ? 9 : c < 0.3 ? 0 : c < 0.7 ? 1 : c < 1.1 ? 2 : c < 1.6 ? 3 : c < 2.2 ? 4 : 5; }
+
+function groupStars(faint) {
+  const used = new Set(), groups = [];
+  for (const a of faint) {
+    if (used.has(a)) continue;
+    const g = faint.filter(b => !used.has(b) && b.cls === a.cls && Math.hypot(b.x - a.x, b.y - a.y) < DRIFT_DIST);
+    if (g.length >= DRIFT_MIN) { g.forEach(b => used.add(b)); groups.push(g); }
+  }
+  return { groups, loose: faint.filter(b => !used.has(b)) };
+}
+
+function angular(y, h, rnd) {
+  const w = 60 + rnd() * 40, cols = Math.ceil(VIEW / w), rows = Math.max(1, Math.round(h / w)), ch = h / rows, cs = PAL;
+  const tri = (p, c) => '<path d="M' + p.map(q => q.map(pt).join(',')).join('L') + 'Z" fill="' + c + '" stroke="' + c + '" stroke-width="0.6"/>';
+  let s = '';
+  for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+    const x = i * w, yy = y + j * ch, f = rnd() < 0.5, a = pick(rnd, cs);
+    let b = pick(rnd, cs);
+    if (b === a) b = cs[(cs.indexOf(a) + 1) % cs.length];
+    s += tri(f ? [[x, yy], [x + w, yy], [x, yy + ch]] : [[x, yy], [x + w, yy], [x + w, yy + ch]], a);
+    s += tri(f ? [[x + w, yy], [x + w, yy + ch], [x, yy + ch]] : [[x, yy], [x, yy + ch], [x + w, yy + ch]], b);
+    if (rnd() < 0.18) s += '<circle cx="' + pt(x + w / 2) + '" cy="' + pt(yy + ch / 2) + '" r="' + pt(Math.min(w, ch) * 0.3) + '" fill="' + pick(rnd, cs.filter(c => c !== a && c !== b).concat([a])) + '"/>';
+  }
+  return s;
+}
+
+function wavestrip(y, h, rnd) {
+  const P = 240 + rnd() * 200, B = 60 + rnd() * 30, A = B * (0.25 + rnd() * 0.17), ph = rnd() * 6.283;
+  let s = '<clipPath id="wavezone"><rect x="0" y="' + y + '" width="' + VIEW + '" height="' + h + '"/></clipPath><rect x="0" y="' + y + '" width="' + VIEW + '" height="' + h + '" fill="' + GAP + '"/><g clip-path="url(#wavezone)">';
+  for (let y0 = y - B; y0 < y + h + B; y0 += 2 * B) {
+    let top = '', bot = '';
+    for (let x = 0; x <= VIEW; x += 10) {
+      top += (x ? 'L' : 'M') + x + ',' + pt(y0 + A * Math.sin(x / P * 6.283 + ph));
+      bot = 'L' + x + ',' + pt(y0 + B + A * Math.sin(x / P * 6.283 + ph + 3.1416)) + bot;
+    }
+    s += '<path d="' + top + bot + 'Z" fill="' + BAND + '"/>';
+  }
+  return s + '</g>';
+}
+
+const EARTH = [INK, RED, '#d9c49a', '#6b6a3a', '#2f5d62', '#b5653a', '#4b2a3a'];
+let PAL = [], BAND = INK, GAP = GROUND;
+const MUTED = ['#d9c9a3', '#b9a77a', '#8f9a73', '#a8664a', '#5d6b6e', '#cfa66b', '#7a5c48'];
+
+function planes(rnd) {
+  let s = '<rect width="' + VIEW + '" height="' + VIEW + '" fill="' + GROUND + '"/>';
+  for (let i = 0; i < 6; i++) {
+    const d = blob(rnd() * VIEW, rnd() * VIEW, 220 + rnd() * 220, rnd);
+    s += '<path d="' + d + '" fill="' + pick(rnd, MUTED) + '"/>';
+    if (i % 3 === 1) s += '<path d="' + d + '" fill="url(#' + pick(rnd, ['hatch', 'stripes']) + ')"/>';
+  }
+  return s;
+}
+
+function mineral(rnd) {
+  const n = 9, w = VIEW / n, v = [];
+  for (let j = 0; j <= n; j++) { v.push([]); for (let i = 0; i <= n; i++) v[j].push([i * w + (i % n ? (rnd() - 0.5) * w * 0.6 : 0), j * w + (j % n ? (rnd() - 0.5) * w * 0.6 : 0)]); }
+  let s = '<rect width="' + VIEW + '" height="' + VIEW + '" fill="' + GROUND + '"/>';
+  for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+    const q = [v[j][i], v[j][i + 1], v[j + 1][i + 1], v[j + 1][i]];
+    s += '<path d="M' + q.map(p => pt(p[0]) + ',' + pt(p[1])).join('L') + 'Z" fill="' + pick(rnd, MUTED) + '" stroke="' + GROUND + '" stroke-width="2"/>';
+  }
+  return s;
+}
+
+function pavement(rnd) {
+  DARK = INK;
+  const k = Math.floor(rnd() * 3);
+  if (k === 1) return planes(rnd);
+  if (k === 2) return mineral(rnd);
+  const pool = EARTH.slice().sort(() => rnd() - 0.5);
+  PAL = [GROUND].concat(pool.slice(0, 3));
+  BAND = pick(rnd, [INK, '#2f5d62', '#4b2a3a', '#6b6a3a']);
+  GAP = pick(rnd, [GROUND, '#d9c49a']);
+  const e = 160;
+  return '<rect width="' + VIEW + '" height="' + VIEW + '" fill="' + GROUND + '"/>' + angular(0, e, rnd) + wavestrip(e, VIEW - 2 * e, rnd) + angular(VIEW - e, e, rnd);
+}
+
+function winding(stars) {
+  const left = stars.slice(), tour = [left.shift()];
+  while (left.length) {
+    const a = tour[tour.length - 1];
+    let bi = 0, bd = Infinity;
+    left.forEach((s, i) => { const d = Math.hypot(s.x - a.x, s.y - a.y); if (d < bd) { bd = d; bi = i; } });
+    tour.push(left.splice(bi, 1)[0]);
+  }
+  const p = tour.map(s => [s.x, s.y]), n = p.length;
+  let d = 'M' + p[0].map(pt).join(',');
+  for (let i = 0; i < n - 1; i++) {
+    const p0 = p[Math.max(i - 1, 0)], p1 = p[i], p2 = p[i + 1], p3 = p[Math.min(i + 2, n - 1)];
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    d += 'C' + [c1, c2, p2].map(q => q.map(pt).join(',')).join(' ');
+  }
+  return '<path d="' + d + '" fill="none" stroke="' + INK + '" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="' + d + '" fill="none" stroke="' + GROUND + '" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>';
+}
+
+function render(stars, ra0, dec0, rad) {
+  const sc = 460 / rad, cd = Math.cos(dec0 * Math.PI / 180);
+  const gs = stars.map(s => s.g), gmin = Math.min(...gs), gmax = Math.max(...gs);
+  const all = stars.map((s, i) => {
+    const [x, y] = proj(s.ra, s.dec, ra0, dec0, sc);
+    return { x, y, t: (gmax - s.g) / ((gmax - gmin) || 1), g: s.g, c: s.c, col: colour(s.c), cls: cls(s.c), i };
+  }).sort((a, b) => a.g - b.g);
+  
+  const ros = all.slice(0, N_ROSETTE), beds = all.slice(N_ROSETTE, N_ROSETTE + N_BED), faint = all.slice(N_ROSETTE + N_BED);
+  ros.forEach(s => s.r = 14 + 22 * s.t);
+  beds.forEach(s => s.r = 8 + 16 * s.t);
+  faint.forEach(s => s.r = 2 + 8 * s.t);
+  const { groups, loose } = groupStars(faint);
+  const rg = mulberry(SEED), per = s => mulberry(SEED ^ Math.imul(s.i + 1, 2654435761));
+  MODE = rg() < 0.5 ? 'organic' : 'geometric';
+  const defs = '<defs>' +
+    '<pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="' + INK + '" stroke-width="1.6" opacity=".4"/></pattern>' +
+    '<pattern id="stripes" width="8" height="8" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="8" stroke="' + INK + '" stroke-width="2.2" opacity=".38"/></pattern>' +
+    '<pattern id="cross" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M0,0L9,9M9,0L0,9" stroke="' + INK + '" stroke-width="1.2" opacity=".38"/></pattern>' +
+    '<pattern id="dots" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="4.5" cy="4.5" r="1.8" fill="' + GROUND + '" opacity=".85"/></pattern>' +
+    '<pattern id="scales" width="14" height="10" patternUnits="userSpaceOnUse"><path d="M0,10a7,7 0 0 1 14,0M-7,5a7,7 0 0 1 14,0M7,5a7,7 0 0 1 14,0" fill="none" stroke="' + INK + '" stroke-width="1.3" opacity=".45"/></pattern>' +
+    '<pattern id="stipple" width="26" height="26" patternUnits="userSpaceOnUse"><g fill="' + INK + '" opacity=".5"><circle cx="3" cy="5" r="1.6"/><circle cx="11" cy="2" r="0.9"/><circle cx="18" cy="8" r="2"/><circle cx="7" cy="14" r="1.1"/><circle cx="22" cy="18" r="1.4"/><circle cx="14" cy="21" r="1.8"/><circle cx="2" cy="23" r="0.9"/><circle cx="24" cy="3" r="0.8"/></g></pattern></defs>';
+  let out = defs + pavement(rg);
+  for (const g of groups) {
+    const rnd = mulberry(SEED ^ Math.round(g[0].x * 31 + g[0].y * 17)), env = envelope(g, rnd), tex = pick(rnd, ['hatch', 'stripes', 'stipple', null, null, null, null, null]), dotc = pick(rnd, [GROUND, GROUND, INK, pick(rnd, ACC)]);
+    out += '<path d="' + env + '" fill="' + g[0].col + '"' + EDGE + '/>';
+    if (tex) out += '<path d="' + env + '" fill="url(#' + tex + ')"/>';
+    for (const s of g) out += '<circle cx="' + pt(s.x) + '" cy="' + pt(s.y) + '" r="' + pt(2 + s.r * 0.5) + '" fill="' + dotc + '"/>';
+  }
+  for (const s of loose) out += '<path d="' + blob(s.x, s.y, s.r + 3, per(s)) + '" fill="' + s.col + '"' + EDGE + '/>';
+  for (const s of beds) out += bed(s.x, s.y, s.r, s.col, per(s), s);
+  out += winding(all.slice(0, N_WIND));
+  for (const s of ros) out += glyph(s.x, s.y, s.r, s.col, per(s), s);
+  const tag = '';
+  document.getElementById('garden').innerHTML =
+    '<svg id="art" xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 ' + VIEW + ' ' + VIEW + '">' + out + tag + '</svg>';
+}
+
+function proj(ra, dec, ra0, dec0, sc) {
+  const d2r = Math.PI / 180, a = (ra - ra0) * d2r, d = dec * d2r, d0 = dec0 * d2r;
+  const cc = Math.sin(d0) * Math.sin(d) + Math.cos(d0) * Math.cos(d) * Math.cos(a);
+  const xi = Math.cos(d) * Math.sin(a) / cc, eta = (Math.cos(d0) * Math.sin(d) - Math.sin(d0) * Math.cos(d) * Math.cos(a)) / cc;
+  return [VIEW / 2 - xi / d2r * sc, VIEW / 2 - eta / d2r * sc];
+}
+
+
+let LAST = [];
+const EXTRA = [];
+const FIELDS = [{ n: 'Pleiades', v: SAMPLE_VIEW, s: SAMPLE }].concat(EXTRA);
+const sel = document.getElementById('field');
+FIELDS.forEach((f, i) => sel.add(new Option(f.n, i)));
+if (FIELDS.length < 2) sel.style.display = 'none';
+function draw() { const f = FIELDS[+sel.value]; render(f.s, f.v[0], f.v[1], f.v[2]); }
+function plant() { SEED = Math.random() * 1e9 | 0; draw(); }
+document.getElementById('plant').onclick = plant;
+
+// upload: a .json from make_field.py, or a Gaia .csv (ra, dec, phot_g_mean_mag, bp_rp)
+function fromFile(txt, name) {
+  const t = txt.trim();
+  if (t[0] === '{') {
+    const j = JSON.parse(t);
+    return { n: j.name || name, v: [j.ra, j.dec, j.radius], s: j.stars.map(a => ({ ra: a[0], dec: a[1], g: a[2], c: a[3] })) };
+  }
+  const s = parseCSV(t);
+  if (!s.length) throw new Error('no stars');
+  const ra = s.map(q => q.ra), de = s.map(q => q.dec), ra0 = (Math.min(...ra) + Math.max(...ra)) / 2, de0 = (Math.min(...de) + Math.max(...de)) / 2, cd = Math.cos(de0 * Math.PI / 180);
+  const r = Math.max(...s.map(q => Math.hypot((q.ra - ra0) * cd, q.dec - de0)));
+  return { n: name, v: [+ra0.toFixed(4), +de0.toFixed(4), +(Math.ceil(r * 20) / 20).toFixed(2)], s };
+}
+function parseCSV(txt) {
+  return txt.trim().split('\n').slice(1).map(l => l.split(',')).map(c => ({ ra: +c[0], dec: +c[1], g: +c[2], c: c[3] === '' || c[3] === undefined ? null : +c[3] }))
+    .filter(q => isFinite(q.ra) && isFinite(q.dec) && isFinite(q.g));
+}
+const fileIn = document.getElementById('file');
+document.getElementById('upload').onclick = () => fileIn.click();
+fileIn.onchange = () => {
+  const f = fileIn.files[0];
+  if (!f) return;
+  f.text().then(txt => {
+    const fld = fromFile(txt, f.name.replace(/\.[^.]+$/, ''));
+    FIELDS.push(fld); sel.add(new Option(fld.n, FIELDS.length - 1));
+    sel.style.display = ''; sel.value = FIELDS.length - 1; plant();
+  }).catch(() => alert('Could not read this file'));
+  fileIn.value = '';
+};
+
+// save: largest PNG this browser can make
+document.getElementById('save').onclick = () => {
+  const svg = document.getElementById('art');
+  if (!svg) return;
+  const img = new Image();
+  img.onload = async () => {
+    for (const n of [12000, 8192, 6000, 4096, 2048]) {
+      try {
+        const c = document.createElement('canvas');
+        c.width = c.height = n;
+        const ctx = c.getContext('2d');
+        if (!ctx) continue;
+        ctx.drawImage(img, 0, 0, n, n);
+        if (ctx.getImageData(n >> 1, n >> 1, 1, 1).data[3] === 0) continue;
+        const b = await new Promise(r => c.toBlob(r, 'image/png'));
+        if (!b || b.size < 1000) continue;
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(b); a.download = 'sky-garden-' + n + '.png'; a.click();
+        return;
+      } catch (e) { }
+    }
+  };
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(svg));
+};
+sel.onchange = plant;
+draw();
+</script>
+</body>
+</html>
