@@ -99,6 +99,13 @@ h1 { margin:0; font:700 clamp(1.3rem,2.6vw,2rem)/1.05 var(--display); letter-spa
 .hintline { font:500 .78rem/1.4 var(--mono); color:var(--ink2); min-height:1.2em; }
 .shake { animation:shake .3s; }
 @keyframes shake { 25% { transform:translateX(-5px); } 75% { transform:translateX(5px); } }
+.chip.on { background:var(--ink); color:var(--bg); }
+.setup { display:flex; flex-wrap:wrap; gap:12px 28px; margin-bottom:14px; align-items:flex-start; }
+.setup .msg { flex-basis:100%; min-height:0; }
+.canvas.wide { aspect-ratio:2/1; }
+.mapbox svg.map.zoomable { touch-action:none; cursor:grab; }
+.zoom { position:absolute; top:8px; right:8px; display:flex; flex-direction:column; gap:4px; }
+.zoom .btn { min-width:30px; }
 /* list */
 .pick { display:flex; flex-direction:column; gap:20px; }
 .group { display:flex; flex-direction:column; gap:8px; }
@@ -145,7 +152,7 @@ const C = DATA.c;
 const PTN = {"af":["Afeganistão"],"al":["Albânia"],"dz":["Argélia"],"ad":["Andorra"],"ao":["Angola"],"ag":["Antígua e Barbuda","Antígua"],"ar":["Argentina"],"am":["Armênia","Arménia"],"au":["Austrália"],"at":["Áustria"],"az":["Azerbaijão","Azerbeijão"],"bs":["Bahamas"],"bh":["Bahrein"],"bd":["Bangladesh"],"bb":["Barbados"],"by":["Belarus","Bielorússia","Bielorrússia"],"be":["Bélgica"],"bz":["Belize"],"bj":["Benin","Benim"],"bt":["Butão"],"bo":["Bolívia"],"ba":["Bósnia e Herzegovina","Bósnia"],"bw":["Botsuana","Botswana"],"br":["Brasil"],"bn":["Brunei"],"bg":["Bulgária"],"bf":["Burkina Faso"],"bi":["Burundi"],"cv":["Cabo Verde"],"kh":["Camboja"],"cm":["Camarões"],"ca":["Canadá"],"cf":["República Centro-Africana","RCA"],"td":["Chade"],"cl":["Chile"],"cn":["China"],"co":["Colômbia"],"km":["Comores"],"cg":["República do Congo","Congo","Congo-Brazzaville"],"cr":["Costa Rica"],"ci":["Costa do Marfim"],"hr":["Croácia"],"cu":["Cuba"],"cy":["Chipre"],"cz":["Chéquia","República Tcheca","Tchéquia"],"dk":["Dinamarca"],"dj":["Djibuti","Djibouti","Jibuti"],"dm":["Dominica"],"do":["República Dominicana"],"cd":["República Democrática do Congo","RD Congo","RDC","Congo-Kinshasa","Congo Kinshasa"],"ec":["Equador"],"eg":["Egito"],"sv":["El Salvador"],"gq":["Guiné Equatorial"],"er":["Eritreia"],"ee":["Estônia","Estónia"],"sz":["Essuatíni","Suazilândia","Eswatini"],"et":["Etiópia"],"fj":["Fiji"],"fi":["Finlândia"],"fr":["França"],"ga":["Gabão"],"gm":["Gâmbia"],"ge":["Geórgia"],"de":["Alemanha"],"gh":["Gana"],"gr":["Grécia"],"gd":["Granada"],"gt":["Guatemala"],"gn":["Guiné"],"gw":["Guiné-Bissau"],"gy":["Guiana"],"ht":["Haiti"],"hn":["Honduras"],"hu":["Hungria"],"is":["Islândia"],"in":["Índia"],"id":["Indonésia"],"ir":["Irã","Irão"],"iq":["Iraque"],"ie":["Irlanda"],"il":["Israel"],"it":["Itália"],"jm":["Jamaica"],"jp":["Japão"],"jo":["Jordânia"],"kz":["Cazaquistão"],"ke":["Quênia","Quénia"],"ki":["Kiribati"],"xk":["Kosovo"],"kw":["Kuwait","Kuaite"],"kg":["Quirguistão","Quirguizistão","Quirguízia"],"la":["Laos"],"lv":["Letônia","Letónia"],"lb":["Líbano"],"ls":["Lesoto"],"lr":["Libéria"],"ly":["Líbia"],"li":["Liechtenstein"],"lt":["Lituânia"],"lu":["Luxemburgo"],"mg":["Madagáscar"],"mw":["Malaui","Malawi"],"my":["Malásia"],"mv":["Maldivas"],"ml":["Mali"],"mt":["Malta"],"mh":["Ilhas Marshall"],"mr":["Mauritânia"],"mu":["Maurício","Maurícia"],"mx":["México"],"fm":["Micronésia","Estados Federados da Micronésia"],"md":["Moldávia"],"mc":["Mônaco","Mónaco"],"mn":["Mongólia"],"me":["Montenegro"],"ma":["Marrocos"],"mz":["Moçambique"],"mm":["Mianmar","Myanmar","Birmânia"],"na":["Namíbia"],"nr":["Nauru"],"np":["Nepal"],"nl":["Países Baixos","Holanda"],"nz":["Nova Zelândia"],"ni":["Nicarágua"],"ne":["Níger"],"ng":["Nigéria"],"kp":["Coreia do Norte"],"mk":["Macedônia do Norte","Macedónia do Norte","Macedônia","Macedónia"],"no":["Noruega"],"om":["Omã"],"pk":["Paquistão"],"pw":["Palau"],"ps":["Palestina"],"pa":["Panamá"],"pg":["Papua-Nova Guiné","Papua Nova Guiné"],"py":["Paraguai"],"pe":["Peru","Perú"],"ph":["Filipinas"],"pl":["Polônia","Polónia"],"pt":["Portugal"],"qa":["Catar","Qatar"],"ro":["Romênia","Roménia"],"ru":["Rússia","Federação Russa"],"rw":["Ruanda"],"kn":["São Cristóvão e Névis","São Cristóvão e Nevis","São Cristóvão"],"lc":["Santa Lúcia"],"vc":["São Vicente e Granadinas","São Vincente e Granadinas","São Vicente"],"ws":["Samoa"],"sm":["San Marino"],"st":["São Tomé e Príncipe","São Tomé"],"sa":["Arábia Saudita"],"sn":["Senegal"],"rs":["Sérvia"],"sc":["Seicheles"],"sl":["Serra Leoa"],"sg":["Cingapura","Singapura"],"sk":["Eslováquia"],"si":["Eslovênia","Eslovénia"],"sb":["Ilhas Salomão"],"so":["Somália"],"za":["África do Sul"],"kr":["Coreia do Sul"],"ss":["Sudão do Sul"],"es":["Espanha"],"lk":["Sri Lanka"],"sd":["Sudão"],"sr":["Suriname"],"se":["Suécia"],"ch":["Suíça"],"sy":["Síria"],"tw":["Taiwan","Ilha Formosa","Formosa"],"tj":["Tajiquistão","Tadjiquistão"],"tz":["Tanzânia"],"th":["Tailândia"],"tl":["Timor-Leste","Timor Leste"],"tg":["Togo"],"to":["Tonga"],"tt":["Trinidade e Tobago","Trinidad"],"tn":["Tunísia"],"tr":["Turquia","Türkiye","Turkiye"],"tm":["Turcomenistão","Turquemenistão"],"ug":["Uganda"],"ua":["Ucrânia"],"ae":["Emirados Árabes Unidos","EAU"],"gb":["Reino Unido","Inglaterra","Grã-Bretanha"],"us":["Estados Unidos","EUA","Estados Unidos da América"],"uy":["Uruguai"],"uz":["Uzbequistão","Usbequistão"],"vu":["Vanuatu"],"va":["Cidade do Vaticano","Vaticano","Santa Sé"],"ve":["Venezuela"],"vn":["Vietnã","Vietname"],"ye":["Iêmen","Iémen"],"zm":["Zâmbia"],"zw":["Zimbábue","Zimbabwe"]};
 const PTCAP = {"Abidjan":"Abidjã","Abu Dhabi":"Abu Dabi","Abuja":"Abuja","Accra":"Accra","Addis Ababa":"Adis Abeba","Algiers":"Argel","Amman":"Amã","Amsterdam":"Amsterdã","Andorra la Vella":"Andorra la Vella","Ankara":"Ankara","Antananarivo":"Antananarivo","Apia":"Apia","Ashgabat":"Asgabate","Asmara":"Asmara","Astana":"Astana","Asunción":"Assunção","Athens":"Atenas","Baghdad":"Bagdá","Baku":"Baku","Bamako":"Bamako","Bandar Seri Begawan":"Bandar Seri Begawan","Bangkok":"Bangcoc","Bangui":"Bangui","Banjul":"Banjul","Basseterre":"Basseterre","Beijing":"Pequim","Beirut":"Beirute","Belgrade":"Belgrado","Belmopan":"Belmopan","Berlin":"Berlim","Bern":"Berna","Bishkek":"Bishkek","Bissau":"Bissau","Bloemfontein":"Bloemfontein","Bogotá":"Bogotá","Brasília":"Brasília","Bratislava":"Bratislava","Brazzaville":"Brazzaville","Bridgetown":"Bridgetown","Brussels":"Bruxelas","Bucharest":"Bucareste","Budapest":"Budapeste","Buenos Aires":"Buenos Aires","Cairo":"Cairo","Canberra":"Canberra","Cape Town":"Cidade do Cabo","Caracas":"Caracas","Castries":"Castries","Chișinău":"Chisinau","Colombo":"Colombo","Conakry":"Conacri","Copenhagen":"Copenhague","Cotonou":"Cotonou","Dakar":"Dakar","Damascus":"Damasco","Dhaka":"Daca","Dili":"Dili","Djibouti":"Djibuti","Dodoma":"Dodoma","Doha":"Doha","Dublin":"Dublin","Dushanbe":"Dushanbe","Freetown":"Freetown","Gaborone":"Gaborone","Georgetown":"Georgetown","Gitega":"Gitega","Guatemala City":"Cidade da Guatemala","Hanoi":"Hanói","Harare":"Harare","Havana":"Havana","Helsinki":"Helsinque","Honiara":"Honiara","Islamabad":"Islamabade","Jakarta":"Jacarta","Jerusalem":"Jerusalém","Juba":"Juba","Kabul":"Cabul","Kampala":"Kampala","Kathmandu":"Catmandu","Khartoum":"Cartum","Kigali":"Kigali","Kingston":"Kingston","Kingstown":"Kingstown","Kinshasa":"Kinshasa","Kuala Lumpur":"Kuala Lumpur","Kuwait City":"Cidade do Kuwait","Kyiv":"Kiev","La Paz":"La Paz","Libreville":"Libreville","Lilongwe":"Lilongwe","Lima":"Lima","Lisbon":"Lisboa","Ljubljana":"Ljubljana","Lobamba":"Lobamba","Lomé":"Lomé","London":"Londres","Luanda":"Luanda","Lusaka":"Lusaka","Luxembourg":"Luxemburgo","Madrid":"Madrid","Majuro":"Majuro","Malabo":"Malabo","Malé":"Malé","Managua":"Managua","Manama":"Manama","Manila":"Manila","Maputo":"Maputo","Maseru":"Maseru","Mbabane":"Mbabane","Mexico City":"Cidade do México","Minsk":"Minsk","Mogadishu":"Mogadíscio","Monaco":"Mônaco","Monrovia":"Monrovia","Montevideo":"Montevideo","Moroni":"Moroni","Moscow":"Moscou","Muscat":"Mascate","N'Djamena":"N'Djamena","Nairobi":"Nairobi","Nassau":"Nassau","Nay Pyi Taw":"Nay Pyi Taw","Naypyidaw":"Naypyidaw","New Delhi":"Nova Délhi","Ngerulmud":"Ngerulmud","Niamey":"Niamei","Nicosia":"Nicósia","Nouakchott":"Nuakchott","Nuku'alofa":"Nuku'alofa","Oslo":"Oslo","Ottawa":"Ottawa","Ouagadougou":"Uagadugu","Palikir":"Palikir","Panama City":"Cidade do Panamá","Paramaribo":"Paramaribo","Paris":"Paris","Phnom Penh":"Phnom Penh","Podgorica":"Podgorica","Port Louis":"Port Louis","Port Moresby":"Port Moresby","Port Vila":"Port Vila","Port of Spain":"Port of Spain","Port-au-Prince":"Porto Príncipe","Porto-Novo":"Porto Novo","Prague":"Praga","Praia":"Praia","Pretoria":"Pretória","Pristina":"Pristina","Pyongyang":"Pyongyang","Quito":"Quito","Rabat":"Rabat","Reykjavik":"Reykjavik","Riga":"Riga","Riyadh":"Riade","Rome":"Roma","Roseau":"Roseau","Saint George's":"Saint George's","Saint John's":"Saint John's","San José":"San José","San Marino":"San Marino","San Salvador":"San Salvador","Sana'a":"Saná","Santiago":"Santiago","Santo Domingo":"Santo Domingo","Sarajevo":"Sarajevo","Seoul":"Seul","Singapore":"Cingapura","Skopje":"Escópia","Sofia":"Sófia","South Tarawa":"Tarawa do Sul","Sri Jayawardenepura Kotte":"Sri Jayawardenepura Kotte","St. George's":"St. George's","St. John's":"St. John's","Stockholm":"Estocolmo","Sucre":"Sucre","Suva":"Suva","São Tomé":"São Tomé","Taipei":"Taipei","Tallinn":"Tallinn","Tashkent":"Tashkent","Tbilisi":"Tbilisi","Tegucigalpa":"Tegucigalpa","Tehran":"Teerã","Thimphu":"Timphu","Tirana":"Tirana","Tokyo":"Tóquio","Tripoli":"Trípoli","Tunis":"Túnis","Ulaanbaatar":"Ulan Bator","Ulan Bator":"Ulan Bator","Vaduz":"Vaduz","Valletta":"Valeta","Vatican City":"Cidade do Vaticano","Victoria":"Victoria","Vienna":"Viena","Vientiane":"Vientiane","Vilnius":"Vilnius","Warsaw":"Varsóvia","Washington":"Washington","Washington DC":"Washington DC","Washington, D.C.":"Washington, D.C.","Wellington":"Wellington","Windhoek":"Windhoek","Yamoussoukro":"Iamussuculo","Yaoundé":"Iaundé","Yaren":"Yaren","Yerevan":"Erevan","Zagreb":"Zagreb"};
 let LANG = lsGet("borderline.lang") === "pt" ? "pt" : "en";
-const PTS = {"tap to reveal": "toque para revelar", "Random country outline. Tap to reveal its name.": "Contorno de um país aleatório. Toque para revelar o nome.", "Guess the shape": "Adivinhe o formato", "Which country is it?": "Que país é este?", "Name the highlighted": "Nomeie o destacado", "One country lit up on the map. Which one?": "Um país aceso no mapa. Qual é?", "Find on the map": "Encontre no mapa", "You get a name. Click it on a world map you can zoom.": "Você recebe um nome. Clique nele em um mapa-múndi com zoom.", "Neighbours": "Vizinhos", "Click every country that shares a border with the one shown.": "Clique em todos os países que fazem fronteira com o mostrado.", "List by letter": "Liste por letra", "Name every country that starts with a letter, or sits on a continent.": "Cite todos os países que começam com uma letra ou ficam em um continente.", "Flags": "Bandeiras", "Name the flag, or pick the flag of a given country.": "Diga de quem é a bandeira, ou escolha a bandeira de um país.", "Capitals": "Capitais", "Country to capital, and capital back to country.": "Do país para a capital, e da capital para o país.", "Size duel": "Duelo de tamanho", "Two countries, one question: which has more area?": "Dois países, uma pergunta: qual tem mais área?", "Pick more regions: this pool has fewer than four countries.": "Escolha mais regiões: este conjunto tem menos de quatro países.", "← Quit": "← Sair", "Quit to home": "Voltar ao início", "World": "Mundo", "Question": "Pergunta", "Score": "Pontos", "Streak": "Sequência", "the flag of ": "a bandeira do país ", "Flag option": "Opção de bandeira", "50/50 (half point)": "50/50 (meio ponto)", "Type the country": "Digite o país", "Your answer": "Sua resposta", "Guess": "Responder", "Hint (half point)": "Dica (meio ponto)", "capital": "capital", "Flag of a country": "Bandeira de um país", "Natural Earth projection": "Projeção Natural Earth", "Find this country": "Encontre este país", "What is the capital of ": "Qual é a capital do país ", "Which country has ": "Qual país tem ", " as its capital?": " como capital?", "Which country's flag is this?": "De que país é esta bandeira?", "Which of these is the flag of ": "Qual destas é a bandeira do país ", "Which country has this shape?": "Qual país tem este formato?", "Which country is highlighted?": "Qual país está destacado?", "World map": "Mapa-múndi", "Zoom in": "Aumentar zoom", "Zoom out": "Diminuir zoom", "Reset view": "Restaurar visão", "drag to pan · scroll or pinch to zoom": "arraste para mover · role ou use pinça para dar zoom", "World overview, tap to jump": "Visão geral do mundo, toque para ir", " is the capital of ": " é a capital do país ", "Also used: ": "Também usada: ", "Correct, with a hint (+0.5)": "Correto, com dica (+0,5)", "Correct (+1)": "Correto (+1)", "Not quite": "Quase", "See results": "Ver resultados", "Next": "Próxima", "You picked ": "Você escolheu ", "You said ": "Você disse ", "isn't a country I know.": "não é um país que eu conheça.", "That area is a territory or unlisted region, not a country in this game. Try again.": "Essa área é um território ou região fora da lista, não um país neste jogo. Tente de novo.", "You clicked ": "Você clicou em ", "Missed": "Erradas", "A clean sheet.": "Sem nenhum erro.", "Round complete": "Rodada concluída", "Accuracy": "Precisão", "Best streak": "Melhor sequência", "Personal best": "Recorde pessoal", "New personal best for this setup.": "Novo recorde pessoal para esta configuração.", "Play again": "Jogar de novo", "Home": "Início", "← Home": "← Início", "Type from memory": "Digite de memória", "Countries starting with": "Países que começam com", "Or name a whole continent": "Ou cite um continente inteiro", "Every country": "Todos os países", "← Back": "← Voltar", "Found": "Encontrados", "Time": "Tempo", "Type a country, press Enter": "Digite um país e tecle Enter", "Country name": "Nome do país", "Add": "Adicionar", "Reveal one": "Revelar um", "Give up": "Desistir", "found countries light up": "os países encontrados se acendem", "Pick another list": "Escolher outra lista", "Try this list again": "Tentar esta lista de novo", "Click every country that touches": "Clique em todos os países que fazem fronteira com", "That area is a territory or unlisted region. Try again.": "Essa área é um território ou região fora da lista. Tente de novo.", "Which country is larger?": "Qual país é maior?", "Shapes are drawn to the same scale, equal-area projection.": "Os formatos estão na mesma escala, em projeção de áreas iguais.", "Africa": "África", "Asia": "Ásia", "Europe": "Europa", "North America": "América do Norte", "South America": "América do Sul", "Oceania": "Oceania", "centre": "centro", "Choose language": "Escolher idioma", "Reveal": "Revelar", "Hint": "Dica"};
+const PTS = {"tap to reveal": "toque para revelar", "Random country outline. Tap to reveal its name.": "Contorno de um país aleatório. Toque para revelar o nome.", "Guess the shape": "Adivinhe o formato", "Which country is it?": "Que país é este?", "Name the highlighted": "Nomeie o destacado", "One country lit up on the map. Which one?": "Um país aceso no mapa. Qual é?", "Find on the map": "Encontre no mapa", "You get a name. Click it on a world map you can zoom.": "Você recebe um nome. Clique nele em um mapa-múndi com zoom.", "Neighbours": "Vizinhos", "Click every country that shares a border with the one shown.": "Clique em todos os países que fazem fronteira com o mostrado.", "List by letter": "Liste por letra", "Name every country that starts with a letter, or sits on a continent.": "Cite todos os países que começam com uma letra ou ficam em um continente.", "Flags": "Bandeiras", "Name the flag, or pick the flag of a given country.": "Diga de quem é a bandeira, ou escolha a bandeira de um país.", "Capitals": "Capitais", "Country to capital, and capital back to country.": "Do país para a capital, e da capital para o país.", "Size duel": "Duelo de tamanho", "Two countries, one question: which has more area?": "Dois países, uma pergunta: qual tem mais área?", "Pick more regions: this pool has fewer than four countries.": "Escolha mais regiões: este conjunto tem menos de quatro países.", "← Quit": "← Sair", "Quit to home": "Voltar ao início", "World": "Mundo", "Question": "Pergunta", "Score": "Pontos", "Streak": "Sequência", "the flag of ": "a bandeira do país ", "Flag option": "Opção de bandeira", "50/50 (half point)": "50/50 (meio ponto)", "Type the country": "Digite o país", "Your answer": "Sua resposta", "Guess": "Responder", "Hint (half point)": "Dica (meio ponto)", "capital": "capital", "Flag of a country": "Bandeira de um país", "Natural Earth projection": "Projeção Natural Earth", "Find this country": "Encontre este país", "What is the capital of ": "Qual é a capital do país ", "Which country has ": "Qual país tem ", " as its capital?": " como capital?", "Which country's flag is this?": "De que país é esta bandeira?", "Which of these is the flag of ": "Qual destas é a bandeira do país ", "Which country has this shape?": "Qual país tem este formato?", "Which country is highlighted?": "Qual país está destacado?", "World map": "Mapa-múndi", "Zoom in": "Aumentar zoom", "Zoom out": "Diminuir zoom", "Reset view": "Restaurar visão", "drag to pan · scroll or pinch to zoom": "arraste para mover · role ou use pinça para dar zoom", "World overview, tap to jump": "Visão geral do mundo, toque para ir", " is the capital of ": " é a capital do país ", "Also used: ": "Também usada: ", "Correct, with a hint (+0.5)": "Correto, com dica (+0,5)", "Correct (+1)": "Correto (+1)", "Not quite": "Quase", "See results": "Ver resultados", "Next": "Próxima", "You picked ": "Você escolheu ", "You said ": "Você disse ", "isn't a country I know.": "não é um país que eu conheça.", "That area is a territory or unlisted region, not a country in this game. Try again.": "Essa área é um território ou região fora da lista, não um país neste jogo. Tente de novo.", "You clicked ": "Você clicou em ", "Missed": "Erradas", "A clean sheet.": "Sem nenhum erro.", "Round complete": "Rodada concluída", "Accuracy": "Precisão", "Best streak": "Melhor sequência", "Personal best": "Recorde pessoal", "New personal best for this setup.": "Novo recorde pessoal para esta configuração.", "Play again": "Jogar de novo", "Home": "Início", "← Home": "← Início", "Type from memory": "Digite de memória", "Countries starting with": "Países que começam com", "Or name a whole continent": "Ou cite um continente inteiro", "Every country": "Todos os países", "← Back": "← Voltar", "Found": "Encontrados", "Time": "Tempo", "Type a country, press Enter": "Digite um país e tecle Enter", "Country name": "Nome do país", "Add": "Adicionar", "Reveal one": "Revelar um", "Give up": "Desistir", "found countries light up": "os países encontrados se acendem", "Pick another list": "Escolher outra lista", "Try this list again": "Tentar esta lista de novo", "Click every country that touches": "Clique em todos os países que fazem fronteira com", "That area is a territory or unlisted region. Try again.": "Essa área é um território ou região fora da lista. Tente de novo.", "Which country is larger?": "Qual país é maior?", "Shapes are drawn to the same scale, equal-area projection.": "Os formatos estão na mesma escala, em projeção de áreas iguais.", "Africa": "África", "Asia": "Ásia", "Europe": "Europa", "North America": "América do Norte", "South America": "América do Sul", "Oceania": "Oceania", "centre": "centro", "Choose language": "Escolher idioma", "Reveal": "Revelar", "Hint": "Dica", "Continents": "Continentes", "Shape, flag, capital or name: which continent is it on?": "Formato, bandeira, capital ou nome: em que continente fica?", "Compass": "Bússola", "Four countries: which lies furthest north, south, east or west?": "Quatro países: qual fica mais ao norte, sul, leste ou oeste?", "Mixed": "Misto", "Every kind of question, shuffled.": "Todos os tipos de pergunta, embaralhados.", "Questions": "Perguntas", "Region": "Região", "Microstates": "Microestados", "All": "Todas", "Which city is the capital of this country?": "Qual cidade é a capital deste país?", "Which continent is ": "Em que continente fica ", "Which continent is the country with this capital on?": "Em que continente fica o país com esta capital?", "Which continent is this country on?": "Em que continente fica este país?", " on?": "?", "Click ": "Clique em ", " on the map": " no mapa", "Which of these lies furthest north?": "Qual destes fica mais ao norte?", "Which of these lies furthest south?": "Qual destes fica mais ao sul?", "Which of these lies furthest east?": "Qual destes fica mais a leste?", "Which of these lies furthest west?": "Qual destes fica mais a oeste?", "Which country is smaller?": "Qual país é menor?", " borders: ": " faz fronteira com: ", "Done": "Pronto", "Misses": "Erros", "Partly right": "Parcialmente certo", "is the country shown.": "é o país mostrado."};
 const tr = s => (LANG === "pt" && PTS[s]) || s;
 const nm = c => LANG === "pt" ? PTN[c.id][0] : c.name;
 const allNames = c => [c.name].concat(c.al, PTN[c.id]);
@@ -164,6 +171,7 @@ const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: 
 function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 let S = { cont: [], style: "choice", rounds: 10, tiny: false };
+try { const t = JSON.parse(lsGet("borderline.settings")); if (t) { if (Array.isArray(t.cont)) S.cont = t.cont.filter(k => ["Africa", "Asia", "Europe", "North America", "South America", "Oceania"].indexOf(k) >= 0); if ([0, 10, 25, 50].indexOf(t.rounds) >= 0) S.rounds = t.rounds; S.tiny = !!t.tiny; } } catch (e) {}
 function saveS() { lsSet("borderline.settings", JSON.stringify(S)); }
 
 /* ---------- text matching ---------- */
@@ -272,23 +280,101 @@ function bestKey(mode) { return "borderline.best." + mode + "." + S.style + "." 
 
 function viewHome() {
   stopTimer(); G = null;
-  const modes = [["shape", tr("Guess the shape"), tr("Which country is it?")], ["pick", tr("Name the highlighted"), tr("One country lit up on the map. Which one?")], ["flag", tr("Flags"), tr("Name the flag, or pick the flag of a given country.")], ["list", tr("List by letter"), tr("Name every country that starts with a letter, or sits on a continent.")], ["cap", tr("Capitals"), tr("Country to capital, and capital back to country.")]];
-  app.innerHTML = '<div class="tiles">' + modes.map((m, i) => '<button class="tile" data-act="mode" data-v="' + m[0] + '"><span class="label">0' + (i + 1) + '</span><h3>' + m[1] + '</h3><p>' + m[2] + '</p></button>').join("") + "</div>";
+  const modes = [["shape", tr("Guess the shape"), tr("Which country is it?")], ["pick", tr("Name the highlighted"), tr("One country lit up on the map. Which one?")], ["flag", tr("Flags"), tr("Name the flag, or pick the flag of a given country.")], ["list", tr("List by letter"), tr("Name every country that starts with a letter, or sits on a continent.")], ["cap", tr("Capitals"), tr("Country to capital, and capital back to country.")],
+    ["find", tr("Find on the map"), tr("You get a name. Click it on a world map you can zoom.")], ["nb", tr("Neighbours"), tr("Click every country that shares a border with the one shown.")], ["duel", tr("Size duel"), tr("Two countries, one question: which has more area?")], ["cont", tr("Continents"), tr("Shape, flag, capital or name: which continent is it on?")], ["geo", tr("Compass"), tr("Four countries: which lies furthest north, south, east or west?")], ["mixed", tr("Mixed"), tr("Every kind of question, shuffled.")]];
+  const lens = [[10, "10"], [25, "25"], [50, "50"], [0, tr("All")]];
+  const setup = '<div class="setup"><div class="group"><span class="label">' + tr("Questions") + '</span><div class="seg">' + lens.map(l => '<button data-act="rounds" data-v="' + l[0] + '"' + (S.rounds === l[0] ? ' class="on"' : "") + ">" + l[1] + "</button>").join("") + "</div></div>" +
+    '<div class="group"><span class="label">' + tr("Region") + '</span><div class="chips"><button class="chip' + (S.cont.length ? "" : " on") + '" data-act="cont" data-v="All">' + tr("World") + "</button>" + CONTS.map(n => '<button class="chip' + (S.cont.indexOf(n) >= 0 ? " on" : "") + '" data-act="cont" data-v="' + n + '">' + ctn(n) + "</button>").join("") + '<button class="chip' + (S.tiny ? " on" : "") + '" data-act="tiny">' + tr("Microstates") + "</button></div></div>" +
+    '<div class="msg err" id="toast" role="status"></div></div>';
+  app.innerHTML = setup + '<div class="tiles">' + modes.map((m, i) => '<button class="tile" data-act="mode" data-v="' + m[0] + '"><span class="label">' + String(i + 1).padStart(2, "0") + '</span><h3>' + m[1] + '</h3><p>' + m[2] + "</p></button>").join("") + "</div>";
   syncLang();
 }
 function syncLang() { document.querySelectorAll("#langseg button").forEach(b => b.classList.toggle("on", b.dataset.v === LANG)); }
 
+const MIX = ["shape", "pick", "flag", "cap", "find", "nb", "duel", "cont", "geo"];
+const ALLN = 60;
+const AMBIG = ["ru", "tr", "eg", "kz", "ge", "az", "am", "cy"];
+const nbOf = c => (c.nb || []).filter(i => BY[i]);
+const capOK = x => x.cap.length && norm(x.cap[0]) !== norm(x.name);
+function capPool() { return C.filter(c => inFilter(c) && capOK(c)); }
+function poolOf(m) {
+  if (m === "cap") return capPool();
+  if (m === "flag") return C.filter(inFilter);
+  if (m === "nb") return C.filter(c => inFilter(c) && nbOf(c).length && nbOf(c).length <= 10);
+  if (m === "cont") return C.filter(c => inFilter(c) && AMBIG.indexOf(c.id) < 0);
+  if (m === "duel" || m === "geo") return C.filter(c => inFilter(c) && !c.micro);
+  return poolFor(m === "find" ? "pick" : m);
+}
+
 function startGame(mode) {
   if (mode === "list") return viewListSetup();
-  const pool = mode === "cap" ? capPool() : mode === "flag" ? C.filter(inFilter) : poolFor(mode);
-  if (pool.length < 4) { alert_("Pick more regions: this pool has fewer than four countries."); return; }
-  const n = S.rounds ? Math.min(S.rounds, pool.length) : pool.length;
-  G = { mode, qs: shuffle(pool).slice(0, n).map(c => c.id), i: 0, score: 0, streak: 0, bestStreak: 0, log: [], locked: false, hint: false, sub: "a" };
+  const pool = mode === "mixed" ? C.filter(inFilter) : poolOf(mode);
+  if (pool.length < (mode === "nb" ? 1 : 4)) { alert_("Pick more regions: this pool has fewer than four countries."); return; }
+  const qs = buildQs(mode);
+  if (!qs.length) { alert_("Pick more regions: this pool has fewer than four countries."); return; }
+  G = { mode, qs, i: 0, score: 0, streak: 0, bestStreak: 0, log: [], locked: false, hint: false };
   viewQuestion();
 }
 function alert_(t) { const m = document.getElementById("toast"); if (m) m.textContent = tr(t); }
 
-const TITLES = { get shape() { return tr("Guess the shape"); }, get pick() { return tr("Name the highlighted"); }, get list() { return tr("List by letter"); }, get cap() { return tr("Capitals"); }, get flag() { return tr("Flags"); } };
+/* ---------- question builders ---------- */
+function makeQ(m, id) {
+  const c = BY[id], q = { m, id, sub: "a" };
+  if (m === "cap") q.sub = sample(["a", "b", "c"]);
+  else if (m === "flag") q.sub = Math.random() < 0.5 ? "b" : "a";
+  else if (m === "cont") { q.sub = sample(c.micro ? ["b", "c", "d"] : ["a", "b", "c", "d"]); if (q.sub === "d" && !c.cap.length) q.sub = "c"; q.ans = c.cont; }
+  else if (m === "nb") { q.found = []; q.bad = []; }
+  if (q.ans === undefined) q.ans = id;
+  return q;
+}
+const geoVal = (v, c) => v === "N" ? c.lat : v === "S" ? -c.lat : v === "E" ? c.lon : -c.lon;
+function makeGeo() {
+  const pool = poolOf("geo").filter(c => Math.abs(c.lon) < 169);
+  if (pool.length < 4) return null;
+  for (let t = 0; t < 300; t++) {
+    const v = sample(["N", "S", "E", "W"]), o = shuffle(pool).slice(0, 4);
+    const s = o.slice().sort((a, b) => geoVal(v, b) - geoVal(v, a));
+    if (geoVal(v, s[0]) - geoVal(v, s[1]) >= (v === "N" || v === "S" ? 6 : 10)) return { m: "geo", id: s[0].id, ans: s[0].id, v, opts: o.map(x => ({ id: x.id, html: esc(nm(x)) })) };
+  }
+  return null;
+}
+function makeDuel() {
+  const pool = poolOf("duel");
+  if (pool.length < 2) return null;
+  for (let t = 0; t < 300; t++) {
+    const p = shuffle(pool).slice(0, 2), big = p[0].a > p[1].a ? p[0] : p[1], small = big === p[0] ? p[1] : p[0];
+    if (big.a / small.a < 1.3) continue;
+    const sub = Math.random() < 0.5 ? "big" : "small", w = sub === "big" ? big : small;
+    return { m: "duel", id: w.id, ans: w.id, sub, pair: p.map(x => x.id), opts: p.map(x => ({ id: x.id, html: esc(nm(x)) })) };
+  }
+  return null;
+}
+function buildQs(mode) {
+  const n0 = S.rounds;
+  if (mode === "geo" || mode === "duel") {
+    const qs = [];
+    for (let i = 0, n = n0 || ALLN; i < n; i++) { const q = mode === "geo" ? makeGeo() : makeDuel(); if (q) qs.push(q); }
+    return qs;
+  }
+  if (mode === "mixed") {
+    const n = n0 || ALLN, qs = [], used = {};
+    for (let g = 0; qs.length < n && g < n * 20; g++) {
+      const m = sample(MIX);
+      let q;
+      if (m === "geo") q = makeGeo();
+      else if (m === "duel") q = makeDuel();
+      else { const p = poolOf(m).filter(c => !used[c.id]); if (!p.length) continue; q = makeQ(m, sample(p).id); }
+      if (!q) continue;
+      used[q.id] = true; qs.push(q);
+    }
+    return qs;
+  }
+  const pool = poolOf(mode), n = n0 ? Math.min(n0, pool.length) : pool.length;
+  return shuffle(pool).slice(0, n).map(c => makeQ(mode, c.id));
+}
+const curQ = () => G.qs[G.i];
+
+const TITLES = { get shape() { return tr("Guess the shape"); }, get pick() { return tr("Name the highlighted"); }, get list() { return tr("List by letter"); }, get cap() { return tr("Capitals"); }, get flag() { return tr("Flags"); }, get find() { return tr("Find on the map"); }, get nb() { return tr("Neighbours"); }, get duel() { return tr("Size duel"); }, get cont() { return tr("Continents"); }, get geo() { return tr("Compass"); }, get mixed() { return tr("Mixed"); } };
 
 function barHTML() {
   const n = G.qs.length;
@@ -297,77 +383,149 @@ function barHTML() {
     '<div class="progress"><i style="width:' + (G.i / n * 100) + '%"></i></div>';
 }
 
-const capOK = x => x.cap.length && norm(x.cap[0]) !== norm(x.name);
-function capPool() { return C.filter(c => inFilter(c) && capOK(c)); }
 function flagURL(id) { return FLAGURL[id] || (FLAGURL[id] = "data:image/svg+xml," + encodeURIComponent(DATA.f[id])); }
 const FLAGURL = {};
 function flagRatio(id) { const m = DATA.f[id].match(/viewBox="[\d.\s-]*?([\d.]+)\s+([\d.]+)"/); return m ? parseFloat(m[1]) / parseFloat(m[2]) : 1.33; }
-function optionsFor(c) {
-  const capSet = G.mode === "cap" ? c.cap.map(norm) : [];
-  const ok = x => x.id !== c.id && (G.mode === "shape" ? !x.micro : G.mode === "cap" ? capOK(x) && !x.cap.some(k => capSet.indexOf(norm(k)) >= 0) : G.mode === "flag" ? true : (S.tiny || !x.micro));
-  let d = shuffle(C.filter(x => x.cont === c.cont && ok(x))).slice(0, 3);
-  if (d.length < 3) d = d.concat(shuffle(C.filter(x => x.cont !== c.cont && ok(x) && !x.micro)).slice(0, 3 - d.length));
-  return shuffle([c].concat(d));
+function flagCanvas(c) { return '<div class="canvas text"><img class="flagbig" alt="' + tr("Flag of a country") + '" style="width:' + Math.min(86, 60 * flagRatio(c.id)).toFixed(1) + '%" src="' + flagURL(c.id) + '"></div>'; }
+function textCanvas(t, lab) { return '<div class="canvas text"><div class="bigcap">' + t + '</div><span class="label coord">' + lab + "</span></div>"; }
+
+/* equal-area pair: each outline scaled by sqrt(area) so drawn areas match real ones */
+const SPA = {};
+function spArea(c) {
+  if (SPA[c.id]) return SPA[c.id];
+  let tot = 0;
+  c.sp.split("M").forEach(s => {
+    const p = s.replace(/Z/g, "").split("L").map(t => t.split(",").map(Number)).filter(t => t.length === 2 && !isNaN(t[0]));
+    let a = 0;
+    for (let i = 0; i < p.length; i++) { const j = (i + 1) % p.length; a += p[i][0] * p[j][1] - p[j][0] * p[i][1]; }
+    tot += Math.abs(a) / 2;
+  });
+  return (SPA[c.id] = tot || 1);
 }
-function optLabel(o) {
-  if (G.mode === "cap") return esc(G.sub === "a" ? cpl(o)[0] : nm(o));
-  if (G.mode === "flag" && G.sub === "b") return '<img class="fl" alt="' + tr("Flag option") + '" src="' + flagURL(o.id) + '">';
+function duelSVG(ids) {
+  const cs = ids.map(i => BY[i]), raw = cs.map(c => Math.sqrt(c.a / spArea(c))), k = 1 / Math.max(raw[0], raw[1]);
+  return '<svg viewBox="0 0 480 240" aria-hidden="true">' + cs.map((c, i) => '<g transform="translate(' + (120 + 240 * i) + ' 120) scale(' + (raw[i] * k).toFixed(4) + ') translate(-120 -120)"><path class="sil" d="' + c.sp + '"/></g>').join("") + "</svg>";
+}
+
+function viewFor(list, aspect) {
+  const x0 = Math.min(...list.map(c => c.bb[0])), y0 = Math.min(...list.map(c => c.bb[1]));
+  const x1 = Math.max(...list.map(c => c.bb[0] + c.bb[2])), y1 = Math.max(...list.map(c => c.bb[1] + c.bb[3]));
+  const w = Math.min(960, Math.max((x1 - x0) * 1.25, (y1 - y0) * 1.25 * aspect, 90)), h = w / aspect;
+  return [(x0 + x1) / 2 - w / 2, (y0 + y1) / 2 - h / 2, w, h];
+}
+function boxAspect(box) { const r = box.getBoundingClientRect(); return r.width / r.height || 1.6; }
+
+function enableZoom(box, svg, onPick) {
+  svg.classList.add("zoomable");
+  box.insertAdjacentHTML("beforeend", '<div class="zoom"><button class="btn" data-z="in" aria-label="' + tr("Zoom in") + '">+</button><button class="btn" data-z="out" aria-label="' + tr("Zoom out") + '">−</button><button class="btn" data-z="reset" aria-label="' + tr("Reset view") + '">⟲</button></div>');
+  const home = svg._v.slice();
+  function zoom(f, cx, cy) {
+    const v = svg._v, r = svg.getBoundingClientRect(), px = cx === undefined ? 0.5 : (cx - r.left) / r.width, py = cy === undefined ? 0.5 : (cy - r.top) / r.height;
+    const w = Math.min(960, Math.max(25, v[2] * f)), h = w * v[3] / v[2];
+    setView(svg, [v[0] + px * (v[2] - w), v[1] + py * (v[3] - h), w, h]);
+  }
+  box.querySelector(".zoom").addEventListener("click", e => {
+    const b = e.target.closest("[data-z]"); if (!b) return;
+    if (b.dataset.z === "reset") animateView(svg, home, 350); else zoom(b.dataset.z === "in" ? 0.6 : 1.6);
+  });
+  let drag = null, moved = false;
+  svg.addEventListener("pointerdown", e => { drag = { x: e.clientX, y: e.clientY, v: svg._v.slice() }; moved = false; });
+  svg.addEventListener("pointermove", e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 6) moved = true;
+    if (!moved) return;
+    const k = drag.v[2] / svg.getBoundingClientRect().width;
+    setView(svg, [drag.v[0] - dx * k, drag.v[1] - dy * k, drag.v[2], drag.v[3]]);
+  });
+  svg.addEventListener("pointerup", () => { drag = null; });
+  svg.addEventListener("pointerleave", () => { drag = null; });
+  svg.addEventListener("wheel", e => { e.preventDefault(); zoom(e.deltaY < 0 ? 0.8 : 1.25, e.clientX, e.clientY); }, { passive: false });
+  svg.addEventListener("click", e => { if (moved) { moved = false; return; } const el = e.target.closest("[data-id]"); onPick(el ? el.dataset.id : null); });
+}
+function mapMsg(t) { const m = document.getElementById("mapmsg"); if (m) m.textContent = t; }
+
+/* ---------- options ---------- */
+function optLabel(q, o) {
+  if (q.m === "cap") return esc(q.sub === "b" ? nm(o) : cpl(o)[0]);
+  if (q.m === "flag" && q.sub === "b") return '<img class="fl" alt="' + tr("Flag option") + '" src="' + flagURL(o.id) + '">';
   return esc(nm(o));
 }
-function pickedText(o) {
-  if (G.mode === "cap" && G.sub === "a") return cpl(o)[0];
-  if (G.mode === "flag" && G.sub === "b") return tr("the flag of ") + nm(o);
+function optionsFor(q) {
+  const c = BY[q.id];
+  if (q.m === "cont") return CONTS.map(k => ({ id: k, html: esc(ctn(k)) }));
+  if (q.m === "geo" || q.m === "duel") return q.opts;
+  const capSet = q.m === "cap" ? c.cap.map(norm) : [];
+  const ok = x => x.id !== c.id && (q.m === "shape" ? !x.micro : q.m === "cap" ? capOK(x) && !x.cap.some(k => capSet.indexOf(norm(k)) >= 0) : q.m === "flag" ? true : (S.tiny || !x.micro));
+  let d = shuffle(C.filter(x => x.cont === c.cont && ok(x))).slice(0, 3);
+  if (d.length < 3) d = d.concat(shuffle(C.filter(x => x.cont !== c.cont && ok(x) && !x.micro)).slice(0, 3 - d.length));
+  return shuffle([c].concat(d)).map(o => ({ id: o.id, html: optLabel(q, o) }));
+}
+function pickedText(q, id) {
+  if (q.m === "cont") return ctn(id);
+  const o = BY[id];
+  if (q.m === "cap" && q.sub !== "b") return cpl(o)[0];
+  if (q.m === "flag" && q.sub === "b") return tr("the flag of ") + nm(o);
   return nm(o);
 }
 
-function answerHTML(c) {
-  if (S.style === "choice") {
-    G.opts = optionsFor(c);
-    return '<div class="opts' + (G.mode === "flag" && G.sub === "b" ? " flags" : "") + '" id="opts">' + G.opts.map((o, i) => '<button class="opt" data-act="choose" data-id="' + o.id + '"><kbd>' + (i + 1) + "</kbd><span>" + optLabel(o) + "</span></button>").join("") + "</div>" +
-      '<div class="row"><button class="btn" data-act="hint" id="hintbtn">' + tr("50/50 (half point)") + '</button></div>';
-  }
-  return '<form class="field" id="typed" autocomplete="off"><input id="guess" type="text" placeholder="' + tr("Type the country") + '" autocapitalize="words" autocorrect="off" spellcheck="false" aria-label="' + tr("Your answer") + '"><button class="btn primary" type="submit">' + tr("Guess") + '</button></form>' +
-    '<div class="row"><button class="btn" data-act="hint" id="hintbtn">' + tr("Hint (half point)") + '</button><span class="hintline" id="hintline"></span></div>';
+function answerHTML(q, c) {
+  if (q.m === "find") return '<div class="row"><button class="btn" data-act="hint" id="hintbtn">' + tr("Hint (half point)") + '</button></div><div class="msg err" id="mapmsg" role="status"></div>';
+  if (q.m === "nb") return '<div class="msg" id="mapmsg" role="status">' + nbStatus(q, c) + '</div><div class="row"><button class="btn" data-act="nbdone" id="donebtn">' + tr("Done") + "</button></div>";
+  q.opts = optionsFor(q);
+  return '<div class="opts' + (q.m === "flag" && q.sub === "b" ? " flags" : "") + '" id="opts">' + q.opts.map((o, i) => '<button class="opt" data-act="choose" data-id="' + esc(o.id) + '"><kbd>' + (i + 1) + "</kbd><span>" + o.html + "</span></button>").join("") + "</div>" +
+    (q.m === "duel" ? "" : '<div class="row"><button class="btn" data-act="hint" id="hintbtn">' + tr("50/50 (half point)") + "</button></div>");
+}
+function nbStatus(q, c) { return tr("Found") + " " + q.found.length + " / " + nbOf(c).length + " · " + tr("Misses") + " " + q.bad.length + " / 3"; }
+
+const GEOQ = { N: "Which of these lies furthest north?", S: "Which of these lies furthest south?", E: "Which of these lies furthest east?", W: "Which of these lies furthest west?" };
+const GEOA = { N: "↑", S: "↓", E: "→", W: "←" };
+
+function leftHTML(q, c) {
+  const m = q.m;
+  if (m === "cap") return q.sub === "a" ? '<div class="canvas">' + silSVG(c) + "</div>" : q.sub === "b" ? textCanvas(esc(cpl(c)[0]), tr("capital")) : flagCanvas(c);
+  if (m === "flag") return q.sub === "a" ? flagCanvas(c) : '<div class="canvas">' + silSVG(c) + "</div>";
+  if (m === "shape") return '<div class="canvas">' + silSVG(c) + '<span class="label coord"></span></div>';
+  if (m === "cont") return q.sub === "a" ? '<div class="canvas">' + silSVG(c) + "</div>" : q.sub === "b" ? flagCanvas(c) : q.sub === "c" ? textCanvas(esc(nm(c)), "") : textCanvas(esc(cpl(c)[0]), tr("capital"));
+  if (m === "geo") return textCanvas('<span style="font-size:3em;line-height:1">' + GEOA[q.v] + "</span>", "");
+  if (m === "duel") return '<div class="canvas wide">' + duelSVG(q.pair) + "</div>";
+  return '<div class="mapbox short" id="mbox">' + mapHTML() + "</div>";
 }
 
 function viewQuestion() {
   stopTimer();
-  const c = BY[G.qs[G.i]];
+  const q = curQ(), c = BY[q.id];
   G.locked = false; G.hint = false;
-  G.sub = (G.mode === "cap" || G.mode === "flag") && Math.random() < 0.5 ? "b" : "a";
-  let left;
-  if (G.mode === "cap") {
-    left = G.sub === "a" ? '<div class="canvas">' + silSVG(c) + "</div>" : '<div class="canvas text"><div class="bigcap">' + esc(cpl(c)[0]) + '</div><span class="label coord">' + tr("capital") + '</span></div>';
-  } else if (G.mode === "flag") {
-    left = G.sub === "a" ? '<div class="canvas text"><img class="flagbig" alt="' + tr("Flag of a country") + '" style="width:' + Math.min(86, 60 * flagRatio(c.id)).toFixed(1) + '%" src="' + flagURL(c.id) + '"></div>' : '<div class="canvas">' + silSVG(c) + "</div>";
-  } else if (G.mode === "shape") {
-    left = '<div class="canvas">' + silSVG(c) + '<span class="label coord"></span></div>';
-  } else if (G.mode === "pick") {
-    left = '<div class="mapbox short" id="mbox">' + mapHTML() + '</div>';
-  }
-  const right = '<div class="q"><p class="prompt">' + promptHTML(c) + "</p>" + answerHTML(c) + '<div id="fb"></div></div>';
-  app.innerHTML = barHTML() + '<div class="stage">' + left + right + "</div>";
+  app.innerHTML = barHTML() + '<div class="stage">' + leftHTML(q, c) + '<div class="q"><p class="prompt">' + promptHTML(q, c) + "</p>" + answerHTML(q, c) + '<div id="fb"></div></div></div>';
   const box = document.getElementById("mbox");
   if (box) {
-    const svg = box.querySelector("svg.map");
-    mark(svg, c.id, "is-target");
-    setView(svg, viewAround(c, box.getBoundingClientRect().width / box.getBoundingClientRect().height || 1.6));
+    const svg = box.querySelector("svg.map"), asp = boxAspect(box);
+    if (q.m === "pick") { mark(svg, c.id, "is-target"); setView(svg, viewAround(c, asp)); }
+    else if (q.m === "find") { setView(svg, homeView(box)); enableZoom(box, svg, onMapClick); }
+    else if (q.m === "nb") { mark(svg, c.id, "is-target"); setView(svg, viewFor([c].concat(nbOf(c).map(i => BY[i])), asp)); enableZoom(box, svg, onMapClick); }
   }
-  const g = document.getElementById("guess");
-  if (g) g.focus({ preventScroll: true });
 }
 
-function promptHTML(c) {
-  if (G.mode === "cap") return G.sub === "a" ? tr("What is the capital of ") + "<em>" + esc(nm(c)) + "</em>?" : tr("Which country has ") + "<em>" + esc(cpl(c)[0]) + "</em>" + tr(" as its capital?");
-  if (G.mode === "flag") return G.sub === "a" ? tr("Which country's flag is this?") : tr("Which of these is the flag of ") + "<em>" + esc(nm(c)) + "</em>?";
-  return G.mode === "shape" ? tr("Which country has this shape?") : tr("Which country is highlighted?");
+function promptHTML(q, c) {
+  const em = t => "<em>" + esc(t) + "</em>";
+  if (q.m === "cap") return q.sub === "a" ? tr("What is the capital of ") + em(nm(c)) + "?" : q.sub === "b" ? tr("Which country has ") + em(cpl(c)[0]) + tr(" as its capital?") : tr("Which city is the capital of this country?");
+  if (q.m === "flag") return q.sub === "a" ? tr("Which country's flag is this?") : tr("Which of these is the flag of ") + em(nm(c)) + "?";
+  if (q.m === "cont") return q.sub === "c" ? tr("Which continent is ") + em(nm(c)) + tr(" on?") : q.sub === "d" ? tr("Which continent is the country with this capital on?") : tr("Which continent is this country on?");
+  if (q.m === "find") return tr("Click ") + em(nm(c)) + tr(" on the map");
+  if (q.m === "nb") return tr("Click every country that touches") + " " + em(nm(c));
+  if (q.m === "geo") return tr(GEOQ[q.v]);
+  if (q.m === "duel") return tr(q.sub === "big" ? "Which country is larger?" : "Which country is smaller?");
+  return q.m === "shape" ? tr("Which country has this shape?") : tr("Which country is highlighted?");
 }
-function revealHTML(c) {
-  if (G.mode === "cap") return "<b>" + esc(cpl(c)[0]) + "</b>" + tr(" is the capital of ") + "<b>" + esc(nm(c)) + "</b>." + (c.cap.length > 1 ? " " + tr("Also used: ") + esc(cpl(c).slice(1).join(", ")) + "." : "");
+function revealHTML(q, c) {
+  if (q.m === "cap") return "<b>" + esc(cpl(c)[0]) + "</b>" + tr(" is the capital of ") + "<b>" + esc(nm(c)) + "</b>." + (c.cap.length > 1 ? " " + tr("Also used: ") + esc(cpl(c).slice(1).join(", ")) + "." : "");
+  if (q.m === "nb") return "<b>" + esc(nm(c)) + "</b>" + tr(" borders: ") + esc(nbOf(c).map(i => nm(BY[i])).join(", ")) + ".";
+  if (q.m === "geo") return "<b>" + esc(nm(c)) + "</b>" + "<div class=\"facts\">" + q.opts.map(o => BY[o.id]).sort((a, b) => geoVal(q.v, b) - geoVal(q.v, a)).map(x => esc(nm(x)) + " · " + fmtCoord(x)).join("<br>") + "</div>";
+  if (q.m === "duel") return "<b>" + esc(nm(c)) + "</b>" + "<div class=\"facts\">" + q.pair.map(i => BY[i]).sort((a, b) => b.a - a.a).map(x => esc(nm(x)) + " · " + fmtArea(x.a)).join("<br>") + "</div>";
   return "<b>" + esc(nm(c)) + "</b>";
 }
 function finishQuestion(id, ok, pts, extra) {
-  const c = BY[G.qs[G.i]];
+  const q = curQ(), c = BY[q.id];
   G.locked = true;
   G.score += pts;
   G.streak = ok ? G.streak + 1 : 0;
@@ -376,49 +534,67 @@ function finishQuestion(id, ok, pts, extra) {
   document.getElementById("score").textContent = fmtPts(G.score);
   document.getElementById("streak").textContent = G.streak;
   const last = G.i + 1 >= G.qs.length;
+  const verdict = ok ? (G.hint ? tr("Correct, with a hint (+0.5)") : tr("Correct (+1)")) : pts > 0 ? tr("Partly right") + " (+" + fmtPts(pts) + ")" : tr("Not quite");
   document.getElementById("fb").innerHTML =
-    '<div class="fb ' + (ok ? "ok" : "bad") + '" role="status"><div class="verdict">' + (ok ? (G.hint ? tr("Correct, with a hint (+0.5)") : tr("Correct (+1)")) : tr("Not quite")) + "</div>" +
+    '<div class="fb ' + (ok ? "ok" : "bad") + '" role="status"><div class="verdict">' + verdict + "</div>" +
     (extra ? "<div>" + extra + "</div>" : "") +
-    '<div>' + revealHTML(c) + '</div><div class="facts">' + facts(c) + '</div><div class="row"><button class="btn primary" data-act="next" id="nextbtn">' + (last ? tr("See results") : tr("Next")) + ' <span class="mono">↵</span></button></div></div>';
+    '<div>' + revealHTML(q, c) + "</div>" + (q.m === "geo" || q.m === "duel" ? "" : '<div class="facts">' + facts(c) + "</div>") + '<div class="row"><button class="btn primary" data-act="next" id="nextbtn">' + (last ? tr("See results") : tr("Next")) + ' <span class="mono">↵</span></button></div></div>';
   const nb = document.getElementById("nextbtn"); if (nb) nb.focus({ preventScroll: true });
 }
 
 function onChoose(id) {
   if (G.locked) return;
-  const c = BY[G.qs[G.i]], ok = id === c.id;
+  const q = curQ(), c = BY[q.id], ok = id === q.ans;
   document.querySelectorAll("#opts .opt").forEach(b => {
     b.disabled = true;
-    if (b.dataset.id === c.id) b.classList.add("ok");
+    if (b.dataset.id === q.ans) b.classList.add("ok");
     else if (b.dataset.id === id) b.classList.add("bad");
   });
   const svg = document.querySelector("#mbox svg.map");
   if (svg) { clearMarks(svg); mark(svg, c.id, "is-ok"); if (!ok) mark(svg, id, "is-bad"); }
-  finishQuestion(id, ok, ok ? (G.hint ? 0.5 : 1) : 0, ok ? "" : tr("You picked ") + esc(pickedText(BY[id])) + ".");
-  document.getElementById("hintbtn") && (document.getElementById("hintbtn").disabled = true);
+  finishQuestion(id, ok, ok ? (G.hint ? 0.5 : 1) : 0, ok ? "" : tr("You picked ") + esc(pickedText(q, id)) + ".");
+  const hb = document.getElementById("hintbtn"); if (hb) hb.disabled = true;
 }
 
-function onTyped(text) {
-  if (G.locked || !text.trim()) return;
-  const c = BY[G.qs[G.i]], id = resolve(text), ok = id === c.id;
-  const inp = document.getElementById("guess"); inp.disabled = true;
-  const svg = document.querySelector("#mbox svg.map");
-  if (svg) { clearMarks(svg); mark(svg, c.id, "is-ok"); }
-  document.getElementById("hintbtn").disabled = true;
-  finishQuestion(id, ok, ok ? (G.hint ? 0.5 : 1) : 0, ok ? "" : (id ? tr("You said ") + esc(nm(BY[id])) + "." : "“" + esc(text.trim()) + "” " + tr("isn't a country I know.")));
+function onMapClick(id) {
+  if (!G || G.locked || !id) return;
+  const q = curQ(), c = BY[q.id], box = document.getElementById("mbox"), svg = box.querySelector("svg.map");
+  if (id === "terr") { mapMsg(tr("That area is a territory or unlisted region. Try again.")); return; }
+  const x = BY[id]; if (!x) return;
+  if (q.m === "find") {
+    const ok = id === c.id;
+    clearMarks(svg); mark(svg, c.id, "is-ok"); if (!ok) mark(svg, id, "is-bad");
+    document.getElementById("hintbtn").disabled = true;
+    animateView(svg, viewAround(c, boxAspect(box)), 500);
+    finishQuestion(id, ok, ok ? (G.hint ? 0.5 : 1) : 0, ok ? "" : tr("You clicked ") + esc(nm(x)) + ".");
+    return;
+  }
+  if (id === c.id) { mapMsg(esc(nm(c)) + " " + tr("is the country shown.")); return; }
+  if (q.found.indexOf(id) >= 0 || q.bad.indexOf(id) >= 0) return;
+  if (nbOf(c).indexOf(id) >= 0) { q.found.push(id); mark(svg, id, "is-found"); } else { q.bad.push(id); mark(svg, id, "is-bad"); }
+  mapMsg(nbStatus(q, c));
+  if (q.found.length === nbOf(c).length || q.bad.length >= 3) endNb();
+}
+function endNb() {
+  if (G.locked) return;
+  const q = curQ(), c = BY[q.id], svg = document.querySelector("#mbox svg.map"), tot = nbOf(c).length;
+  nbOf(c).forEach(i => { if (q.found.indexOf(i) < 0) mark(svg, i, "is-miss"); });
+  document.getElementById("donebtn").disabled = true;
+  finishQuestion(null, q.found.length === tot, q.found.length / tot, q.found.length === tot ? "" : nbStatus(q, c));
 }
 
 function onHint() {
   if (G.locked || G.hint) return;
-  const c = BY[G.qs[G.i]];
+  const q = curQ(), c = BY[q.id];
   G.hint = true;
   document.getElementById("hintbtn").disabled = true;
-  if (S.style === "choice") {
-    const wrong = shuffle(G.opts.filter(o => o.id !== c.id)).slice(0, 2).map(o => o.id);
-    document.querySelectorAll("#opts .opt").forEach(b => { if (wrong.indexOf(b.dataset.id) >= 0) { b.disabled = true; b.classList.add("gone"); } });
-  } else {
-    const nn = nm(c), wc = nn.split(/\s+/).length; document.getElementById("hintline").textContent = LANG === "pt" ? ctn(c.cont) + " · começa com " + nn[0] + " · " + nn.replace(/[^\s-]/g, "").length + " letras (" + wc + " palavra" + (wc > 1 ? "s" : "") + ")" : c.cont + " · starts with " + nn[0] + " · " + nn.replace(/[^\s-]/g, "").length + " letters (" + wc + " word" + (wc > 1 ? "s" : "") + ")";
-    const g = document.getElementById("guess"); if (g) g.focus({ preventScroll: true });
+  if (q.m === "find") {
+    const box = document.getElementById("mbox");
+    animateView(box.querySelector("svg.map"), viewAround(c, boxAspect(box), 9, 260), 600);
+    return;
   }
+  const wrong = shuffle(q.opts.filter(o => o.id !== q.ans)).slice(0, 2).map(o => o.id);
+  document.querySelectorAll("#opts .opt").forEach(b => { if (wrong.indexOf(b.dataset.id) >= 0) { b.disabled = true; b.classList.add("gone"); } });
 }
 
 function nextQ() {
@@ -556,6 +732,7 @@ app.addEventListener("click", e => {
     case "choose": onChoose(t.getAttribute("data-id")); break;
     case "hint": onHint(); break;
     case "next": nextQ(); break;
+    case "nbdone": endNb(); break;
     case "list-setup": viewListSetup(); break;
     case "list-letter": startList("letter", v); break;
     case "list-cont": startList("cont", v); break;
@@ -589,8 +766,8 @@ document.addEventListener("keydown", e => {
   const typing = e.target && e.target.tagName === "INPUT";
   if (e.key === "Enter" && G.mode !== "list" && G.locked && !typing) { e.preventDefault(); nextQ(); return; }
   if (e.key === "Enter" && G.mode !== "list" && G.locked && typing) { e.preventDefault(); nextQ(); return; }
-  if (!typing && S.style === "choice" && (G.mode === "shape" || G.mode === "pick" || G.mode === "cap" || G.mode === "flag") && !G.locked && /^[1-4]$/.test(e.key)) {
-    const o = G.opts && G.opts[parseInt(e.key, 10) - 1];
+  if (!typing && G.mode !== "list" && !G.locked && /^[1-6]$/.test(e.key)) {
+    const q = curQ(), o = q && q.opts && q.opts[parseInt(e.key, 10) - 1];
     const b = o && document.querySelector('#opts .opt[data-id="' + o.id + '"]');
     if (b && !b.disabled) onChoose(o.id);
   }
