@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Pool</title>
+<style>
+:root{--bg:#ececec;--ink:#0a0a0a;--acc:#e30613;--dim:#777}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:500 12px/1.2 "Helvetica Neue",Helvetica,Arial,"Liberation Sans",sans-serif;overflow-x:hidden}
+#app{max-width:860px;margin:0 auto;padding:18px 14px 20px}
+button{font:inherit;text-transform:uppercase;letter-spacing:.08em;color:var(--ink);background:transparent;border:0;border-bottom:2px solid transparent;border-radius:0;padding:4px 0;cursor:pointer;font-size:11px}
+button:hover{border-bottom-color:var(--acc)}
+#go{display:none;color:var(--acc);font-weight:700}#go.on{display:inline-block}
+header{display:flex;justify-content:flex-start;align-items:end;gap:14px;border-top:6px solid var(--ink);padding-top:10px}
+#st{text-align:left;text-transform:uppercase;letter-spacing:.08em;font-size:11px;line-height:1.35}
+#pw{display:flex;align-items:center;gap:10px;height:14px;margin-top:4px;visibility:hidden}
+#pw.on{visibility:visible}
+#pb{width:140px;height:8px;background:#fff;border:1px solid var(--ink);display:block}
+#pb i{display:block;height:100%;background:linear-gradient(90deg,#0a0a0a,#e30613) 0 0/140px 100% no-repeat;width:0}
+#pn{font-weight:700;min-width:22px}
+#why{color:var(--acc);font-weight:700;min-height:15px}
+nav{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:14px 0 12px}
+#sp{width:24px;height:24px;cursor:crosshair;opacity:.5;transition:opacity .15s}
+#sp{position:relative;transform-origin:0 50%}
+#sp:hover{opacity:1}
+#sp.on{opacity:1;transform:scale(3.4);z-index:5;box-shadow:0 0 0 6px var(--bg);border-radius:50%}
+#sw{display:flex;gap:8px;margin-left:auto}
+.sw{width:18px;height:18px;padding:0;border:0;background:var(--c)}
+.sw:hover{border:0}
+.sw.on{outline:2px solid var(--ink);outline-offset:2px}
+
+footer{margin-top:22px;display:flex;gap:26px;flex-wrap:wrap}
+#wrap{display:flex;justify-content:center}
+canvas{touch-action:none;display:block}
+#trays{margin-top:12px;border-top:1px solid var(--ink)}
+.tray{display:flex;justify-content:space-between;align-items:center;position:relative;border-bottom:1px solid var(--ink);padding:10px 0 10px 18px;transition:opacity .2s;opacity:.4;text-transform:uppercase;letter-spacing:.08em;font-size:12px;min-height:50px}
+.tray::before{content:'';position:absolute;left:2px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--acc);transform:scale(0);transition:transform .2s}
+.tray.on{opacity:1;border-bottom:2px solid var(--acc)}
+.tray.on::before{transform:scale(1)}
+
+#n0{font:inherit;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink);background:transparent;border:0;border-bottom:1px dashed transparent;border-radius:0;padding:2px 0;width:14ch;outline:0}
+#n0:hover,#n0:focus{border-bottom-color:var(--ink)}
+#n0::placeholder{color:inherit;opacity:1}
+.dots{display:flex;gap:6px}
+.dot{position:relative;width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;flex:none}
+.dot i{font-style:normal;width:13px;height:13px;border-radius:50%;background:#fff;color:var(--ink);font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;letter-spacing:0}
+@media(max-width:520px){.dot{width:22px;height:22px}.dot i{width:11px;height:11px;font-size:7px}.dots{gap:4px}}
+.dot.gone{opacity:.2}
+#shp{position:fixed;inset:0;display:none;overflow:auto;background:var(--bg);z-index:90}
+#shp.on{display:block}
+#shp .in{max-width:860px;margin:0 auto;padding:18px 14px 60px}
+#shp .top{display:flex;justify-content:space-between;align-items:end;border-top:6px solid var(--ink);padding-top:10px;text-transform:uppercase;letter-spacing:.08em;font-size:11px;font-weight:700}
+#shg{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:26px 20px;margin-top:28px}
+.tl{display:block;width:100%;background:transparent;border:0;border-top:2px solid var(--ink);border-radius:0;padding:12px 0 0;text-align:left;cursor:pointer}
+.tl:hover{border-bottom:0;border-top-color:var(--acc)}
+.tl.on{border-top-color:var(--acc)}
+.tl svg{display:block;width:100%;height:84px;overflow:visible}.tl svg .f{fill:none;stroke:var(--ink);stroke-width:2.5;vector-effect:non-scaling-stroke}.tl:hover svg .f,.tl.on svg .f{stroke:var(--acc)}
+.tl b{display:block;margin-top:10px;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+#ed{position:fixed;inset:0;display:none;overflow:auto;background:var(--bg);z-index:95}
+#ed.on{display:block}
+#ed .in{max-width:1400px;margin:0 auto;padding:18px 14px 40px}
+#ed .top{display:flex;justify-content:space-between;align-items:end;border-top:6px solid var(--ink);padding-top:10px;text-transform:uppercase;letter-spacing:.08em;font-size:11px;font-weight:700}
+#ed .bar{display:flex;gap:22px;flex-wrap:wrap;align-items:end;margin:22px 0 14px;text-transform:uppercase;letter-spacing:.08em;font-size:11px;font-weight:700}
+#ed .bar button.on{border-bottom-color:var(--acc)}#ed .bar button.dis{opacity:.3}
+#edgo{color:var(--acc)}#edm{color:var(--acc);margin-left:auto}
+#edsvg{display:block;width:100%;aspect-ratio:2000/1400;touch-action:none;cursor:crosshair;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+#phy{position:fixed;inset:0;display:none;overflow:auto;background:var(--bg);z-index:90}
+#phy.on{display:block}
+#phy .in{max-width:860px;margin:0 auto;padding:18px 14px 60px}
+#phy .top{display:flex;justify-content:space-between;align-items:end;border-top:6px solid var(--ink);padding-top:10px;text-transform:uppercase;letter-spacing:.08em;font-size:11px;font-weight:700}
+#phy article{max-width:640px;margin:22px auto 0}
+#phy h3{margin:30px 0 10px;padding-top:8px;border-top:1px solid var(--ink);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:left}
+#phy h3:first-child{margin-top:0;border-top:0;padding-top:0}
+#phy p{margin:0 0 12px;font-size:14px;line-height:1.7;font-weight:400;text-align:justify;hyphens:auto}
+#phy .eq{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;margin:0 0 12px;font:italic 15px/1.6 "Times New Roman",Georgia,serif;overflow-x:auto}
+#phy .eq span{text-align:center;white-space:nowrap}
+#phy .eq>b{font:400 14px "Times New Roman",Georgia,serif}
+#phy .eq span b{font-weight:700;font-style:normal}
+#phy .eq sub,#phy .eq sup{font-size:.7em}
+#phy .rm,#phy .eq [data-v]{font-style:normal}
+#phy p b{font-weight:700;font-style:normal}
+#win{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:flex-end;flex-direction:column;gap:18px;padding:8vw;background:var(--acc);color:#fff;z-index:100}
+#win div{font-size:min(18vw,150px);font-weight:700;letter-spacing:-.05em;line-height:.85}
+#win button{color:#fff;font-size:13px;border-bottom:2px solid #fff}
+#win.on{display:flex}
+</style></head><body>
+<div id="app">
+ <header><div id="st"><div id="who"></div><div id="why"></div><div id="pw"><span id="pb"><i></i></span><b id="pn"></b></div></div></header>
+ <nav><button id="new">New</button><button id="go">Start</button><button id="mode"></button><button id="sty"></button><button id="aid"></button><canvas id="sp" width="288" height="288"></canvas><span id="sw"></span></nav>
+ <div id="wrap"><canvas id="cv"></canvas></div>
+ <div id="trays">
+  <div class="tray" id="r0"><input id="n0" maxlength="12" spellcheck="false" autocomplete="off"><span class="dots" id="t0"></span></div>
+  <div class="tray" id="r1"><b id="n1"></b><span class="dots" id="t1"></span></div>
+ </div>
+ <footer><button id="phb">Physics</button><button id="shb">Unconventional shapes</button><button id="mkb">Make your own</button></footer>
+</div>
+<div id="ed"><div class="in"><div class="top"><span>Make your own shape</span><button id="edx">Close</button></div>
+<div class="bar"><button id="edo" class="on">Outline</button><button id="edp">Pockets</button><button id="edu">Undo</button><button id="edc">Clear</button><button id="edgo">Play</button><span id="edm"></span></div>
+<svg id="edsvg" viewBox="0 0 2000 1400"></svg></div></div>
+<div id="shp"><div class="in"><div class="top"><span>Unconventional shapes</span><button id="shx">Close</button></div><div id="shg"></div></div></div>
+<div id="phy"><div class="in">
+<div class="top"><span>Physics</span><button id="phx">Close</button></div>
+<article>
+<h3>Model and integration</h3>
+<p>The table is treated as a plane region bounded by a closed outline, which is a rectangle of <span data-v="W"></span> by <span data-v="H"></span> units on the classic table and one of eleven other outlines in the Shapes menu, all of them non-convex: the T, the star, the cross, the peanut, the banana, the cluster of grapes, the doughnut, the lightning bolt, the Pac-Man, the outline of Brazil (digitised from Natural Earth 110 m country boundaries) and a giraffe, of which the doughnut is an annulus with a hole at its centre, together with any simple polygon that the player draws in the separate Make your own editor, and on it every ball is a disc of radius <i>R</i> = <span data-v="R"></span>, so that the game reduces to the motion of sixteen centres subject to friction, to collisions between discs and to reflections at the cushions. Positions are advanced with an explicit Euler scheme in steps of <span class="rm">d</span><i>t</i> = 1/<span data-v="SUB"></span> s,</p>
+<div class="eq"><span>r ← r + v <span class="rm">d</span><i>t</i></span><b>(<span class="rm">1</span>)</b></div>
+<p>which is crude in the abstract but sufficient here, because the fastest ball, with a speed of at most <i>V</i><sub class="rm">max</sub> = <span data-v="VMAX"></span> units per second, moves by only about <span data-v="STEP"></span> units per step, far less than a ball diameter, and cannot therefore pass through another ball or a cushion between two consecutive checks. A shot of relative power <i>p</i>, which the player sets through the length of the pull-back and which is restricted to the interval [<span data-v="PMIN"></span>, 1], launches the cue ball with the speed</p>
+<div class="eq"><span><i>v</i><sub><span class="rm">0</span></sub> = <i>p</i> <i>V</i><sub class="rm">max</sub>.</span><b>(<span class="rm">2</span>)</b></div>
+<h3>Motion on the cloth</h3>
+<p>Besides the position <b>r</b> and the velocity <b>v</b> of its centre, each ball carries an angular velocity <b>ω</b> = (<i>ω</i><sub>x</sub>, <i>ω</i><sub>y</sub>, <i>ω</i><sub>z</sub>), in which (<i>ω</i><sub>x</sub>, <i>ω</i><sub>y</sub>) describes top spin, back spin and roll and <i>ω</i><sub>z</sub> is the side spin about the vertical axis. A ball of unit mass has the moment of inertia <i>I</i> = (2/5)<i>R</i><sup>2</sup> and touches the cloth at a point a distance <i>R</i> below its centre, which moves relative to the cloth with the velocity</p>
+<div class="eq"><span><b>u</b> = (<i>v</i><sub>x</sub> − <i>R</i> <i>ω</i><sub>y</sub>, <i>v</i><sub>y</sub> + <i>R</i> <i>ω</i><sub>x</sub>),</span><b>(<span class="rm">3</span>)</b></div>
+<p>so that <b>u</b> = 0 is the condition for rolling without slipping. Whilst |<b>u</b>| exceeds <span data-v="SLIPMIN"></span> units per second the contact slides, and the cloth exerts a friction of constant magnitude <i>a</i><sub class="rm">s</sub> = <span data-v="SLIDE"></span> units per second squared directed against <b>u</b>, which changes the velocity and the spin together,</p>
+<div class="eq"><span><span class="rm">d</span><b>v</b>/<span class="rm">d</span><i>t</i> = −<i>a</i><sub class="rm">s</sub> <b>û</b>,  <span class="rm">d</span><i>ω</i><sub>x</sub>/<span class="rm">d</span><i>t</i> = −(5<i>a</i><sub class="rm">s</sub>/2<i>R</i>) <i>û</i><sub>y</sub>,  <span class="rm">d</span><i>ω</i><sub>y</sub>/<span class="rm">d</span><i>t</i> = (5<i>a</i><sub class="rm">s</sub>/2<i>R</i>) <i>û</i><sub>x</sub>,</span><b>(<span class="rm">4</span>)</b></div>
+<p>where <b>û</b> = <b>u</b>/|<b>u</b>| and the factor 5/2 is <i>R</i><sup>2</sup>/<i>I</i>. Because translation and rotation are both altered, |<b>u</b>| falls at the rate (7/2)<i>a</i><sub class="rm">s</sub>, and the slide lasts</p>
+<div class="eq"><span><i>t</i><sub class="rm">s</sub> = 2|<b>u</b><sub><span class="rm">0</span></sub>| / (7<i>a</i><sub class="rm">s</sub>),</span><b>(<span class="rm">5</span>)</b></div>
+<p>after which a ball that began without spin retains 5/7 of its initial speed. The same law accounts for draw and follow without any further rule: a ball with back spin has <b>u</b> pointing backwards, so that the cloth accelerates it backwards until it rolls, whereas a ball with top spin is accelerated forwards. Once <b>u</b> vanishes the ball rolls, with <i>ω</i><sub>x</sub> = −<i>v</i><sub>y</sub>/<i>R</i> and <i>ω</i><sub>y</sub> = <i>v</i><sub>x</sub>/<i>R</i>, and its speed <i>s</i> = |<b>v</b>| decays through a drag proportional to the speed, standing for the combined effect of cloth and air, and a constant deceleration, standing for rolling resistance, which dominates at low speed,</p>
+<div class="eq"><span><span class="rm">d</span><i>s</i>/<span class="rm">d</span><i>t</i> = −<i>K</i> <i>s</i> − <i>A</i>,  <i>K</i> = <span data-v="K"></span> <span class="rm">s</span><sup>−<span class="rm">1</span></sup>,  <i>A</i> = <span data-v="A0"></span> <span class="rm">units</span> <span class="rm">s</span><sup>−<span class="rm">2</span></sup>,</span><b>(<span class="rm">6</span>)</b></div>
+<p>of which the game applies the discrete counterpart <i>s</i> ← <i>s</i> e<sup>−<i>K</i> <span class="rm">d</span><i>t</i></sup> − <i>A</i> <span class="rm">d</span><i>t</i> at every step, declaring a ball to be at rest once <i>s</i> falls below <span data-v="REST"></span> units per second. Equation (<span class="rm">6</span>) integrates to</p>
+<div class="eq"><span><i>s</i>(<i>t</i>) = (<i>s</i><sub><span class="rm">0</span></sub> + <i>A</i>/<i>K</i>) e<sup>−<i>K</i> <i>t</i></sup> − <i>A</i>/<i>K</i>,</span><b>(<span class="rm">7</span>)</b></div>
+<p>which vanishes at <i>t</i>* = <i>K</i><sup>−1</sup> ln(1 + <i>K</i> <i>s</i><sub>0</sub>/<i>A</i>), and a further integration over this interval gives the distance a rolling ball covers before it stops,</p>
+<div class="eq"><span><i>d</i>(<i>s</i><sub><span class="rm">0</span></sub>) = <i>s</i><sub><span class="rm">0</span></sub>/<i>K</i> − (<i>A</i>/<i>K</i><sup><span class="rm">2</span></sup>) <span class="rm">ln</span>(<span class="rm">1</span> + <i>K</i> <i>s</i><sub><span class="rm">0</span></sub>/<i>A</i>).</span><b>(<span class="rm">8</span>)</b></div>
+<p>A ball that rolls at the highest speed therefore travels about <span data-v="DMAX"></span> units, roughly <span data-v="TL"></span> table lengths if no ball or cushion intervenes, whereas a ball launched without spin first loses the fraction 2/7 of its speed in the slide, so that equation (<span class="rm">8</span>) overestimates its travel; the computer opponent nevertheless inverts it numerically as a first estimate of the speed that leaves a ball at a chosen distance and corrects the choice by simulation. Side spin is removed by the pivoting of the ball on the cloth, which is represented by <i>ω</i><sub>z</sub> ← <i>ω</i><sub>z</sub> e<sup>−<i>ζ</i> <span class="rm">d</span><i>t</i></sup> with <i>ζ</i> = <span data-v="ZD"></span> <span class="rm">s</span><sup>−<span class="rm">1</span></sup>.</p>
+<h3>The cue strike</h3>
+<p>The small disc beside the toolbar selects the point at which the cue strikes the cue ball. Its coordinates (<i>u</i>, <i>w</i>), with <i>u</i> to the right and <i>w</i> downwards, are converted into a follow parameter <i>σ</i><sub class="rm">f</sub> = −<i>w</i>, positive for a strike above the centre, and a side parameter <i>σ</i><sub class="rm">s</sub> = <i>u</i>, each limited to a magnitude of 0.85. A cue that strikes at a height <i>b</i> from the centre gives a ball of speed <i>v</i><sub><span class="rm">0</span></sub> the angular velocity 5<i>v</i><sub><span class="rm">0</span></sub><i>b</i>/2<i>R</i><sup><span class="rm">2</span></sup>, and with <i>b</i> = <i>σR</i>/2 this is <i>κσv</i><sub><span class="rm">0</span></sub>/<i>R</i>, where <i>κ</i> = <span data-v="TOPK"></span>. The cue is inclined at <i>ε</i> = <span data-v="ELEVD"></span>° to the table, so that, with <b>d</b> the unit vector along the shot,</p>
+<div class="eq"><span><b>ω</b> = <i>κ</i> (<i>v</i><sub><span class="rm">0</span></sub>/<i>R</i>) [<i>σ</i><sub class="rm">f</sub> (−<i>d</i><sub>y</sub>, <i>d</i><sub>x</sub>, <span class="rm">0</span>) + <i>σ</i><sub class="rm">s</sub> (−<span class="rm">sin</span> <i>ε</i> <i>d</i><sub>x</sub>, −<span class="rm">sin</span> <i>ε</i> <i>d</i><sub>y</sub>, <span class="rm">cos</span> <i>ε</i>)].</span><b>(<span class="rm">9</span>)</b></div>
+<p>The first term is top or back spin about the horizontal axis perpendicular to the shot and the second is side spin, whose small horizontal component along the line of the shot gives the cloth a sideways slip through equation (<span class="rm">3</span>) whilst the ball slides, so that the ball curves towards the side on which it was struck (swerve). The ball moreover leaves the cue not along <b>d</b> but turned slightly away from the side of the strike (squirt), and with <b>r̂</b> = (−<i>d</i><sub>y</sub>, <i>d</i><sub>x</sub>) the unit vector to the right of the shot,</p>
+<div class="eq"><span><b>d</b>′ = (<b>d</b> − <i>q</i> <i>σ</i><sub class="rm">s</sub> <b>r̂</b>) / |<b>d</b> − <i>q</i> <i>σ</i><sub class="rm">s</sub> <b>r̂</b>|,  <i>q</i> = <span data-v="SQ"></span>,</span><b>(<span class="rm">10</span>)</b></div>
+<p>which is a deflection of <span data-v="SQD"></span>° at the largest side offset. The ball keeps its spin until it meets another ball or a cushion, and what it does afterwards follows from equation (<span class="rm">4</span>) alone, so that no separate damping of follow or draw with distance is needed.</p>
+<h3>Collisions between balls</h3>
+<p>Two balls collide when the distance between their centres drops below 2<i>R</i>. Writing <b>n</b> for the unit vector from ball <i>a</i> to ball <i>b</i> and <span class="rm">rel</span> for the component of the relative velocity along it,</p>
+<div class="eq"><span><b>n</b> = (<b>r</b><sub>b</sub> − <b>r</b><sub>a</sub>) / |<b>r</b><sub>b</sub> − <b>r</b><sub>a</sub>|,  <span class="rm">rel</span> = (<b>v</b><sub>a</sub> − <b>v</b><sub>b</sub>) · <b>n</b>,</span><b>(<span class="rm">11</span>)</b></div>
+<p>a contact is processed only if <span class="rm">rel</span> &gt; 0, that is, whilst the balls are still approaching one another. The masses being equal, the exchange along <b>n</b> takes place with the impulse</p>
+<div class="eq"><span><i>J</i> = (<span class="rm">1</span> + <i>e</i><sub class="rm">B</sub>) <span class="rm">rel</span> / <span class="rm">2</span>,  <b>v</b><sub>a</sub>′ = <b>v</b><sub>a</sub> − <i>J</i> <b>n</b>,  <b>v</b><sub>b</sub>′ = <b>v</b><sub>b</sub> + <i>J</i> <b>n</b>,  <i>e</i><sub class="rm">B</sub> = <span data-v="EB"></span> − <span data-v="EBK"></span> <span class="rm">rel</span>/<i>V</i><sub class="rm">max</sub>,</span><b>(<span class="rm">12</span>)</b></div>
+<p>where the coefficient of restitution <i>e</i><sub class="rm">B</sub> falls from <span data-v="EB"></span> for gentle contacts to <span data-v="EBN"></span> at the highest closing speed. Momentum is conserved and the relative normal velocity is reversed and scaled by <i>e</i><sub class="rm">B</sub>, so that a head-on shot almost stops the cue ball and a cut shot sends the two balls apart at nearly a right angle. Friction between the surfaces then acts along the tangent <b>t</b> = (−<i>n</i><sub>y</sub>, <i>n</i><sub>x</sub>). With the slip speed of the two contact points</p>
+<div class="eq"><span><i>s</i><sub class="rm">t</sub> = (<b>v</b><sub>a</sub> − <b>v</b><sub>b</sub>) · <b>t</b> + <i>R</i> (<i>ω</i><sub>z,a</sub> + <i>ω</i><sub>z,b</sub>),  <i>J</i><sub class="rm">t</sub> = <span class="rm">clamp</span>(<i>s</i><sub class="rm">t</sub>/7, ±<i>μ</i><sub class="rm">B</sub> <i>J</i>),  <i>μ</i><sub class="rm">B</sub> = <span data-v="MUB"></span>,</span><b>(<span class="rm">13</span>)</b></div>
+<p>the velocities change by ∓<i>J</i><sub class="rm">t</sub> <b>t</b> for balls <i>a</i> and <i>b</i> and both side spins by −5<i>J</i><sub class="rm">t</sub>/2<i>R</i>, the divisor 7 being the effective mass of the contact for two balls with the moment of inertia given above. A cut shot therefore throws the object ball slightly off the line of centres, in the direction in which the surface of the cue ball moves past it, and side spin on the cue ball is passed on to the object ball with the opposite sign. Any overlap left by the finite step is removed by moving each ball by half the penetration along <b>n</b>.</p>
+<h3>Cushions</h3>
+<p>Each cushion is a straight segment with a unit normal pointing into the table, and curved cushions, as on the peanut, the banana, the grapes, the doughnut and the Pac-Man, are approximated by many short segments. For the point <b>c</b> of a segment that lies nearest to the ball centre <b>r</b>, a contact occurs when</p>
+<div class="eq"><span><i>d</i> = |<b>r</b> − <b>c</b>| &lt; <i>R</i>,  <b>n</b> = (<b>r</b> − <b>c</b>) / <i>d</i>,</span><b>(<span class="rm">14</span>)</b></div>
+<p>and the ball is then moved back to a distance <i>R</i> from the cushion along <b>n</b>. At a corner, <b>c</b> is the end point of the segment, so that the ball rolls around a rounded vertex instead of catching on it. The normal velocity <i>v</i><sub class="rm">n</sub> &lt; 0 is reversed with a coefficient that decreases with speed,</p>
+<div class="eq"><span><i>v</i><sub class="rm">n</sub>′ = −<i>e</i><sub class="rm">W</sub> <i>v</i><sub class="rm">n</sub>,  <i>e</i><sub class="rm">W</sub> = <span data-v="EW"></span> − <span data-v="EWK"></span> |<i>v</i><sub class="rm">n</sub>|/<i>V</i><sub class="rm">max</sub>,</span><b>(<span class="rm">15</span>)</b></div>
+<p>which is about 0.73 at a normal speed of 600 units per second and 0.50 at the highest speed. The cushion nose touches the ball at a height <span data-v="NOSE"></span><i>R</i> above its centre, that is at an angle <i>φ</i> = <span data-v="PHI"></span>° from the horizontal, so that a spinning ball does not slip along the cushion in the way it would at the equator. With <i>J</i><sub>n</sub> = (1 + <i>e</i><sub class="rm">W</sub>)|<i>v</i><sub class="rm">n</sub>|, the tangent <b>t</b> = (−<i>n</i><sub>y</sub>, <i>n</i><sub>x</sub>) and the component <i>ω</i><sub>h</sub> of the horizontal spin along <b>n</b>, the slip and the friction impulse are</p>
+<div class="eq"><span><i>s</i><sub class="rm">w</sub> = <b>v</b> · <b>t</b> − <i>R</i> (<span class="rm">cos</span> <i>φ</i> <i>ω</i><sub>z</sub> + <span class="rm">sin</span> <i>φ</i> <i>ω</i><sub>h</sub>),  <i>J</i><sub class="rm">w</sub> = <span class="rm">clamp</span>(−<i>s</i><sub class="rm">w</sub>/(7/2), ±<i>μ</i><sub class="rm">W</sub> <i>J</i><sub>n</sub>),  <i>μ</i><sub class="rm">W</sub> = <span data-v="MUW"></span>,</span><b>(<span class="rm">16</span>)</b></div>
+<p>and the ball receives the velocity change <i>J</i><sub class="rm">w</sub> <b>t</b> together with the spin changes Δ<i>ω</i><sub>z</sub> = −5<i>J</i><sub class="rm">w</sub> cos <i>φ</i>/2<i>R</i> and Δ<i>ω</i><sub>h</sub> = −5<i>J</i><sub class="rm">w</sub> sin <i>φ</i>/2<i>R</i>, the divisor 7/2 being 1 + <i>R</i><sup>2</sup>/<i>I</i>. English therefore alters the rebound angle, a running spin is partly spent at each contact, and the tangential speed is reduced even for a ball without side spin. The impulse from the nose also has a vertical component on a real table, which is not represented, so that the ball stays on the cloth and top or back spin is unaffected by a perpendicular impact. To keep the test cheap, the segments are sorted into a grid of square cells of <span data-v="CELL"></span> units and a ball is tested only against the segments registered in its own cell, balls at rest being skipped altogether. </p>
+<h3>Pockets</h3>
+<p>A ball is potted when its centre comes within a capture radius <i>ρ</i><sub>k</sub> of the centre <b>p</b><sub>k</sub> of pocket <i>k</i>, provided that it is not moving too obliquely across the mouth,</p>
+<div class="eq"><span>|<b>r</b> − <b>p</b><sub>k</sub>| &lt; <i>ρ</i><sub>k</sub>,  |<b>v</b> × (<b>p</b><sub>k</sub> − <b>r</b>)| / |<b>p</b><sub>k</sub> − <b>r</b>| &lt; <i>V</i><sub class="rm">J</sub>,  <i>V</i><sub class="rm">J</sub> = <span data-v="JAW"></span> <span class="rm">units</span> <span class="rm">s</span><sup>−<span class="rm">1</span></sup>.</span><b>(<span class="rm">17</span>)</b></div>
+<p>The second condition bounds the component of the velocity across the line to the pocket centre, so that a ball travelling along that line drops at any speed whereas a fast ball that arrives at an angle is refused, meets the cushions beside the mouth, which act as the jaws, and may rattle in the opening or leave it.</p>
+<p>On the classic table the six pockets sit at the corners of the playing area and, for the side pockets, six units beyond the middle of each long cushion, with capture radii of <span data-v="RC"></span> and <span data-v="RS"></span> units for the corner and side pockets. The other tables have pockets at their vertices and, on several of them, at the midpoints of some sides, as well as in the reflex corners, as at the waist of the peanut, in the notches of the cross and in the valleys between the grapes, whereas the star carries one at each of its five tips, the banana one at each end and four along its edges, and the doughnut six on its outer rim and three on the rim of its central hole, which is a closed cushion loop. A ball can approach a vertex of interior angle <i>α</i> only to within <i>R</i>/sin(<i>α</i>/2) of it, which is 38 units for the 47° tips of the star, and the capture radius of those five pockets is therefore raised to 46 units, whereas the 60° apex of the Pac-Man, where the bound is 30 units, carries a pocket of 36 units. The black openings drawn on each table are marginally smaller than the capture radii.</p>
+<h3>Setting up the balls</h3>
+<p>On every table other than the classic one the player positions the balls before the first shot, which is the only stage at which the motion is not governed by the equations above, although the placement is constrained by the same geometry. The cue ball may be dragged to any point that lies at least <i>R</i> from every cushion segment, that is at least 2 units beyond the capture radius of every pocket and that is at least 2<i>R</i> from every other ball, whereas the rack of fifteen balls, which on the built-in tables keeps its triangular packing, is moved as a rigid body and turned about its centroid, through any angle by dragging beside it, by 5° with the scroll wheel or by 60° with a tap. A displacement or rotation of the rack is accepted only if all fifteen centres still satisfy the cushion condition, remain at least <i>R</i> + 4 units outside the capture radius of every pocket and keep a distance of at least 2<i>R</i> + 1 from the cue ball, and a rejected displacement leaves the rack where it was, so that no starting configuration can violate the contact conditions of the simulation. On a table drawn by the player the balls may be arranged in another formation (see below), and in that case each ball is dragged on its own, subject to the cushion, pocket and contact conditions just given with a minimum separation of 2<i>R</i> + 0.6 from every other ball.</p>
+<h3>Tables drawn by the player</h3>
+<p>The outline of a table made by the player is drawn on a grid of <span data-v="GRIDU"></span> units, shown as lines every <span data-v="ESHOW"></span> units, in the same coordinates as the built-in tables, so that a ball of radius <i>R</i> can be compared directly with the drawing area of <span data-v="EDW"></span> by <span data-v="EDH"></span> units, and passages as narrow as a single ball, or tables barely larger than the balls, are allowed. The outline is accepted only if it is a simple polygon, in which no two non-adjacent edges intersect, with an area of at least 10 000 square units and at least one pocket, and the table is then refused unless fifteen balls and the cue ball can be placed on it. The cushion segments and their normals are generated in the same way as for the other tables. A pocket placed within <span data-v="SNAPD"></span> units of a vertex is attached to it, with a capture radius equal to the larger of 32 units and <i>R</i>/sin(<i>α</i>/2) + 4 units at a convex vertex of interior angle <i>α</i>, in accordance with the bound given above, and to 32 units at a reflex vertex, whereas a pocket within the same distance of a cushion is moved onto it, with a capture radius of 28 units and a centre displaced by 6 units outwards, as for the side pockets of the classic table, and any other pocket lies in the interior of the table with a capture radius of 30 units. The starting positions are found by scanning the interior on a lattice of 10 units, in order of decreasing distance from the cushions, for a point at which the balls can be packed in the triangle of the standard rack in one of twelve orientations spaced by 30°. If the triangle fits nowhere, the same search is repeated for seven other close packings of hexagonal rows (3, 4, 4 and 4 balls, three rows of 5, rows of 4, 5, 4 and 2, five rows of 3, rows of 8 and 7, seven pairs and a single ball, and a straight line of 15), and if none of these fits either, the balls are added one at a time at the lattice point nearest to the centroid of those already placed that lies at least 2<i>R</i> + 1.5 from each of them, which fills a table of any shape that has room for them. In every case the ball nearest to the centre of the group becomes the eight ball, and the cue ball is placed at the lattice point that is distant from the group, has a clear line of sight to it and lies behind its axis.</p>
+<h3>Aiming help</h3>
+<p>The aiming help has three settings, which the Aim button cycles. With Off only the cue is drawn. With Line the shot ray, turned by the squirt angle of equation (<span class="rm">10</span>) for the selected hit point, is intersected with discs of radius 2<i>R</i> centred on the other balls. With <b>f</b> the vector from the centre of an object ball to the cue ball and <b>d</b>′ the unit direction of the shot, the first contact lies at</p>
+<div class="eq"><span><i>t</i> = −<i>b</i> − √(<i>b</i><sup><span class="rm">2</span></sup> − <i>c</i>),  <i>b</i> = <b>f</b> · <b>d</b>′,  <i>c</i> = |<b>f</b>|<sup><span class="rm">2</span></sup> − <span class="rm">4</span><i>R</i><sup><span class="rm">2</span></sup>,</span><b>(<span class="rm">18</span>)</b></div>
+<p>provided that <i>b</i><sup>2</sup> − <i>c</i> ≥ 0 and <i>t</i> &gt; 0. The distance to the cushions is found by stepping along the ray in increments of 3 units until the ball centre comes within <i>R</i> of a segment and then bisecting the last step ten times, and the smaller of this distance and the smallest <i>t</i> over all balls fixes where the ghost ball is drawn, together with the direction in which the object ball will leave. With Path the game does not use this construction but runs the shot itself on a copy of the table, with the selected power and hit point and with the same equations as the real shot, until every ball has stopped, for at most 6000 steps, and draws the centres of the balls every sixth step, the cue ball in solid white and the others in fainter white, a red dot marking a ball that is potted and a dashed ring the position of the cue ball at its first contact, all in white except the red dots. The prediction contains swerve, throw, draw and cushion effects. The displayed game advances the balls in fixed steps of exactly 1/<span data-v="SUB"></span> s, whatever the frame rate, and the shot contains no random element, so that the path drawn is the path the balls then follow, provided that the hit point, the power and the direction are not changed between the preview and the release.</p>
+<h3>Rotation of the balls</h3>
+<p>The rotation of the balls follows the angular velocity. Each ball carries an orientation matrix <b>Q</b>, and in a time <span class="rm">d</span><i>t</i> it is multiplied by a rotation through</p>
+<div class="eq"><span><i>θ</i> = |<b>ω</b>| <span class="rm">d</span><i>t</i> <span class="rm">about</span> <b>â</b> = <b>ω</b>/|<b>ω</b>|,</span><b>(<span class="rm">19</span>)</b></div>
+<p>applied through Rodrigues' formula <b>Q</b> ← [<b>I</b> cos <i>θ</i> + sin <i>θ</i> [<b>â</b>]<sub>×</sub> + (1 − cos <i>θ</i>) <b>â</b><b>â</b><sup>T</sup>] <b>Q</b>. For a rolling ball <b>ω</b> = (−<i>v</i><sub>y</sub>, <i>v</i><sub>x</sub>, <span class="rm">0</span>)/<i>R</i>, which is the condition for rolling without slipping, but a ball that slides, spins about a vertical axis or has just been struck with draw turns differently from its displacement, and the picture shows that. To draw a ball, each pixel of its disc at (<i>u</i>, <i>v</i>) is lifted to the sphere point <b>p</b> = (<i>u</i>, <i>v</i>, √(1 − <i>u</i><sup>2</sup> − <i>v</i><sup>2</sup>)) and transformed into the body frame,</p>
+<div class="eq"><span><b>q</b> = <b>Q</b><sup>T</sup> <b>p</b>,  <span class="rm">stripe if</span> |<i>q</i><sub>y</sub>| &lt; <span data-v="STRIPE"></span>,</span><b>(<span class="rm">20</span>)</b></div>
+<p>so that the pixel is white where it falls on the band of a striped ball and takes the ball colour elsewhere. The number discs sit at ±<b>z</b> in the body frame and are drawn with the affine map given by the first two columns of <b>Q</b>, which makes them foreshorten as they turn away from the viewer. The orientation is a result of the motion and does not feed back into it.</p>
+<h3>The computer opponent</h3>
+<p>The computer opponent uses the same engine. For each candidate shot, defined by an angle, a speed obtained from equation (<span class="rm">8</span>) for a chosen travel distance and, for one of the styles, a hit point, the position is simulated forward and scored, with its own potted balls counting in its favour, fouls and potted balls of the opponent counting against it, and a further term rewarding a cue ball left with a clear line to the next ball and, when no ball is potted, penalising a cue ball that leaves the opponent such a line. Potting lines that would leave the table outline, as happens across the notch of the cross, are discarded. The selected shot is then perturbed by a random angular error of about <span data-v="E0"></span>°, <span data-v="E1"></span>°, <span data-v="E2"></span>° and <span data-v="E3"></span>° at the Easy, Medium, Hard and Pro levels respectively, together with a relative power error, so that the levels differ in how well the shot is chosen (no search at Easy, only simulated pots at Medium, and a search over the best <span data-v="K2"></span> and <span data-v="K3"></span> potting lines at Hard and Pro) as well as in how accurately it is executed. In headless games on the classic table, with six games per pairing and the players alternating the break, Pro beat Easy six games to none, Medium five to one and Hard three to three, Hard beat Medium six to none and Medium beat Easy six to none, which orders the levels as labelled except that Pro and Hard are not separated by so small a sample.</p>
+<p>The style changes the weights of the score and the speeds that are tried from the Medium level upwards, whereas at the Easy level it alters only the angular error. The Balanced style uses the weights above. The Aggressive style raises the reward for a potted ball by 40 per cent, halves the weight of the position term, lowers the penalty of a foul to 60 per cent, tries speeds up to 1.9 times the estimate and adds 30 per cent to the angular error. The Safe style raises the weight of the position from 1 to 1.8 and that of the opponent's chances from 1.4 to 2.4, raises the foul penalty by half, tries speeds down to 0.6 of the estimate and reduces the angular error by 15 per cent. The Technical style keeps the Balanced weights apart from a position weight of 1.3 and, for each potting line, also tries follow, draw and side spin of 0.6 and 0.5 of the largest offset, aiming at the angle that cancels the squirt of equation (<span class="rm">10</span>), so that it is the only style that uses the hit point. In eight games each against the Balanced style at the Pro level the Aggressive style won four, the Safe style five and the Technical style six, differences that are within what chance alone would give for such a sample.</p>
+<h3>Limits of the model</h3>
+<p>The model still omits the vertical motion of the ball, so that there are no jump shots, no massé shots with a steep cue (the elevation is fixed at <span data-v="ELEVD"></span>°) and no lift at the cushion, the dependence of the friction coefficients on speed and humidity, the change of the cloth with wear and the possibility of a miscue at a large offset, which is avoided by limiting the offset. The numerical factors <i>κ</i>, <i>q</i>, <i>μ</i><sub class="rm">B</sub>, <i>μ</i><sub class="rm">W</sub>, <i>ζ</i> and <i>V</i><sub class="rm">J</sub> were tuned for a plausible feel, whilst <i>a</i><sub class="rm">s</sub>, <i>μ</i><sub class="rm">B</sub> and the restitution coefficients were set near the values that Alciatore (technical proofs TP A.6, TP B.2 and TP B.6, billiards.colostate.edu) gives as typical for pool: a ball–cloth sliding friction of 0.2, which for a ball of 57 mm diameter (2<i>R</i> = 30 units, so that one unit is 1.9 mm) is <i>a</i><sub class="rm">s</sub> = <span data-v="SLIDE"></span> units per second squared, a ball–ball friction of 0.06, a ball–ball restitution of 0.94 and a ball–cushion restitution of about 0.7 for a rolling ball. The pivoting decay of the side spin was compared with his measured deceleration of about 10 rad s<sup>−2</sup> only in order of magnitude, and nothing here has been measured on a real table.</p>
+
+</article>
+</div></div>
+<div id="win"><div id="wint"></div><button id="again">New game</button></div>
+<script>
+const $=id=>document.getElementById(id);
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const BUILD='20261121-7';
+if(store.get('pool-build')!=BUILD){try{['pool-shape','pool-cloth','pool-lvl','pool-2p','pool-custom','pool-name','pool-sty','pool-aid'].forEach(k=>localStorage.removeItem(k))}catch(e){}store.set('pool-build',BUILD)}
+let W=1000,H=500;
+const M=50,C=14,R=15,CELL=40,E_W=.80,E_B=.97,VMAX=2400,A0=100,K=.35,PULL=200,SUB=360;
+const STRIPE=.55,REST=4,PMIN=.03,SLIDE=1030,SLIPMIN=3,TOPK=1.25,SQ=.03,ELEV=8*Math.PI/180,ZD=.5,MUB=.06,MUW=.14,NOSE=.27,EBK=.10,EWK=.30,JAW=900;
+const CLOTHS=['#1f45e0','#12804f','#0e8c94','#7a1f3d','#44506a','#5b3fd1'];
+const INK="#0a0a0a",ACC="#e30613";
+let CLOTH=CLOTHS.includes(store.get('pool-cloth'))?store.get('pool-cloth'):CLOTHS[1];
+const COL={1:'#ffd23f',2:'#b9a6ff',3:'#ef3e36',4:'#ff8fb8',5:'#ffa31a',6:'#2dc26b',7:'#8a1538',8:INK};
+const colorOf=id=>COL[id>8?id-8:id];
+const grpOf=id=>id==8?null:id<8?'solid':'stripe';
+let POCKETS=[],WALLS=[],GRID=[],GW=1,GH=1,POLY=[],HOLES=[],RACK={x:0,y:0,ux:1,uy:0},CUE={x:0,y:0},SHAPE=null;
+const P=(x,y,r,nx,ny,vo,vr)=>({x,y,r,nx,ny,vo,vr});
+const unit=(x,y)=>{const l=Math.hypot(x,y)||1;return[x/l,y/l]};
+const vp=(pts,i,r,vo,vr)=>{const n=pts.length;let A=0;for(let k=0;k<n;k++){const a=pts[k],b=pts[(k+1)%n];A+=a[0]*b[1]-b[0]*a[1]}
+  const sg=A>0?1:-1,nrm=(a,b)=>{const dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy);return[sg*dy/l,-sg*dx/l]},
+  p=pts[(i+n-1)%n],q=pts[i],t=pts[(i+1)%n],n1=nrm(p,q),n2=nrm(q,t),u=unit(n1[0]+n2[0],n1[1]+n2[1]);return P(q[0],q[1],r,u[0],u[1],vo,vr)};
+const arcPts=(cx,cy,rx,ry,a0,a1,n)=>{const o=[];for(let i=0;i<=n;i++){const a=a0+(a1-a0)*i/n;o.push([cx+rx*Math.cos(a),cy+ry*Math.sin(a)])}return o};
+const GRAPES=[[-234.0,-83.7],[-252.3,-102.0],[-268.1,-113.2],[-291.5,-124.3],[-310.2,-129.5],[-329.5,-131.8],[-355.4,-130.6],[-374.3,-126.3],[-398.2,-116.4],[-419.7,-102.0],[-438.0,-83.7],[-452.4,-62.2],[-460.3,-44.5],[-465.5,-25.8],[-468.0,0.0],[-465.5,25.8],[-460.3,44.5],[-442.0,78.6],[-414.6,106.0],[-380.5,124.3],[-344.7,131.7],[-354.6,165.6],[-354.6,204.4],[-343.3,241.4],[-326.0,268.7],[-307.7,287.0],[-286.2,301.4],[-262.3,311.3],[-232.7,316.7],[-242.6,350.6],[-243.4,382.9],[-236.3,414.5],[-218.0,448.6],[-195.7,472.0],[-174.2,486.4],[-150.3,496.3],[-120.7,501.7],[-130.6,535.6],[-130.6,574.4],[-122.0,605.5],[-102.0,638.7],[-83.7,657.0],[-67.9,668.2],[-32.1,683.0],[6.5,686.8],[44.5,679.3],[67.9,668.2],[88.6,652.8],[106.0,633.6],[122.0,605.5],[129.5,580.8],[132.0,555.0],[129.5,529.2],[120.7,501.7],[156.5,494.3],[185.3,479.8],[209.8,458.6],[228.4,432.2],[240.0,402.1],[243.8,376.5],[241.5,344.2],[232.7,316.7],[268.5,309.3],[297.3,294.8],[321.8,273.6],[340.4,247.2],[352.0,217.1],[355.8,191.5],[353.5,159.2],[344.7,131.7],[374.3,126.3],[403.9,113.2],[429.3,93.3],[449.2,67.9],[460.3,44.5],[467.4,12.9],[467.4,-12.9],[460.3,-44.5],[442.0,-78.6],[414.6,-106.0],[380.5,-124.3],[342.5,-131.8],[310.2,-129.5],[273.8,-116.4],[247.4,-97.8],[224.0,-69.8],[205.3,-93.3],[179.9,-113.2],[150.3,-126.3],[118.5,-131.8],[86.2,-129.5],[49.8,-116.4],[23.4,-97.8],[-0.0,-69.8],[-18.7,-93.3],[-44.1,-113.2],[-73.7,-126.3],[-105.5,-131.8],[-137.8,-129.5],[-174.2,-116.4],[-200.6,-97.8],[-224.0,-69.8]];
+const SHAPES=[
+ {id:'classic',name:'Classic',convex:1,rect:1,build(){const w=1000,h=500,q=.7071;
+  return{pts:[[0,0],[w,0],[w,h],[0,h]],pk:[P(0,0,32,-q,-q,11,25),P(w,0,32,q,-q,11,25),P(0,h,32,-q,q,11,25),P(w,h,32,q,q,11,25),P(w/2,-6,28,0,-1,4,24),P(w/2,h+6,28,0,1,4,24)],cue:[250,250],rack:[720,250,1,0]}}},
+ {id:'tshape',name:'T-shape',convex:0,build(){const q=.7071;
+  return{pts:[[-560,-400],[560,-400],[560,-120],[180,-120],[180,500],[-180,500],[-180,-120],[-560,-120]],pk:[P(-560,-400,32,-q,-q,11,25),P(560,-400,32,q,-q,11,25),P(0,-406,28,0,-1,4,24),P(560,-120,32,q,q,11,25),P(-560,-120,32,-q,q,11,25),P(180,500,32,q,q,11,25),P(-180,500,32,-q,q,11,25)],cue:[0,390],rack:[0,-170,0,-1]}}},
+ {id:'star',name:'Star',convex:0,build(){const pts=[],pk=[];
+  for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,r=k%2?260:560,c=Math.cos(a),sn=Math.sin(a);pts.push([r*c,r*sn]);if(!(k%2))pk.push(P(r*c,r*sn,46,c,sn,14,32))}
+  return{pts,pk,cue:[0,-350],rack:[0,-40,0,1]}}},
+ {id:'cross',name:'Cross',convex:0,build(){const a=150,e=450,q=.7071;
+  return{pts:[[-a,-e],[a,-e],[a,-a],[e,-a],[e,a],[a,a],[a,e],[-a,e],[-a,a],[-e,a],[-e,-a],[-a,-a]],pk:[P(0,-e-6,28,0,-1,4,24),P(e+6,0,28,1,0,4,24),P(0,e+6,28,0,1,4,24),P(-e-6,0,28,-1,0,4,24),P(a,a,32,q,q,11,25),P(-a,a,32,-q,q,11,25),P(a,-a,32,q,-q,11,25),P(-a,-a,32,-q,-q,11,25)],cue:[0,380],rack:[0,60,0,-1]}}},
+ {id:'peanut',name:'Peanut',convex:0,build(){const r=290,d=250,yi=Math.sqrt(r*r-d*d),a=Math.atan2(yi,d);
+  const A=arcPts(d,0,r,r,a-Math.PI,Math.PI-a,48),B=arcPts(-d,0,r,r,a,2*Math.PI-a,48);A.pop();B.pop();
+  return{pts:[...A,...B],pk:[P(d+r,0,32,1,0,10,25),P(-d-r,0,32,-1,0,10,25),P(0,-yi,32,0,-1,8,25),P(0,yi,32,0,1,8,25),P(-d,-r-6,28,0,-1,4,24),P(d,r+6,28,0,1,4,24)],cue:[-330,0],rack:[130,0,1,0]}}},
+ {id:'banana',name:'Banana',convex:0,build(){const K=5.8,N=44,L=[],Rr=[],pk=[];
+  for(let i=0;i<=N;i++){const t=i/N,a=(200+140*t)*Math.PI/180,c=Math.cos(a),sn=Math.sin(a),w=(7+24*Math.pow(Math.sin(Math.PI*t),.8))*K;
+   L.push([100*K*c+c*w,100*K*sn+sn*w]);Rr.push([100*K*c-c*w,100*K*sn-sn*w])}
+  const ang=t=>(200+140*t)*Math.PI/180,pt=(t,sd)=>{const a=ang(t),c=Math.cos(a),sn=Math.sin(a),w=(7+24*Math.pow(Math.sin(Math.PI*t),.8))*K;return[100*K*c+sd*c*w,100*K*sn+sd*sn*w,sd*c,sd*sn]};
+  const e0=pt(0,0),e1=pt(1,0);
+  pk.push(P(e0[0],e0[1],34,-.342,.94,10,26),P(e1[0],e1[1],34,.342,.94,10,26));
+  for(const [t,sd] of [[.3,1],[.7,1],[.3,-1],[.7,-1]]){const q=pt(t,sd);pk.push(P(q[0]+q[2]*6,q[1]+q[3]*6,28,q[2],q[3],4,24))}
+  const m=pt(.5,0),c0=pt(.17,0);
+  return{pts:[...L,...Rr.reverse()],pk,cue:[c0[0],c0[1]],rack:[m[0]-40,m[1],1,0]}}},
+ {id:'grapes',name:'Grapes',convex:0,build(){const pts=GRAPES.map(q=>q.slice());let bi=0;pts.forEach((q,i)=>{if(q[1]>pts[bi][1])bi=i});
+  const pk=[20,36,53,69,93].map(i=>vp(pts,i,34,10,26));pk.push(vp(pts,bi,34,10,26));
+  return{pts,pk,cue:[0,555],rack:[0,230,0,-1]}}},
+ {id:'doughnut',name:'Doughnut',convex:0,build(){const R0=600,R1=210,o=arcPts(0,0,R0,R0,0,Math.PI*2,96),h=arcPts(0,0,R1,R1,0,Math.PI*2,48),pk=[];o.pop();h.pop();
+  for(let k=0;k<6;k++){const a=k*Math.PI/3,c=Math.cos(a),sn=Math.sin(a);pk.push(P(c*(R0+6),sn*(R0+6),30,c,sn,8,25))}
+  for(let k=0;k<3;k++){const a=Math.PI/6+k*2*Math.PI/3,c=Math.cos(a),sn=Math.sin(a);pk.push(P(c*(R1-6),sn*(R1-6),28,-c,-sn,4,24))}
+  return{pts:o,holes:[h],pk,cue:[0,-420],rack:[330,0,1,0]}}},
+ {id:'lightning',name:'Lightning',convex:0,build(){const pts=[[400,0],[600,0],[430,450],[760,420],[150,1200],[300,600],[0,600]];
+  return{pts,pk:[0,1,3,4,5,6].map(i=>vp(pts,i,34,11,26)),cue:[330,850],rack:[390,380,0,-1]}}},
+ {id:'pacman',name:'Pac-Man',convex:0,build(){const r=560,a0=Math.PI/6,pts=[[0,0],...arcPts(0,0,r,r,a0,2*Math.PI-a0,72)],pk=[P(0,0,36,1,0,14,26),P(r*Math.cos(a0),r*Math.sin(a0),32,.966,.259,11,25),P(r*Math.cos(a0),-r*Math.sin(a0),32,.966,-.259,11,25)];
+  for(const a of [Math.PI/2,Math.PI,3*Math.PI/2]){const c=Math.cos(a),sn=Math.sin(a);pk.push(P(c*(r+6),sn*(r+6),30,c,sn,8,25))}
+  return{pts,pk,cue:[0,-400],rack:[-260,0,-1,0]}}}
+];
+let CUSTOM=null;try{CUSTOM=JSON.parse(store.get('pool-custom')||'null')}catch(e){}
+const ESNAP=5,ESHOW=20,SNAPD=30,EDW=2000,EDH=1400;
+const orient=pts=>{let A=0;for(let k=0;k<pts.length;k++){const a=pts[k],b=pts[(k+1)%pts.length];A+=a[0]*b[1]-b[0]*a[1]}return A>0?1:-1};
+function edgeNear(pts,q){let be=-1,bt=0,bd=1e9;const n=pts.length;
+  for(let i=0;i<n;i++){const a=pts[i],b=pts[(i+1)%n],dx=b[0]-a[0],dy=b[1]-a[1],l2=dx*dx+dy*dy||1;let t=((q[0]-a[0])*dx+(q[1]-a[1])*dy)/l2;t=t<0?0:t>1?1:t;
+    const d=Math.hypot(q[0]-a[0]-t*dx,q[1]-a[1]-t*dy);if(d<bd){bd=d;be=i;bt=t}}
+  return{e:be,t:bt,d:bd}}
+function vertNear(pts,q){let bv=-1,bd=1e9;pts.forEach((p,i)=>{const d=Math.hypot(p[0]-q[0],p[1]-q[1]);if(d<bd){bd=d;bv=i}});return{v:bv,d:bd}}
+function customPk(pts,q){
+  const n=pts.length,sg=orient(pts),V=vertNear(pts,q);
+  if(V.d<SNAPD){const p=pts[(V.v+n-1)%n],c=pts[V.v],t=pts[(V.v+1)%n];
+    let th=Math.abs(Math.atan2(p[1]-c[1],p[0]-c[0])-Math.atan2(t[1]-c[1],t[0]-c[0]));if(th>Math.PI)th=2*Math.PI-th;
+    const cr=(c[0]-p[0])*(t[1]-c[1])-(c[1]-p[1])*(t[0]-c[0]),convex=(cr>0)==(sg>0),r=convex?Math.max(32,Math.ceil(R/Math.sin(Math.max(th,.2)/2))+4):32;
+    return vp(pts,V.v,r,11,Math.min(25,r-7))}
+  const E=edgeNear(pts,q);
+  if(E.d<SNAPD){const a=pts[E.e],b=pts[(E.e+1)%n],dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy),nx=sg*dy/l,ny=-sg*dx/l;
+    return P(a[0]+dx*E.t+nx*6,a[1]+dy*E.t+ny*6,28,nx,ny,4,24)}
+  return P(q[0],q[1],30,0,0,0,23)}
+SHAPES.push({id:'custom',name:'Make your own',convex:0,custom:1,build(){const pts=CUSTOM.pts.map(q=>q.slice()),pk=CUSTOM.pk.map(q=>customPk(pts,q));let cx=0,cy=0;pts.forEach(q=>{cx+=q[0];cy+=q[1]});
+  return{pts,pk,cue:[cx/pts.length,cy/pts.length],rack:[cx/pts.length,cy/pts.length,1,0]}}});
+const BRAZIL=[[600.1,1170.4],[592.0,1153.4],[604.8,1139.1],[588.0,1118.7],[535.2,1082.9],[524.4,1083.8],[495.2,1060.6],[476.3,1063.8],[548.0,993.8],[592.0,965.0],[592.6,941.0],[578.0,923.7],[563.6,929.5],[573.3,894.4],[573.3,877.9],[562.8,872.5],[551.9,877.3],[541.0,876.0],[534.9,837.0],[529.5,828.0],[509.8,819.9],[497.9,825.8],[467.2,820.0],[469.1,779.3],[460.5,762.6],[469.6,756.4],[466.8,739.3],[474.8,726.2],[480.0,702.5],[473.1,683.9],[457.2,675.5],[454.1,663.6],[458.4,646.3],[402.6,645.0],[391.4,610.1],[399.9,609.6],[392.5,570.6],[375.6,561.7],[357.3,562.0],[325.6,547.3],[314.1,536.1],[281.5,531.2],[249.9,504.3],[251.8,450.2],[213.7,455.2],[172.9,478.7],[166.4,487.7],[129.8,485.9],[113.3,491.0],[100.1,487.6],[102.1,442.0],[78.2,459.7],[52.5,458.9],[41.5,442.9],[22.2,441.2],[28.3,428.3],[12.1,410.0],[0.0,383.0],[7.7,377.5],[7.7,364.9],[25.3,356.2],[22.4,340.0],[29.8,329.5],[31.9,315.5],[65.2,295.1],[92.9,284.8],[119.2,286.2],[132.9,191.0],[128.4,173.8],[115.5,162.9],[115.6,141.1],[132.0,136.1],[137.8,139.2],[138.8,127.7],[121.8,124.6],[121.4,105.9],[178.1,106.5],[187.8,96.2],[201.5,123.4],[207.0,119.7],[223.0,135.6],[245.7,133.6],[251.3,124.4],[284.9,112.5],[288.3,99.8],[309.1,91.3],[307.5,85.0],[282.9,82.4],[280.0,43.4],[267.0,35.6],[272.4,32.8],[317.1,44.2],[325.5,37.1],[379.0,21.2],[389.7,9.8],[385.8,1.3],[400.9,0.0],[407.7,6.9],[403.9,20.1],[413.9,24.6],[420.6,38.5],[412.5,49.1],[407.9,74.6],[417.5,103.7],[435.4,117.8],[449.7,119.3],[452.9,113.4],[475.3,106.8],[484.7,98.8],[523.7,102.8],[524.4,82.0],[549.9,81.6],[579.3,94.1],[588.3,86.0],[594.8,87.3],[598.7,95.7],[612.7,93.6],[623.8,82.2],[650.0,32.6],[659.9,31.2],[683.4,100.3],[699.0,105.2],[699.8,125.9],[677.9,150.6],[687.0,159.7],[738.4,164.4],[739.5,194.4],[761.6,174.7],[846.5,203.9],[860.8,221.4],[856.0,238.0],[889.8,228.8],[946.5,244.7],[990.0,243.5],[1033.0,268.3],[1070.2,301.9],[1092.6,310.6],[1117.5,311.8],[1128.0,321.2],[1142.7,377.6],[1131.2,427.2],[1075.3,488.5],[1056.8,522.4],[1035.2,548.4],[1027.9,549.0],[1019.8,571.1],[1021.9,627.3],[1010.7,693.3],[1001.5,705.2],[996.3,745.3],[966.8,784.4],[961.8,815.4],[938.3,828.4],[931.5,846.4],[899.8,846.3],[854.1,857.9],[833.6,871.2],[800.9,880.0],[766.7,903.9],[742.1,933.6],[737.8,956.0],[742.7,972.6],[730.6,1017.5],[710.3,1034.0],[678.0,1086.8],[632.6,1124.7],[619.3,1153.2]];
+SHAPES.splice(SHAPES.length-1,0,
+ {id:'brazil',name:'Brazil',convex:0,auto:1,build(){const pts=BRAZIL.map(q=>q.slice());
+  return{pts,pk:[96,118,139,150,0,57,43].map(i=>vp(pts,i,36,11,26)),cue:[0,0],rack:[0,0,1,0]}}},
+ {id:'giraffe',name:'Giraffe',convex:0,auto:1,build(){
+  const pts=[[0,420],[120,385],[300,375],[400,380],[493,200],[560,70],[600,55],[740,80],[840,130],[855,172],[820,205],[720,175],[640,190],[608,380],[600,470],[600,1090],[510,1090],[510,665],[460,665],[460,1090],[370,1090],[370,665],[230,665],[230,1090],[140,1090],[140,665],[90,665],[90,1090],[0,1090],[0,600]];
+  const pk=[555,415,185,45].map(x=>P(x,1096,28,0,1,4,24));pk.push(vp(pts,9,34,11,26),P(-6,510,28,-1,0,4,24));
+  return{pts,pk,cue:[0,0],rack:[0,0,1,0]}}});
+const shapeData=id=>{
+  const sp=SHAPES.find(x=>x.id==id)||SHAPES[0],d=sp.build();let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  d.pts.forEach(q=>{x0=Math.min(x0,q[0]);y0=Math.min(y0,q[1]);x1=Math.max(x1,q[0]);y1=Math.max(y1,q[1])});
+  return{sp,pts:d.pts.map(q=>[q[0]-x0,q[1]-y0]),holes:(d.holes||[]).map(h=>h.map(q=>[q[0]-x0,q[1]-y0])),pk:d.pk.map(q=>({...q,x:q.x-x0,y:q.y-y0})),cue:{x:d.cue[0]-x0,y:d.cue[1]-y0},rack:{x:d.rack[0]-x0,y:d.rack[1]-y0,ux:d.rack[2],uy:d.rack[3]},W:x1-x0,H:y1-y0}};
+function inPoly(x,y){let c=false;for(const w of WALLS)if((w.ay>y)!=(w.by>y)&&x<(w.bx-w.ax)*(y-w.ay)/(w.by-w.ay)+w.ax)c=!c;return c}
+function segD2(w,x,y){const dx=w.bx-w.ax,dy=w.by-w.ay;let t=((x-w.ax)*dx+(y-w.ay)*dy)/w.l2;t=t<0?0:t>1?1:t;const ex=x-(w.ax+t*dx),ey=y-(w.ay+t*dy);return ex*ex+ey*ey}
+const cellOf=(x,y)=>Math.min(GH-1,Math.max(0,y/CELL|0))*GW+Math.min(GW-1,Math.max(0,x/CELL|0));
+function nearWall(x,y,m){const L=GRID[cellOf(x,y)];if(!L)return false;for(let k=0;k<L.length;k++)if(segD2(WALLS[L[k]],x,y)<m*m)return true;return false}
+const okWall=(x,y)=>inPoly(x,y)&&!nearWall(x,y,R-.01);
+function loadShape(id){
+  const d=shapeData(id);SHAPE=d.sp;POLY=d.pts;POCKETS=d.pk;CUE=d.cue;RACK=d.rack;W=d.W;H=d.H;
+  HOLES=d.holes;WALLS=[];
+  for(const L of [POLY,...HOLES]){const n=L.length;
+  for(let i=0;i<n;i++){const a=L[i],b=L[(i+1)%n],dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy);WALLS.push({ax:a[0],ay:a[1],bx:b[0],by:b[1],l2:l*l,nx:-dy/l,ny:dx/l})}}
+  for(const w of WALLS)if(!inPoly((w.ax+w.bx)/2+w.nx*2,(w.ay+w.by)/2+w.ny*2)){w.nx=-w.nx;w.ny=-w.ny}
+  GW=Math.ceil(W/CELL)+1;GH=Math.ceil(H/CELL)+1;GRID=new Array(GW*GH);
+  WALLS.forEach((w,i)=>{
+    const x0=Math.max(0,Math.floor((Math.min(w.ax,w.bx)-R-2)/CELL)),x1=Math.min(GW-1,Math.floor((Math.max(w.ax,w.bx)+R+2)/CELL)),
+      y0=Math.max(0,Math.floor((Math.min(w.ay,w.by)-R-2)/CELL)),y1=Math.min(GH-1,Math.floor((Math.max(w.ay,w.by)+R+2)/CELL));
+    for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)(GRID[y*GW+x]||(GRID[y*GW+x]=[])).push(i)});
+  if(SHAPE.custom||SHAPE.auto)CUSTOK=autoPlace();
+}
+const rackXY=(ax,ay,ux,uy)=>{const dx=R*2*.866+.4,o=[];for(let r=0;r<5;r++)for(let k=0;k<=r;k++){const t=(k-r/2)*(2*R+.6);o.push([ax+ux*r*dx-uy*t,ay+uy*r*dx+ux*t])}return o};
+const clearAt=(x,y)=>{let m=1e9;for(const w of WALLS){const d=Math.sqrt(segD2(w,x,y));if(d<m)m=d}return m};
+const rowsXY=(rows,ax,ay,ux,uy)=>{const dx=R*2*.866+.4,o=[];rows.forEach((n,r)=>{for(let k=0;k<n;k++){const t=(k-(n-1)/2)*(2*R+.6);o.push([ax+ux*r*dx-uy*t,ay+uy*r*dx+ux*t])}});return o};
+const FORMS=[[1,2,3,4,5],[3,4,4,4],[5,5,5],[4,5,4,2],[3,3,3,3,3],[8,7],[2,2,2,2,2,2,2,1],[15]];
+const okBall=(x,y)=>okWall(x,y)&&POCKETS.every(p=>Math.hypot(x-p.x,y-p.y)>=p.r+R+4);
+function autoPlace(){
+  const c=[];for(let x=R;x<W;x+=10)for(let y=R;y<H;y+=10)if(okWall(x,y)&&POCKETS.every(p=>Math.hypot(x-p.x,y-p.y)>=p.r+R+12))c.push([x,y,clearAt(x,y)]);
+  c.sort((a,b)=>b[2]-a[2]);let best=null,pts=null;
+  for(let f=0;f<FORMS.length&&!best;f++)for(const q of c.slice(0,600)){for(let k=0;k<12;k++){const a=k*Math.PI/6,ux=Math.cos(a),uy=Math.sin(a);
+    const P=rowsXY(FORMS[f],q[0],q[1],ux,uy);
+    if(P.every(z=>okBall(z[0],z[1]))){best={x:q[0],y:q[1],ux,uy};if(f)pts=P;break}}if(best)break}
+  if(!best&&c.length){
+    const ch=[c[0].slice()];
+    while(ch.length<15){let cx=0,cy=0;ch.forEach(z=>{cx+=z[0];cy+=z[1]});cx/=ch.length;cy/=ch.length;
+      let bq=null,bd=1e9;for(const q of c){if(ch.some(z=>Math.hypot(z[0]-q[0],z[1]-q[1])<2*R+1.5))continue;const d=Math.hypot(q[0]-cx,q[1]-cy);if(d<bd){bd=d;bq=q}}
+      if(!bq)break;ch.push(bq)}
+    if(ch.length<15)return false;
+    pts=ch.map(z=>[z[0],z[1]]);best={x:pts[0][0],y:pts[0][1],ux:1,uy:0}}
+  if(!best)return false;
+  const far=pts||rowsXY(FORMS[0],best.x,best.y,best.ux,best.uy);let cue=null,bs=-1e9;
+  for(const q of c){if(far.some(z=>Math.hypot(z[0]-q[0],z[1]-q[1])<2*R+12))continue;
+    const dx=q[0]-best.x,dy=q[1]-best.y,d=Math.hypot(dx,dy),sc=Math.min(d,500)+q[2]*2-150*(dx*best.ux+dy*best.uy)/(d||1)+(los({x:q[0],y:q[1]},best,2*R)?400:0);
+    if(sc>bs){bs=sc;cue=q}}
+  if(!cue)return false;
+  best.pts=pts;CUE={x:cue[0],y:cue[1]};RACK=best;return true}
+let CUSTOK=true;
+function los(a,b,skip){const dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy),e=Math.max(0,l-(skip||0)),n=Math.max(1,Math.floor(e/10));
+  for(let i=1;i<=n;i++){const f=i*e/n/l;if(!inPoly(a.x+dx*f,a.y+dy*f))return false}return true}
+const cv=$('cv'),ctx=cv.getContext('2d');
+let setupDrag=null,balls,turn,grp,phase,inHand,shot,breakNow,drag,ai,placing,home8,over;
+let mode=store.get('pool-2p')=='1'?'2p':'cpu',lvl=Math.max(0,Math.min(3,+(store.get('pool-lvl')||3))),spin={x:0,y:0};
+let s=1,rot=false,cw=0,ch=0,dpr=2,dirty=true;
+
+const nm0=()=>$('n0').value.trim(),dn=()=>mode=='cpu'?'You':'Player 1';
+const nm=i=>i?(mode=='cpu'?'CPU':'Player 2'):(nm0()||dn());
+
+/* ---------- setup ---------- */
+function newGame(){
+  const solids=[1,2,3,4,5,6,7],stripes=[9,10,11,12,13,14,15];
+  const ids=shuf(solids.concat(stripes));
+  ids.splice(4,0,8);
+  if(grpOf(ids[10])==grpOf(ids[14])){
+    for(let i=0;i<15;i++){if(i==4||i==10||i==14)continue;if(grpOf(ids[i])!=grpOf(ids[10])){[ids[14],ids[i]]=[ids[i],ids[14]];break}}
+  }
+  balls=[{id:0,x:CUE.x,y:CUE.y,vx:0,vy:0,wx:0,wy:0,wz:0,out:false}];
+  const P=RACK.pts||rowsXY(FORMS[0],RACK.x,RACK.y,RACK.ux,RACK.uy);
+  if(RACK.pts){let gx=0,gy=0;P.forEach(q=>{gx+=q[0];gy+=q[1]});gx/=15;gy/=15;let ci=0,bd=1e9;P.forEach((q,i)=>{const d=Math.hypot(q[0]-gx,q[1]-gy);if(d<bd){bd=d;ci=i}});const k=ids.indexOf(8);[ids[k],ids[ci]]=[ids[ci],ids[k]]}
+  P.forEach((q,n)=>{const b={id:ids[n],x:q[0],y:q[1],vx:0,vy:0,wx:0,wy:0,wz:0,out:false};
+    if(b.id==8)home8={x:b.x,y:b.y};balls.push(b)});
+  turn=0;grp=[null,null];inHand=false;breakNow=true;shot=null;drag=null;ai=null;placing=false;over=false;
+  $('win').classList.remove('on');
+  modeLabel();setupDrag=null;
+  if(SHAPE.rect){$('go').classList.remove('on');trays();nextPhase()}
+  else{phase='setup';$('go').classList.add('on');trays();status('Drag the balls · tap the rack to turn it')}
+}
+function shuf(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+
+/* ---------- turn flow ---------- */
+const modeLabel=()=>{$('mode').textContent=mode=='cpu'?'CPU · '+LEVELS[lvl].n:'2 players';$('sty').style.display=mode=='cpu'?'':'none';$('sty').textContent='Style · '+STYLES[sty].n;$('aid').textContent='Aim · '+AID[aid]};
+function status(why){dirty=true;
+  $('who').textContent=nm(turn)+' · '+(grp[turn]?(grp[turn]=='solid'?'Solids':'Stripes'):'Open table')+(phase=='place'?' · Place the cue ball':'');
+  $('why').textContent=why||'';
+}
+function nextPhase(why){
+  drag=null;
+  if(turn==1&&mode=='cpu'){phase='ai';status(why);setTimeout(aiStart,700)}
+  else{phase=inHand?'place':'aim';if(inHand)freeCue();status(why)}
+  trays();
+}
+const rackBalls=()=>balls.filter(b=>b.id>0&&!b.out);
+function rackOk(bs){const c=balls[0];
+  return bs.every(b=>okWall(b.x,b.y)&&POCKETS.every(p=>Math.hypot(b.x-p.x,b.y-p.y)>=p.r+R+4)&&Math.hypot(b.x-c.x,b.y-c.y)>=2*R+1)}
+const rackC=()=>{const bs=rackBalls();let cx=0,cy=0;bs.forEach(b=>{cx+=b.x;cy+=b.y});return[cx/bs.length,cy/bs.length]};
+function spinRack(da,cx,cy){const bs=rackBalls(),old=bs.map(b=>[b.x,b.y]),co=Math.cos(da),si=Math.sin(da);
+  bs.forEach(b=>{const x=b.x-cx,y=b.y-cy;b.x=cx+x*co-y*si;b.y=cy+x*si+y*co});
+  if(rackOk(bs)){dirty=true;return true}bs.forEach((b,i)=>{b.x=old[i][0];b.y=old[i][1]});return false}
+cv.addEventListener('wheel',e=>{if(phase!='setup')return;e.preventDefault();const g=rackC();spinRack(Math.sign(e.deltaY)*Math.PI/36,g[0],g[1])},{passive:false});
+function turnRack(){const bs=rackBalls();let cx=0,cy=0;bs.forEach(b=>{cx+=b.x;cy+=b.y});cx/=bs.length;cy/=bs.length;
+  const old=bs.map(b=>[b.x,b.y]),co=Math.cos(Math.PI/3),si=Math.sin(Math.PI/3);
+  bs.forEach(b=>{const x=b.x-cx,y=b.y-cy;b.x=cx+x*co-y*si;b.y=cy+x*si+y*co});
+  if(!rackOk(bs))bs.forEach((b,i)=>{b.x=old[i][0];b.y=old[i][1]});dirty=true}
+function startGame(){if(phase!='setup')return;const e=balls.find(b=>b.id==8);home8={x:e.x,y:e.y};$('go').classList.remove('on');phase='aim';status('');trays();dirty=true}
+$('go').onclick=startGame;
+addEventListener('keydown',e=>{if(e.key=='Enter'&&phase=='setup')startGame()});
+function freeCue(){
+  const c=balls[0];c.out=false;c.vx=c.vy=0;
+  if(validCue(c.x,c.y))return;
+  let best=null,bd=1e9;
+  for(let x=R;x<W;x+=15)for(let y=R;y<H;y+=15)if(validCue(x,y)){const d=Math.hypot(x-CUE.x,y-CUE.y);if(d<bd){bd=d;best={x,y}}}
+  if(best){c.x=best.x;c.y=best.y}
+}
+function validCue(x,y){
+  if(!okWall(x,y)||POCKETS.some(p=>Math.hypot(x-p.x,y-p.y)<p.r+2))return false;
+  return balls.every(b=>b.id==0||b.out||Math.hypot(b.x-x,b.y-y)>=2*R);
+}
+function trays(){
+  for(let i=0;i<2;i++){
+    if(i)$('n1').textContent=nm(1);else $('n0').placeholder=dn();$('r'+i).classList.toggle('on',i==turn&&!over);
+    const d=$('t'+i);d.innerHTML='';
+    if(!grp[i])continue;
+    const ids=(grp[i]=='solid'?[1,2,3,4,5,6,7]:[9,10,11,12,13,14,15]).concat(8);
+    ids.forEach(id=>{
+      const b=balls.find(x=>x.id==id),e=document.createElement('span'),c=colorOf(id);
+      e.className='dot'+(b.out?' gone':'');
+      e.style.background=id>8?'linear-gradient(#fff 0 26%,'+c+' 26% 74%,#fff 74%)':c;
+      e.innerHTML='<i>'+id+'</i>';
+      d.appendChild(e)});
+  }
+}
+function remaining(g){return balls.filter(b=>!b.out&&b.id>0&&grpOf(b.id)==g).length}
+
+function launch(c,ang,v,sf,ss){
+  const x0=Math.cos(ang),y0=Math.sin(ang);
+  let dx=x0+SQ*ss*y0,dy=y0-SQ*ss*x0;const l=Math.hypot(dx,dy);dx/=l;dy/=l;
+  c.vx=dx*v;c.vy=dy*v;
+  const t=TOPK*sf*v/R,q=TOPK*ss*v/R,se=Math.sin(ELEV),ce=Math.cos(ELEV);
+  c.wx=-dy*t-dx*q*se;c.wy=dx*t-dy*q*se;c.wz=q*ce;
+}
+function shoot(ang,p,sf,ss){
+  const c=balls[0],v=VMAX*Math.max(PMIN,Math.min(1,p));
+  const hu=!(mode=='cpu'&&turn==1);
+  if(sf===undefined){sf=hu?-spin.y:0;ss=hu?spin.x:0;if(hu){spin={x:0,y:0};drawSp()}}
+  launch(c,ang,v,sf,ss);
+  const g=grp[turn];
+  shot={potted:[],first:null,rail:false,isBreak:breakNow,rem:g?remaining(g):15};
+  breakNow=false;phase='roll';acc=0;drag=null;ai=null;status('');
+}
+function judge(sh,mg,rem,isBreak){
+  const potted=sh.potted.slice(),first=sh.first;
+  let foul=false,why='',win=false,lose=false,respot=false;
+  if(potted.includes(0)){foul=true;why='Scratch'}
+  else if(first==null){foul=true;why='No ball hit'}
+  else{
+    const legal=mg?(rem>0?grpOf(first)==mg:first==8):first!=8;
+    if(!legal){foul=true;why=mg&&rem==0?'Hit the wrong ball, 8 first':'Wrong ball first'}
+  }
+  if(!foul&&!sh.rail&&potted.length==0){foul=true;why='No cushion'}
+  if(potted.includes(8)){
+    if(isBreak){respot=true;potted.splice(potted.indexOf(8),1)}
+    else if(!foul&&mg&&rem==0)win=true;else lose=true;
+  }
+  const pots=potted.filter(i=>i!=0&&i!=8);
+  let g=mg;
+  if(!foul&&!win&&!lose&&!g&&!isBreak&&pots.length)g=grpOf(pots[0]);
+  let cont=false;
+  if(!foul&&!win&&!lose)cont=isBreak?pots.length>0:pots.some(i=>grpOf(i)==g);
+  return{foul,why,win,lose,respot,pots,g,cont};
+}
+function resolve(){
+  const me=turn,J=judge(shot,grp[me],shot.rem,shot.isBreak);
+  if(J.respot){
+    const b8=balls.find(b=>b.id==8);b8.out=false;b8.x=home8.x;b8.y=home8.y;
+    for(let n=0;n<30&&!validCue(b8.x,b8.y);n++){b8.x+=RACK.ux*2*R;b8.y+=RACK.uy*2*R}
+  }
+  if(J.win||J.lose){endGame(J.win?me:1-me);return}
+  if(!grp[me]&&J.g){grp[me]=J.g;grp[1-me]=J.g=='solid'?'stripe':'solid'}
+  if(J.foul){turn=1-me;inHand=true;freeCue()}
+  else if(!J.cont){turn=1-me;inHand=false}
+  nextPhase(J.foul?'Foul · '+J.why:'');
+}
+function endGame(w){
+  over=true;phase='over';trays();
+  $('wint').textContent=mode=='cpu'&&w==0&&!nm0()?'You win.':nm(w)+(mode=='cpu'&&w==0&&nm0()?' wins.':' wins.');
+  $('win').classList.add('on');status('');
+}
+
+/* ---------- physics ---------- */
+function stepOn(bs,sh,dt){
+  let moving=false;
+  const f=Math.exp(-K*dt),zd=Math.exp(-ZD*dt);
+  for(const b of bs){
+    if(b.out)continue;
+    if(!b.vx&&!b.vy&&!b.wx&&!b.wy)continue;
+    b.x+=b.vx*dt;b.y+=b.vy*dt;
+    const ux=b.vx-R*b.wy,uy=b.vy+R*b.wx,us=Math.hypot(ux,uy);
+    if(us>SLIPMIN){
+      let q=SLIDE*dt;if(3.5*q>us)q=us/3.5;
+      const fx=-ux/us*q,fy=-uy/us*q;
+      b.vx+=fx;b.vy+=fy;b.wx+=2.5*fy/R;b.wy-=2.5*fx/R;moving=true;
+    }else{
+      const sp=Math.hypot(b.vx,b.vy);let ns=sp*f-A0*dt;
+      if(ns<REST){b.vx=b.vy=b.wx=b.wy=b.wz=0}
+      else{const k=ns/sp;b.vx*=k;b.vy*=k;b.wx=-b.vy/R;b.wy=b.vx/R;moving=true}
+    }
+    if(b.wz){b.wz*=zd;if(Math.abs(b.wz)<.05)b.wz=0}
+    if(!b.vx&&!b.vy)continue;
+    for(const p of POCKETS){const px=p.x-b.x,py=p.y-b.y,d=Math.hypot(px,py);
+      if(d<p.r&&Math.abs(b.vx*py-b.vy*px)/(d||1)<JAW){b.out=true;b.vx=b.vy=b.wx=b.wy=b.wz=0;sh.potted.push(b.id);break}}
+    if(b.out)continue;
+    let hit=false;const L=GRID[cellOf(b.x,b.y)];
+    if(L)for(let k=0;k<L.length;k++){
+      const w=WALLS[L[k]],ddx=w.bx-w.ax,ddy=w.by-w.ay;let t=((b.x-w.ax)*ddx+(b.y-w.ay)*ddy)/w.l2;t=t<0?0:t>1?1:t;
+      const ex=b.x-(w.ax+t*ddx),ey=b.y-(w.ay+t*ddy),d2=ex*ex+ey*ey;
+      if(d2<R*R){
+        let d=Math.sqrt(d2),nx,ny;if(d<1e-6){nx=w.nx;ny=w.ny;d=0}else{nx=ex/d;ny=ey/d}
+        b.x+=nx*(R-d);b.y+=ny*(R-d);hit=true;
+        const vn=b.vx*nx+b.vy*ny;
+        if(vn<0){
+          const e=E_W-EWK*(-vn)/VMAX,jn=(1+e)*(-vn),tx=-ny,ty=nx,cs=Math.sqrt(1-NOSE*NOSE);
+          b.vx+=jn*nx;b.vy+=jn*ny;
+          const slip=b.vx*tx+b.vy*ty-R*(cs*b.wz+NOSE*(b.wx*nx+b.wy*ny));
+          let jt=-slip/3.5;const lim=MUW*jn;jt=jt>lim?lim:jt<-lim?-lim:jt;
+          b.vx+=jt*tx;b.vy+=jt*ty;
+          b.wx-=2.5*jt*NOSE*nx/R;b.wy-=2.5*jt*NOSE*ny/R;b.wz-=2.5*jt*cs/R;
+          moving=true}}}
+    if(hit&&sh.first!=null)sh.rail=true;
+  }
+  for(let i=0;i<bs.length;i++){const a=bs[i];if(a.out)continue;
+    for(let j=i+1;j<bs.length;j++){const b=bs[j];if(b.out)continue;
+      const dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy;
+      if(d2>=4*R*R||d2==0)continue;
+      const d=Math.sqrt(d2),nx=dx/d,ny=dy/d,ov=(2*R-d)/2;
+      a.x-=nx*ov;a.y-=ny*ov;b.x+=nx*ov;b.y+=ny*ov;
+      const rel=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;
+      if(rel>0){
+        const e=E_B-EBK*rel/VMAX,jn=(1+e)*rel/2,tx=-ny,ty=nx;
+        a.vx-=jn*nx;a.vy-=jn*ny;b.vx+=jn*nx;b.vy+=jn*ny;
+        const st=(a.vx-b.vx)*tx+(a.vy-b.vy)*ty+R*(a.wz+b.wz);
+        let jt=st/7;const lim=MUB*jn;jt=jt>lim?lim:jt<-lim?-lim:jt;
+        a.vx-=jt*tx;a.vy-=jt*ty;b.vx+=jt*tx;b.vy+=jt*ty;
+        a.wz-=2.5*jt/R;b.wz-=2.5*jt/R;moving=true}
+      if(sh.first==null){if(a.id==0)sh.first=b.id;else if(b.id==0)sh.first=a.id}
+    }}
+  return moving;
+}
+const step=dt=>stepOn(balls,shot,dt);
+
+/* ---------- aiming helpers ---------- */
+function cast(c,ang){
+  const dx=Math.cos(ang),dy=Math.sin(ang);let t=1e9,hit=null;
+  for(const b of balls){
+    if(b.out||b.id==0)continue;
+    const fx=c.x-b.x,fy=c.y-b.y,bq=fx*dx+fy*dy,cq=fx*fx+fy*fy-4*R*R,disc=bq*bq-cq;
+    if(disc<0)continue;const tt=-bq-Math.sqrt(disc);
+    if(tt>0&&tt<t){t=tt;hit=b}
+  }
+  const lim=Math.min(t,3000),ST=3;let a=0;
+  while(a<lim&&!nearWall(c.x+dx*(a+ST),c.y+dy*(a+ST),R-.5))a+=ST;
+  let lo=a,hi=Math.min(a+ST,lim);
+  for(let i=0;i<10;i++){const m=(lo+hi)/2;if(nearWall(c.x+dx*m,c.y+dy*m,R-.5))hi=m;else lo=m}
+  if(lo<t){t=lo;hit=null}
+  return{t,hit,x:c.x+dx*t,y:c.y+dy*t};
+}
+
+/* ---------- cpu ---------- */
+const LEVELS=[
+  {n:'Easy',err:3,pw:.18,mode:0},
+  {n:'Medium',err:1.2,pw:.08,mode:1},
+  {n:'Hard',err:.4,pw:.04,mode:2,k:8,sp:2},
+  {n:'Pro',err:.12,pw:.02,mode:2,k:12,sp:3}];
+const stopDist=v=>v/K-(A0/(K*K))*Math.log(1+K*v/A0);
+function speedFor(d){for(let v=120;v<=VMAX;v+=30)if(stopDist(v)>=d)return v;return VMAX}
+const STYLES=[
+  {n:'Balanced',pot:1,pos:1,foul:1,safe:1.4,err:1,k1:[1,1.3],k2:[.85,1,1.2,1.5],spin:0},
+  {n:'Aggressive',pot:1.4,pos:.5,foul:.6,safe:.8,err:1.3,k1:[1.3,1.7],k2:[1,1.3,1.6,1.9],spin:0},
+  {n:'Safe',pot:1,pos:1.8,foul:1.5,safe:2.4,err:.8,k1:[.8,1],k2:[.6,.75,.9,1.05],spin:0},
+  {n:'Technical',pot:1,pos:1.3,foul:1,safe:1.4,err:1,k1:[1,1.3],k2:[.85,1,1.2,1.5],spin:1}];
+const AID=['Off','Line','Path'];
+let sty=Math.max(0,Math.min(3,+(store.get('pool-sty')||0))),aid=store.get('pool-aid')==null?1:Math.max(0,Math.min(2,+store.get('pool-aid')));
+const cloneBalls=bs=>bs.map(b=>({id:b.id,x:b.x,y:b.y,vx:0,vy:0,wx:0,wy:0,wz:0,out:b.out}));
+function legalTargetsFor(bs,g){
+  const on=bs.filter(b=>!b.out&&b.id>0);
+  if(!g)return on.filter(b=>b.id!=8);
+  const own=on.filter(b=>grpOf(b.id)==g);return own.length?own:on.filter(b=>b.id==8);
+}
+function segDist(px,py,ax,ay,bx,by){
+  const dx=bx-ax,dy=by-ay,l2=dx*dx+dy*dy;let t=l2?((px-ax)*dx+(py-ay)*dy)/l2:0;t=Math.max(0,Math.min(1,t));
+  return Math.hypot(px-(ax+t*dx),py-(ay+t*dy));
+}
+const clearIn=(bs,a,b,ex,md)=>bs.every(o=>o.out||ex.includes(o.id)||segDist(o.x,o.y,a.x,a.y,b.x,b.y)>md);
+function shotsFor(bs,g){
+  const c=bs[0],out=[];
+  for(const t of legalTargetsFor(bs,g))for(const p of POCKETS){
+    const dx=p.x-t.x,dy=p.y-t.y,dist=Math.hypot(dx,dy),ux=dx/dist,uy=dy/dist;
+    const gx=t.x-ux*2*R,gy=t.y-uy*2*R;
+    if(!okWall(gx,gy))continue;
+    const cx=gx-c.x,cy=gy-c.y,cd=Math.hypot(cx,cy);if(cd<1)continue;
+    const cos=(cx*ux+cy*uy)/cd;if(cos<.2)continue;
+    if(!clearIn(bs,c,{x:gx,y:gy},[0,t.id],2*R*.98))continue;
+    if(!clearIn(bs,t,p,[t.id],2*R*.98))continue;
+    if(!SHAPE.convex&&(!los(c,{x:gx,y:gy})||!los(t,p,36)))continue;
+    out.push({score:cd+dist*.8+(1-cos)*600,ang:Math.atan2(cy,cx),v:speedFor(cd+dist*1.5)});
+  }
+  return out.sort((a,b)=>a.score-b.score);
+}
+function quality(bs,g){const L=shotsFor(bs,g);return L.length?Math.max(0,600-L[0].score)/6:0}
+function simulate(base,ang,v,sf,ss){
+  const bs=cloneBalls(base),sh={potted:[],first:null,rail:false},c=bs[0];
+  launch(c,ang,v,sf||0,ss||0);
+  let n=0;while(n++<5000&&stepOn(bs,sh,1/SUB));
+  return{bs,sh};
+}
+function valueOf(bs,sh,mg,rem,isBrk,pos){
+  const S=STYLES[sty],J=judge(sh,mg,rem,isBrk);
+  if(J.win)return 1e6;if(J.lose)return -1e6;
+  if(J.foul)return -400*S.foul-(sh.potted.includes(0)?100:0);
+  if(J.respot){const b8=bs.find(b=>b.id==8);b8.out=false;b8.x=home8.x;b8.y=home8.y}
+  const my=J.g,opp=my?(my=='solid'?'stripe':'solid'):null;
+  let v=J.pots.filter(i=>my&&grpOf(i)==my).length*100*S.pot-J.pots.filter(i=>opp&&grpOf(i)==opp).length*120;
+  if(J.cont)v+=150+(pos?quality(bs,my)*S.pos:0);else if(pos)v-=quality(bs,opp)*S.safe;
+  return v;
+}
+function search(base,mg,isBrk,L){
+  const S=STYLES[sty],c=base[0],rem=mg?base.filter(b=>!b.out&&b.id>0&&grpOf(b.id)==mg).length:15,cands=[];
+  if(L.mode==0){
+    if(isBrk){const t=base.filter(b=>b.id>0&&!b.out).sort((a,b)=>Math.hypot(a.x-c.x,a.y-c.y)-Math.hypot(b.x-c.x,b.y-c.y))[0];return{ang:Math.atan2(t.y-c.y,t.x-c.x)+(Math.random()-.5)*.05,v:VMAX*.8,val:0}}
+    const sh=shotsFor(base,mg);
+    if(sh.length&&Math.random()<.75){const k=sh[Math.min(sh.length-1,Math.random()*3|0)];return{ang:k.ang,v:Math.min(VMAX,k.v*(1+Math.random()*.5)),val:0}}
+    const ts=legalTargetsFor(base,mg),t=ts[Math.random()*ts.length|0];
+    if(!t)return{ang:0,v:600,val:0};
+    return{ang:Math.atan2(t.y-c.y,t.x-c.x),v:speedFor(Math.hypot(t.x-c.x,t.y-c.y)+100+Math.random()*400),val:0};
+  }
+  if(isBrk){
+    const t=base.filter(b=>b.id>0).sort((a,b)=>Math.hypot(a.x-c.x,a.y-c.y)-Math.hypot(b.x-c.x,b.y-c.y))[0],a0=Math.atan2(t.y-c.y,t.x-c.x);
+    for(const off of[-.05,-.025,0,.025,.05])for(const k of[.88,.94,1])cands.push({ang:a0+off,v:VMAX*k,sf:0,ss:0});
+  }else{
+    const ks=L.mode==1?S.k1:S.k2,SPV=S.spin&&L.mode>0?[[0,0],[.6,0],[-.6,0],[0,.5],[0,-.5]]:[[0,0]];
+    for(const sh of shotsFor(base,mg).slice(0,L.mode==1?6:L.k))for(const k of ks)for(const[sf,ss]of SPV)cands.push({ang:sh.ang+Math.atan(SQ*ss),v:Math.min(VMAX,sh.v*k),sf,ss});
+    for(const t of legalTargetsFor(base,mg)){
+      const a0=Math.atan2(t.y-c.y,t.x-c.x),d=Math.hypot(t.x-c.x,t.y-c.y);
+      if(L.mode==1)cands.push({ang:a0,v:speedFor(d+80),sf:0,ss:0});
+      else for(const off of[-.06,-.03,0,.03,.06])for(const x of[30,120,260,450,800])cands.push({ang:a0+off,v:speedFor(d+x),sf:0,ss:0});
+    }
+  }
+  let best=null;
+  for(const k of cands){
+    const r=simulate(base,k.ang,k.v,k.sf,k.ss),val=valueOf(r.bs,r.sh,mg,rem,isBrk,L.mode==2)+Math.random()*.01;
+    if(!best||val>best.val)best={ang:k.ang,v:k.v,sf:k.sf,ss:k.ss,val};
+  }
+  return best||{ang:0,v:300,val:-1e9};
+}
+function aiChoose(){
+  const L=LEVELS[lvl],mg=grp[turn];
+  if(!inHand)return search(balls,mg,breakNow,L);
+  const spots=[];
+  for(let i=0;i<70;i++){const x=R+Math.random()*(W-2*R),y=R+Math.random()*(H-2*R);if(validCue(x,y))spots.push({x,y})}
+  const withCue=sp=>{const bs=cloneBalls(balls);bs[0].x=sp.x;bs[0].y=sp.y;bs[0].out=false;return bs};
+  if(L.mode==0){const sp=spots[Math.random()*spots.length|0];return{...search(withCue(sp),mg,false,L),x:sp.x,y:sp.y}}
+  for(const t of legalTargetsFor(balls,mg))for(const p of POCKETS){
+    const dx=p.x-t.x,dy=p.y-t.y,d=Math.hypot(dx,dy);
+    for(const k of[120,220,340]){const x=t.x-dx/d*(2*R+k),y=t.y-dy/d*(2*R+k);if(validCue(x,y))spots.push({x,y})}
+  }
+  spots.forEach(sp=>{sp.q=quality(withCue(sp),mg)});
+  spots.sort((a,b)=>b.q-a.q);
+  let best=null;
+  for(const sp of spots.slice(0,L.mode==1?1:L.sp)){
+    const r=search(withCue(sp),mg,false,L);
+    if(!best||r.val>best.val)best={...r,x:sp.x,y:sp.y};
+  }
+  return best;
+}
+function aiStart(){
+  if(over||phase!='ai')return;
+  const L=LEVELS[lvl],c=balls[0],b=aiChoose();
+  if(inHand){c.x=b.x;c.y=b.y;c.out=false;inHand=false}
+  const err=(Math.random()-.5)*2*L.err*STYLES[sty].err*Math.PI/180;
+  ai={sf:b.sf||0,ss:b.ss||0,ang:b.ang+err,p:Math.min(1,b.v*(1+(Math.random()-.5)*2*L.pw)/VMAX),t0:performance.now()};
+  phase='aiaim';status('');
+}
+
+/* ---------- input ---------- */
+function toWorld(e){
+  const r=cv.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;
+  return rot?{x:py/s-M,y:(cw-px)/s-M}:{x:px/s-M,y:py/s-M};
+}
+function moveCue(p){
+  const c=balls[0];let x=p.x,y=p.y;
+  if(!inPoly(x,y)||nearWall(x,y,R)){
+    let bd=1e9,bw=null;
+    for(const w of WALLS){const d=segD2(w,x,y);if(d<bd){bd=d;bw=w}}
+    const dx=bw.bx-bw.ax,dy=bw.by-bw.ay;let t=((x-bw.ax)*dx+(y-bw.ay)*dy)/bw.l2;t=Math.max(0,Math.min(1,t));
+    x=bw.ax+t*dx+bw.nx*(R+.5);y=bw.ay+t*dy+bw.ny*(R+.5);
+  }
+  if(inPoly(x,y)&&!nearWall(x,y,R-.5)){c.x=x;c.y=y}
+}
+cv.addEventListener('pointerdown',e=>{
+  const p=toWorld(e);
+  if(phase=='setup'){const c=balls[0];
+    if(Math.hypot(p.x-c.x,p.y-c.y)<R+10)setupDrag={k:'cue'};
+    else if(rackBalls().some(b=>Math.hypot(p.x-b.x,p.y-b.y)<R+8))setupDrag=RACK.pts?{k:'ball',b:rackBalls().find(b=>Math.hypot(p.x-b.x,p.y-b.y)<R+8),m:0}:{k:'rack',x:p.x,y:p.y,m:0};
+    else{const bs=rackBalls(),d=Math.min(...bs.map(b=>Math.hypot(p.x-b.x,p.y-b.y)));
+      if(d<R+34){const g=rackC();setupDrag={k:'spin',cx:g[0],cy:g[1],a:Math.atan2(p.y-g[1],p.x-g[0])}}}
+    if(setupDrag)cv.setPointerCapture(e.pointerId)}
+  else if(phase=='place'){moveCue(p);placing=true;cv.setPointerCapture(e.pointerId)}
+  else if(phase=='aim'){drag={x0:p.x,y0:p.y,x:p.x,y:p.y};cv.setPointerCapture(e.pointerId)}
+});
+cv.addEventListener('pointermove',e=>{
+  const p=toWorld(e);
+  if(setupDrag){
+    if(setupDrag.k=='cue'){const c=balls[0],ox=c.x,oy=c.y;moveCue(p);if(!validCue(c.x,c.y)){c.x=ox;c.y=oy}}
+    else if(setupDrag.k=='ball'){const b=setupDrag.b,ox=b.x,oy=b.y;b.x=p.x;b.y=p.y;setupDrag.m+=1;
+      if(!(okBall(b.x,b.y)&&balls.every(o=>o===b||o.out||Math.hypot(o.x-b.x,o.y-b.y)>=2*R+.6))){b.x=ox;b.y=oy}}
+    else if(setupDrag.k=='spin'){const a=Math.atan2(p.y-setupDrag.cy,p.x-setupDrag.cx);if(spinRack(a-setupDrag.a,setupDrag.cx,setupDrag.cy))setupDrag.a=a}
+    else{const dx=p.x-setupDrag.x,dy=p.y-setupDrag.y,bs=rackBalls();setupDrag.m+=Math.hypot(dx,dy);
+      bs.forEach(b=>{b.x+=dx;b.y+=dy});if(rackOk(bs)){setupDrag.x=p.x;setupDrag.y=p.y}else bs.forEach(b=>{b.x-=dx;b.y-=dy})}
+    dirty=true}
+  else if(placing)moveCue(p);
+  else if(drag){drag.x=p.x;drag.y=p.y}
+});
+cv.addEventListener('pointerup',e=>{
+  if(setupDrag){if((setupDrag.k=='rack'||setupDrag.k=='ball')&&setupDrag.m<6)turnRack();setupDrag=null;dirty=true;return}
+  if(placing){placing=false;const c=balls[0];if(validCue(c.x,c.y)){inHand=false;phase='aim';status('')}return}
+  if(drag){
+    const dx=drag.x0-drag.x,dy=drag.y0-drag.y,len=Math.hypot(dx,dy);
+    const d=drag;drag=null;
+    if(len>14)shoot(Math.atan2(dy,dx),len/PULL);
+  }
+});
+cv.addEventListener('pointercancel',()=>{placing=false;drag=null;setupDrag=null});
+
+/* ---------- drawing ---------- */
+const bgc=document.createElement('canvas');let sprites=[],lastSize='';
+function applyT(g){g.setTransform(dpr,0,0,dpr,0,0);if(rot){g.translate(cw,0);g.rotate(Math.PI/2)}g.scale(s,s);g.translate(M,M)}
+function layout(){
+  const wrap=$('wrap'),aw=Math.max(240,wrap.clientWidth||innerWidth-28),top=wrap.getBoundingClientRect().top+scrollY;
+  const ah=Math.max(240,innerHeight-top-110);
+  lastSize=wrap.clientWidth+'x'+innerHeight;
+  const W2=W+2*M,H2=H+2*M;
+  const s1=Math.min(aw/W2,ah/H2),s2=Math.min(aw/H2,ah/W2);
+  rot=s2>s1*1.05;s=Math.min(1.2,rot?s2:s1);
+  cw=(rot?H2:W2)*s;ch=(rot?W2:H2)*s;
+  dpr=Math.max(2,Math.min(3,window.devicePixelRatio||1));
+  while(dpr>1&&cw*ch*dpr*dpr>5e6)dpr-=.25;
+  const pw=Math.round(cw*dpr),ph=Math.round(ch*dpr);
+  cv.style.width=cw+'px';cv.style.height=ch+'px';cv.width=bgc.width=pw;cv.height=bgc.height=ph;
+  buildBg();buildSprites();dirty=true;
+}
+const shade=(h,f)=>{const m=/^#(..)(..)(..)$/.exec(h);return m?'rgb('+[1,2,3].map(i=>Math.round(parseInt(m[i],16)*f)).join(',')+')':h};
+function rrect(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
+function buildBg(){if(SHAPE.rect)buildBgRect();else buildBgPoly()}
+function offsetPoly(pts,d){
+  const n=pts.length,o=[];
+  for(let i=0;i<n;i++){
+    const w1=WALLS[(i+n-1)%n],w2=WALLS[i],n1=[-w1.nx,-w1.ny],n2=[-w2.nx,-w2.ny],dot=n1[0]*n2[0]+n1[1]*n2[1],q=pts[i];
+    const d2=[(w2.bx-w2.ax),(w2.by-w2.ay)],convex=n1[0]*d2[0]+n1[1]*d2[1]<0;
+    if(dot>.55||!convex){const k=1/(1+dot);o.push([q[0]+(n1[0]+n2[0])*k*d,q[1]+(n1[1]+n2[1])*k*d])}
+    else{o.push([q[0]+n1[0]*d,q[1]+n1[1]*d]);o.push([q[0]+n2[0]*d,q[1]+n2[1]*d])}
+  }
+  return o;
+}
+function polyPath(g,pts){g.beginPath();pts.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath()}
+function buildBgPoly(){
+  const g=bgc.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,bgc.width,bgc.height);applyT(g);
+  const wg=g.createLinearGradient(-M,-M,W+M,H+M);wg.addColorStop(0,'#8a5a30');wg.addColorStop(.5,'#6f4524');wg.addColorStop(1,'#5a3519');
+  g.lineJoin='round';g.fillStyle=wg;g.strokeStyle=wg;g.lineWidth=2*M;polyPath(g,POLY);g.stroke();g.fill();
+  let a=7;const rnd=()=>(a=(a*1664525+1013904223)%4294967296)/4294967296;
+  for(let n=0;n<34;n++){
+    const o=C+3+rnd()*(M-C-6);polyPath(g,offsetPoly(POLY,o));
+    g.strokeStyle=rnd()<.55?'rgba(30,14,4,'+(.06+rnd()*.1)+')':'rgba(255,215,160,'+(.03+rnd()*.06)+')';
+    g.lineWidth=.5+rnd()*1.3;g.setLineDash([60+rnd()*260,10+rnd()*90]);g.lineDashOffset=rnd()*600;g.stroke()}
+  g.setLineDash([]);
+  polyPath(g,offsetPoly(POLY,M-1));g.strokeStyle='rgba(255,230,190,.3)';g.lineWidth=2;g.stroke();
+  const cu=shade(CLOTH,.66);
+  polyPath(g,offsetPoly(POLY,C));g.fillStyle=cu;g.fill();g.strokeStyle='#2a1707';g.lineWidth=3;g.stroke();
+  polyPath(g,POLY);g.fillStyle=CLOTH;g.fill();
+  g.save();polyPath(g,POLY);g.clip();
+  const vg=g.createRadialGradient(W/2,H/2,60,W/2,H/2,Math.max(W,H)*.62);vg.addColorStop(0,'rgba(255,255,255,.1)');vg.addColorStop(1,'rgba(0,0,0,.2)');
+  g.fillStyle=vg;g.fillRect(0,0,W,H);g.restore();
+  polyPath(g,POLY);g.strokeStyle='rgba(255,255,255,.3)';g.lineWidth=1.5;g.stroke();
+  for(const h of HOLES){let cx=0,cy=0;h.forEach(q=>{cx+=q[0];cy+=q[1]});cx/=h.length;cy/=h.length;
+    polyPath(g,h);g.fillStyle=shade(CLOTH,.66);g.fill();g.strokeStyle='#2a1707';g.lineWidth=3;g.stroke();
+    const rr=Math.hypot(h[0][0]-cx,h[0][1]-cy),f=(rr-C)/rr,hi=h.map(q=>[cx+(q[0]-cx)*f,cy+(q[1]-cy)*f]);
+    polyPath(g,hi);g.fillStyle=wg;g.fill();g.strokeStyle='rgba(255,230,190,.3)';g.lineWidth=2;g.stroke()}
+  g.fillStyle='rgba(255,255,255,.35)';g.beginPath();g.arc(CUE.x,CUE.y,3,0,7);g.arc(RACK.x,RACK.y,3,0,7);g.fill();
+  g.fillStyle='#f3ead2';const mid=(C+M)/2;let acc=62;
+  for(const w of WALLS){
+    const l=Math.sqrt(w.l2),ux=(w.bx-w.ax)/l,uy=(w.by-w.ay)/l;
+    while(acc<l){
+      const x=w.ax+ux*acc-w.nx*mid,y=w.ay+uy*acc-w.ny*mid;
+      if(POCKETS.every(p=>Math.hypot(x-p.x,y-p.y)>62)){g.save();g.translate(x,y);g.rotate(Math.atan2(uy,ux));g.beginPath();g.moveTo(0,-4.5);g.lineTo(7,0);g.lineTo(0,4.5);g.lineTo(-7,0);g.closePath();g.fill();g.restore()}
+      acc+=125}
+    acc-=l;
+  }
+  for(const p of POCKETS){
+    const x=p.x+(p.nx||0)*(p.vo||0),y=p.y+(p.ny||0)*(p.vo||0),r=p.vr;
+    const rg=g.createRadialGradient(x,y,r*.92,x,y,r*1.25);rg.addColorStop(0,'rgba(0,0,0,.45)');rg.addColorStop(1,'rgba(0,0,0,0)');
+    g.fillStyle=rg;g.beginPath();g.arc(x,y,r*1.25,0,7);g.fill();
+    g.fillStyle='#030409';g.beginPath();g.arc(x,y,r,0,7);g.fill()}
+}
+function buildBgRect(){
+  const g=bgc.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,bgc.width,bgc.height);applyT(g);
+  const X0=-M,X1=W+M,Y0=-M,Y1=H+M,wg=g.createLinearGradient(X0,Y0,X1,Y1);
+  wg.addColorStop(0,'#8a5a30');wg.addColorStop(.5,'#6f4524');wg.addColorStop(1,'#5a3519');
+  g.fillStyle=wg;rrect(g,X0,Y0,X1-X0,Y1-Y0,24);g.fill();
+  g.save();rrect(g,X0,Y0,X1-X0,Y1-Y0,24);g.clip();
+  let a=7;const rnd=()=>(a=(a*1664525+1013904223)%4294967296)/4294967296;
+  const rails=[[[X0,Y0],[X1,Y0],[W+C,-C],[-C,-C],0],[[X0,Y1],[X1,Y1],[W+C,H+C],[-C,H+C],0],[[X0,Y0],[-C,-C],[-C,H+C],[X0,Y1],1],[[X1,Y0],[W+C,-C],[W+C,H+C],[X1,Y1],1]];
+  for(const r of rails){
+    g.save();g.beginPath();g.moveTo(...r[0]);g.lineTo(...r[1]);g.lineTo(...r[2]);g.lineTo(...r[3]);g.closePath();g.clip();
+    for(let n=0;n<34;n++){
+      const o=rnd()*(M-C),sw=rnd()*3;g.strokeStyle=rnd()<.55?'rgba(30,14,4,'+(.06+rnd()*.1)+')':'rgba(255,215,160,'+(.03+rnd()*.06)+')';
+      g.lineWidth=.5+rnd()*1.3;g.beginPath();
+      for(let t=-M;t<=(r[4]?H+M:W+M);t+=30){
+        const u=o+Math.sin(t*.012+sw)*1.6,px=r[4]?(r===rails[2]?X0+u:W+C+u):t,py=r[4]?t:(r===rails[0]?Y0+u:H+C+u);
+        t==-M?g.moveTo(px,py):g.lineTo(px,py)}
+      g.stroke()}
+    g.restore();
+    g.strokeStyle='rgba(30,14,4,.45)';g.lineWidth=1;g.beginPath();g.moveTo(...r[0]);g.lineTo(...r[3]);g.moveTo(...r[1]);g.lineTo(...r[2]);g.stroke();
+  }
+  g.restore();
+  g.strokeStyle='rgba(255,230,190,.35)';g.lineWidth=2;rrect(g,X0+1,Y0+1,X1-X0-2,Y1-Y0-2,23);g.stroke();
+  g.strokeStyle='#2a1707';g.lineWidth=3;g.strokeRect(-C-1,-C-1,W+2*C+2,H+2*C+2);
+  const cu=shade(CLOTH,.66),n1=30,hk=W/2-26;
+  g.fillStyle=cu;g.fillRect(-C,-C,W+2*C,H+2*C);g.fillStyle=CLOTH;g.fillRect(0,0,W,H);
+  g.fillStyle=cu;
+  const poly=(pts)=>{g.beginPath();pts.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.fill()};
+  for(const [x1,x2] of [[n1,hk],[W/2+26,W-n1]]){
+    poly([[x1,0],[x2,0],[x2+C,-C],[x1-C,-C]]);poly([[x1,H],[x2,H],[x2+C,H+C],[x1-C,H+C]])}
+  poly([[0,n1],[0,H-n1],[-C,H-n1+C],[-C,n1-C]]);poly([[W,n1],[W,H-n1],[W+C,H-n1+C],[W+C,n1-C]]);
+  g.strokeStyle='rgba(255,255,255,.3)';g.lineWidth=1.5;g.beginPath();
+  for(const [x1,x2] of [[n1,hk],[W/2+26,W-n1]]){g.moveTo(x1,0);g.lineTo(x2,0);g.moveTo(x1,H);g.lineTo(x2,H)}
+  g.moveTo(0,n1);g.lineTo(0,H-n1);g.moveTo(W,n1);g.lineTo(W,H-n1);g.stroke();
+  const vg=g.createRadialGradient(W/2,H/2,60,W/2,H/2,W*.62);vg.addColorStop(0,'rgba(255,255,255,.1)');vg.addColorStop(1,'rgba(0,0,0,.2)');
+  g.fillStyle=vg;g.fillRect(0,0,W,H);
+  g.strokeStyle='rgba(255,255,255,.22)';g.lineWidth=1.5;g.beginPath();g.moveTo(W*.25,0);g.lineTo(W*.25,H);g.stroke();
+  g.fillStyle='rgba(255,255,255,.35)';g.beginPath();g.arc(W*.25,H/2,3,0,7);g.arc(W*.72,H/2,3,0,7);g.fill();
+  const dm=(x,y,hz)=>{const w=hz?7:4.5,h=hz?4.5:7;g.beginPath();g.moveTo(x,y-h);g.lineTo(x+w,y);g.lineTo(x,y+h);g.lineTo(x-w,y);g.closePath();g.fill()};
+  g.fillStyle='#f3ead2';const mid=(C+M)/2;
+  for(let i=1;i<8;i++){if(i==4)continue;dm(i*W/8,-mid,1);dm(i*W/8,H+mid,1)}
+  for(let j=1;j<4;j++){dm(-mid,j*H/4,0);dm(W+mid,j*H/4,0)}
+  const VP=[[-8,-8,25],[W+8,-8,25],[-8,H+8,25],[W+8,H+8,25],[W/2,-10,24],[W/2,H+10,24]];
+  for(const [x,y,r] of VP){
+    const rg=g.createRadialGradient(x,y,r*.92,x,y,r*1.25);rg.addColorStop(0,'rgba(0,0,0,.45)');rg.addColorStop(1,'rgba(0,0,0,0)');
+    g.fillStyle=rg;g.beginPath();g.arc(x,y,r*1.25,0,7);g.fill();
+    g.fillStyle='#030409';g.beginPath();g.arc(x,y,r,0,7);g.fill()}
+}
+function buildSprites(){
+  const sz=Math.ceil((2*R+4)*s*dpr);sprites=[];
+  for(let id=0;id<16;id++){const c=document.createElement('canvas');c.width=c.height=sz;c.stale=true;sprites.push(c)}
+  RGB=[];for(let id=0;id<16;id++){const h=id?colorOf(id):'#ffffff',m=/^#(..)(..)(..)$/.exec(h);RGB.push(m?[parseInt(m[1],16),parseInt(m[2],16),parseInt(m[3],16)]:[255,255,255])}
+}
+let RGB=[];
+const rotM=(Q,ax,ay,az,th)=>{
+  const c=Math.cos(th),sn=Math.sin(th),t=1-c,
+  r=[c+ax*ax*t,ax*ay*t-az*sn,ax*az*t+ay*sn, ax*ay*t+az*sn,c+ay*ay*t,ay*az*t-ax*sn, ax*az*t-ay*sn,ay*az*t+ax*sn,c+az*az*t],o=new Array(9);
+  for(let i=0;i<3;i++)for(let j=0;j<3;j++)o[3*i+j]=r[3*i]*Q[j]+r[3*i+1]*Q[3+j]+r[3*i+2]*Q[6+j];
+  return o};
+function paintBall(b){
+  const c=sprites[b.id],g=c.getContext('2d'),n=c.width,u=2*R+4,rho=R/(R+2);
+  const img=c.img||(c.img=g.createImageData(n,n)),d=img.data,Q=b.Q,col=RGB[b.id],stripe=b.id>8,cue=b.id==0,h=n/2;
+  for(let py=0;py<n;py++){const v=(py+.5-h)/h/rho;
+    for(let px=0;px<n;px++){
+      const x=(px+.5-h)/h/rho,r2=x*x+v*v,k=4*(py*n+px);
+      if(r2>1.08){d[k+3]=0;continue}
+      const rr=Math.sqrt(r2),a=Math.max(0,Math.min(1,(1-rr)*h*rho+.5));
+      const z=Math.sqrt(Math.max(0,1-r2)),qy=Q[1]*x+Q[4]*v+Q[7]*z;
+      const w=cue||(stripe&&Math.abs(qy)>STRIPE);
+      d[k]=w?255:col[0];d[k+1]=w?255:col[1];d[k+2]=w?255:col[2];d[k+3]=a*255}}
+  g.putImageData(img,0,0);
+  g.lineWidth=1.5*n/u;g.strokeStyle=INK;g.beginPath();g.arc(h,h,R*n/u,0,7);g.stroke();
+}
+function drawBall(b){
+  if(!b.Q){const a=rot?-Math.PI/2:0,ca=Math.cos(a),sa=Math.sin(a);b.Q=[ca,-sa,0,sa,ca,0,0,0,1];b.lx=b.x;b.ly=b.y;sprites[b.id].stale=true}
+  const c=sprites[b.id];
+  if(c.stale){paintBall(b);c.stale=false}
+  ctx.drawImage(c,b.x-R-2,b.y-R-2,2*R+4,2*R+4);
+  const Q=b.Q;
+  for(const sg of[1,-1]){
+    const nx=sg*Q[2],ny=sg*Q[5],nz=sg*Q[8];
+    if(nz<.03)continue;
+    ctx.save();
+    ctx.transform(Q[0],Q[3],sg*Q[1],sg*Q[4],b.x+R*nx,b.y+R*ny);
+    if(b.id>0){
+      ctx.beginPath();ctx.arc(0,0,R*.52,0,7);ctx.fillStyle='#fff';ctx.fill();
+      ctx.fillStyle=INK;ctx.font='700 '+(R*.72)+'px Helvetica,Arial,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(b.id,0,R*.04)}
+    else{ctx.beginPath();ctx.arc(0,0,R*.2,0,7);ctx.fillStyle=ACC;ctx.fill()}
+    ctx.restore();
+  }
+}
+function pwr(p){const e=$('pw');e.classList.toggle('on',p>=0);if(p>=0){$('pb').firstChild.style.width=Math.round(p*100)+'%';$('pn').textContent=Math.round(p*100)}}
+let PK='',PT=null;
+function predict(ang,p){
+  const key=[ang.toFixed(4),p.toFixed(3),spin.x.toFixed(2),spin.y.toFixed(2),balls.reduce((a,b)=>a+b.x*3+b.y+(b.out?1e3:0),0).toFixed(1)].join();
+  if(key==PK)return PT;
+  const bs=cloneBalls(balls),sh={potted:[],first:null,rail:false};
+  launch(bs[0],ang,VMAX*p,-spin.y,spin.x);
+  const tr=bs.map(b=>[[b.x,b.y]]);let n=0,fc=null;
+  while(n++<6000){const mv=stepOn(bs,sh,1/SUB);
+    if(n%6==0)bs.forEach((b,i)=>{if(!b.out&&(b.vx||b.vy))tr[i].push([b.x,b.y])});
+    if(fc==null&&sh.first!=null)fc=[bs[0].x,bs[0].y];
+    if(!mv)break}
+  bs.forEach((b,i)=>{if(!b.out)tr[i].push([b.x,b.y])});
+  PK=key;PT={tr,fc,out:bs.map(b=>b.out)};return PT;
+}
+function drawPath(aim){
+  const P=predict(aim.ang,aim.p);ctx.setLineDash([]);ctx.lineJoin='round';
+  P.tr.forEach((t,i)=>{if(i==0||t.length<3)return;
+    ctx.strokeStyle='#fff';ctx.globalAlpha=.5;ctx.lineWidth=1.5;ctx.beginPath();t.forEach((q,k)=>k?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.stroke();ctx.globalAlpha=1;
+    if(P.out[i]){const q=t[t.length-1];ctx.fillStyle=ACC;ctx.beginPath();ctx.arc(q[0],q[1],5,0,7);ctx.fill()}});
+  const t=P.tr[0];ctx.strokeStyle='#fff';ctx.lineWidth=2.2;ctx.beginPath();t.forEach((q,k)=>k?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.stroke();
+  if(P.fc){ctx.lineWidth=2;ctx.setLineDash([5,5]);ctx.beginPath();ctx.arc(P.fc[0],P.fc[1],R,0,7);ctx.stroke();ctx.setLineDash([])}
+  const e=t[t.length-1];if(!P.out[0]){ctx.beginPath();ctx.arc(e[0],e[1],R,0,7);ctx.stroke()}
+}
+function draw(){
+  if(!cv.width||!cv.height||!bgc.width||!sprites.length)return;
+  ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(bgc,0,0);applyT(ctx);
+  for(const b of balls)if(!b.out&&b.id>0)drawBall(b);
+  const c=balls[0];
+  if(!c.out){
+    if(phase=='place'){ctx.globalAlpha=validCue(c.x,c.y)?1:.45;drawBall(c);ctx.globalAlpha=1;
+      ctx.strokeStyle=ACC;ctx.lineWidth=2;ctx.setLineDash([6,5]);ctx.beginPath();ctx.arc(c.x,c.y,R+6,0,7);ctx.stroke();ctx.setLineDash([])}
+    else drawBall(c);
+    if(phase=='setup'){ctx.strokeStyle=ACC;ctx.lineWidth=2;ctx.setLineDash([6,5]);ctx.beginPath();ctx.arc(c.x,c.y,R+6,0,7);ctx.stroke();
+      if(RACK.pts)rackBalls().forEach(b=>{ctx.beginPath();ctx.arc(b.x,b.y,R+4,0,7);ctx.stroke()});ctx.setLineDash([]);if(!RACK.pts){
+      const bs=rackBalls(),T=[bs[0],bs[10],bs[14]],gx=(T[0].x+T[1].x+T[2].x)/3,gy=(T[0].y+T[1].y+T[2].y)/3,
+        rho=Math.abs((T[1].x-T[0].x)*(T[0].y-gy)-(T[1].y-T[0].y)*(T[0].x-gx))/Math.hypot(T[1].x-T[0].x,T[1].y-T[0].y),f=(rho+R+7)/rho;
+      ctx.lineJoin='round';ctx.beginPath();T.forEach((q,i)=>{const x=gx+(q.x-gx)*f,y=gy+(q.y-gy)*f;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath();ctx.stroke()}}
+  }
+  let aim=null;
+  if(phase=='aim'&&drag){const dx=drag.x0-drag.x,dy=drag.y0-drag.y,len=Math.hypot(dx,dy);if(len>14)aim={ang:Math.atan2(dy,dx),p:Math.min(1,len/PULL)}}
+  else if(phase=='aiaim'&&ai){aim={ang:ai.ang,p:ai.p*Math.min(1,(performance.now()-ai.t0)/600)}}
+  if(aim){
+    const hum=phase=='aim',a2=hum?aim.ang-Math.atan(SQ*spin.x):aim.ang,r=cast(c,a2),dx=Math.cos(aim.ang),dy=Math.sin(aim.ang),ex=Math.cos(a2),ey=Math.sin(a2);
+    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.setLineDash([8,7]);
+    if(hum&&aid==2)drawPath(aim);
+    else if(!hum||aid==1){ctx.beginPath();ctx.moveTo(c.x+ex*R,c.y+ey*R);ctx.lineTo(r.x,r.y);ctx.stroke()}
+    if(r.hit&&(!hum||aid==1)){
+      ctx.beginPath();ctx.arc(r.x,r.y,R,0,7);ctx.stroke();ctx.setLineDash([]);
+      const tx=r.hit.x-r.x,ty=r.hit.y-r.y,tl=Math.hypot(tx,ty);
+      ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(r.hit.x,r.hit.y);ctx.lineTo(r.hit.x+tx/tl*80,r.hit.y+ty/tl*80);ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    const g=R+8+aim.p*PULL*.7;
+    ctx.strokeStyle='#ececec';ctx.lineWidth=6;ctx.lineCap='butt';
+    ctx.beginPath();ctx.moveTo(c.x-dx*g,c.y-dy*g);ctx.lineTo(c.x-dx*(g+300),c.y-dy*(g+300));ctx.stroke();
+    ctx.strokeStyle=ACC;ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(c.x-dx*g,c.y-dy*g);ctx.lineTo(c.x-dx*(g+22),c.y-dy*(g+22));ctx.stroke();
+    pwr(aim.p);
+  }else pwr(-1);
+}
+
+/* ---------- loop ---------- */
+let last=performance.now();
+let acc=0;
+function frame(now){
+  const dt=Math.min(.033,(now-last)/1000);last=now;
+  if(phase=='roll'){
+    acc+=dt;let moving=true,n=0;
+    while(acc>=1/SUB&&n++<24){moving=step(1/SUB);acc-=1/SUB}
+    for(const b of balls){if(b.out||!b.Q)continue;const w=Math.hypot(b.wx,b.wy,b.wz);if(w>1e-3){b.Q=rotM(b.Q,b.wx/w,b.wy/w,b.wz/w,w*dt);sprites[b.id].stale=true}}
+    if(!moving){for(const b of balls){b.vx=b.vy=b.wx=b.wy=b.wz=0}resolve()}
+  }else if(phase=='aiaim'&&ai&&now-ai.t0>900)shoot(ai.ang,ai.p,ai.sf,ai.ss);
+  if(phase=='roll'||phase=='aiaim'||drag||placing||dirty){draw();dirty=false}
+  requestAnimationFrame(frame);
+}
+
+/* ---------- ui ---------- */
+$('new').onclick=newGame;$('again').onclick=newGame;
+$('mode').onclick=()=>{
+  const was=mode;
+  if(mode=='2p'){mode='cpu';lvl=0}else if(lvl<3)lvl++;else mode='2p';
+  store.set('pool-2p',mode=='2p'?'1':'0');store.set('pool-lvl',lvl);
+  if(mode!=was)newGame();else modeLabel();
+};
+$('sty').onclick=()=>{sty=(sty+1)%STYLES.length;store.set('pool-sty',sty);modeLabel()};
+$('aid').onclick=()=>{aid=(aid+1)%3;store.set('pool-aid',aid);modeLabel();dirty=true};
+const SP=$('sp'),sg=SP.getContext('2d');
+function drawSp(){
+  const n=SP.width,h=n/2;sg.clearRect(0,0,n,n);
+  sg.fillStyle='#fff';sg.beginPath();sg.arc(h,h,h-n*.03,0,7);sg.fill();
+  sg.strokeStyle=INK;sg.lineWidth=n*.045;sg.stroke();
+  sg.lineWidth=n*.012;sg.beginPath();sg.moveTo(h,n*.14);sg.lineTo(h,n*.86);sg.moveTo(n*.14,h);sg.lineTo(n*.86,h);sg.stroke();
+  sg.fillStyle=ACC;sg.beginPath();sg.arc(h+spin.x*(h-n*.03),h+spin.y*(h-n*.03),n*.1,0,7);sg.fill();
+}
+function setSp(e){
+  const r=SP.getBoundingClientRect();let x=(e.clientX-r.left)/r.width*2-1,y=(e.clientY-r.top)/r.height*2-1;
+  const l=Math.hypot(x,y);if(l>.85){x*=.85/l;y*=.85/l}
+  if(l<.12){x=0;y=0}
+  spin={x,y};drawSp();
+}
+let spd=false;
+SP.onpointerdown=e=>{spd=true;SP.classList.add('on');SP.setPointerCapture(e.pointerId);setSp(e)};
+SP.onpointermove=e=>{if(spd)setSp(e)};
+SP.onpointerup=()=>{spd=false;SP.classList.remove('on')};
+drawSp();
+CLOTHS.forEach(c=>{
+  const b=document.createElement('button');b.className='sw';b.style.setProperty('--c',c);b.setAttribute('aria-label','Table colour');
+  b.onclick=()=>{CLOTH=c;store.set('pool-cloth',c);document.querySelectorAll('.sw').forEach(x=>x.classList.toggle('on',x==b));buildBg();dirty=true};
+  if(c==CLOTH)b.classList.add('on');$('sw').appendChild(b);
+});
+addEventListener('resize',layout);
+setInterval(()=>{if($('wrap').clientWidth+'x'+innerHeight!=lastSize)layout()},400);
+$('n0').value=store.get('pool-name')||'';
+$('n0').oninput=()=>{store.set('pool-name',$('n0').value.trim());trays();status($('why').textContent)};
+$('n0').onkeydown=e=>{e.stopPropagation();if(e.key=='Enter')$('n0').blur()};
+const phy=$('phy');$('phb').onclick=()=>phy.classList.add('on');$('phx').onclick=()=>phy.classList.remove('on');
+addEventListener('keydown',e=>{if(e.key=='Escape')phy.classList.remove('on')});
+(()=>{const f=x=>+x.toFixed(2),Lv=LEVELS,d=Math.round(stopDist(VMAX)),
+  c0=shapeData('classic'),v={W:c0.W,H:c0.H,CELL,R,SUB,VMAX,K,A0,REST,PMIN,STRIPE,SLIDE,TOPK,SQ,SQD:f(Math.atan(SQ*.85)*180/Math.PI),ELEVD:Math.round(ELEV*180/Math.PI),ZD,MUB,MUW,NOSE,PHI:f(Math.asin(NOSE)*180/Math.PI),EBK,EWK,JAW,STEP:f(VMAX/SUB).toFixed(1),DMAX:d,TL:(d/c0.W).toFixed(1),EB:E_B,EW:E_W,EBN:f(E_B-EBK),SLIPMIN,RC:c0.pk[0].r,RS:c0.pk[4].r,
+  GRIDU:ESNAP,ESHOW,SNAPD,EDW,EDH,E0:Lv[0].err,E1:Lv[1].err,E2:Lv[2].err,E3:Lv[3].err,K2:Lv[2].k,K3:Lv[3].k};
+  document.querySelectorAll('[data-v]').forEach(e=>e.textContent=v[e.dataset.v])})();
+function mini(d){
+  const pad=10,vw=d.W+2*pad,vh=d.H+2*pad,ps=l=>'M'+l.map(q=>(q[0]+pad)+','+(q[1]+pad)).join(' L')+'Z ';
+  return '<svg viewBox="0 0 '+vw+' '+vh+'"><path class="f" fill-rule="evenodd" stroke-linejoin="round" d="'+ps(d.pts)+d.holes.map(ps).join('')+'"/></svg>';
+}
+const shp=$('shp');
+function shapeMenu(){
+  const g=$('shg');g.innerHTML='';
+  for(const sp of SHAPES){if(sp.custom)continue;
+    const b=document.createElement('button');b.className='tl'+(sp.id==SHAPE.id?' on':'');
+    if(sp.custom){
+      b.innerHTML=(CUSTOM?mini(shapeData('custom')):'<svg viewBox="0 0 100 70"><path class="f" d="M50 14V56M29 35H71"/></svg>')+'<b>'+sp.name+'</b>';
+      b.onclick=()=>edOpen()}
+    else{
+      b.innerHTML=mini(shapeData(sp.id))+'<b>'+sp.name+'</b>';
+      b.onclick=()=>{store.set('pool-shape',sp.id);shp.classList.remove('on');if(sp.id!=SHAPE.id){loadShape(sp.id);layout();newGame()}}}
+    g.appendChild(b)}
+}
+/* ---------- shape editor ---------- */
+const ed=$('ed'),es=$('edsvg'),ES={pts:[],closed:false,pk:[],mode:'out',hist:[],cur:null,drag:-1,msg:''};
+const edSnap=v=>Math.round(v/ESNAP)*ESNAP;
+function edLoad(){if(CUSTOM){ES.pts=CUSTOM.pts.map(q=>q.slice());ES.pk=CUSTOM.pk.map(q=>q.slice());ES.closed=true;ES.mode='pk'}}
+function edOpen(){if(!ES.pts.length)edLoad();ed.classList.add('on');edDraw()}
+const edSave=()=>{ES.hist.push(JSON.stringify([ES.pts,ES.closed,ES.pk,ES.mode]));if(ES.hist.length>80)ES.hist.shift()};
+function edPt(e){const r=es.getBoundingClientRect();return[(e.clientX-r.left)/r.width*EDW,(e.clientY-r.top)/r.height*EDH]}
+function segX(a,b,c,d){const o=(p,q,r)=>(q[0]-p[0])*(r[1]-p[1])-(q[1]-p[1])*(r[0]-p[0]);return o(a,b,c)*o(a,b,d)<0&&o(c,d,a)*o(c,d,b)<0}
+function edCheck(){
+  const p=ES.pts,n=p.length;
+  if(!ES.closed)return'Close the outline';
+  for(let i=0;i<n;i++)for(let j=i+2;j<n;j++){if(i==0&&j==n-1)continue;if(segX(p[i],p[(i+1)%n],p[j],p[(j+1)%n]))return'The outline crosses itself'}
+  let A=0;p.forEach((a,i)=>{const b=p[(i+1)%n];A+=a[0]*b[1]-b[0]*a[1]});if(Math.abs(A)/2<10000)return'The table is too small';
+  if(!ES.pk.length)return'Add a pocket';
+  return''}
+function edDraw(){
+  const p=ES.pts,pl=p.map(q=>q[0]+','+q[1]).join(' ');let h='<defs><pattern id="gr" width="'+ESHOW+'" height="'+ESHOW+'" patternUnits="userSpaceOnUse"><path d="M'+ESHOW+' 0H0V'+ESHOW+'" fill="none" stroke="rgba(10,10,10,.08)"/></pattern></defs><rect width="'+EDW+'" height="'+EDH+'" fill="url(#gr)"/>';
+  h+='<circle cx="34" cy="'+(EDH-34)+'" r="'+R+'" fill="none" stroke="#0a0a0a" stroke-width="2" stroke-dasharray="4 4"/>';
+  if(ES.closed)h+='<polygon points="'+pl+'" fill="rgba(10,10,10,.06)" stroke="#0a0a0a" stroke-width="5" stroke-linejoin="round"/>';
+  else if(p.length){h+='<polyline points="'+pl+'" fill="none" stroke="#0a0a0a" stroke-width="5" stroke-linejoin="round"/>';
+    if(ES.cur)h+='<line x1="'+p[p.length-1][0]+'" y1="'+p[p.length-1][1]+'" x2="'+ES.cur[0]+'" y2="'+ES.cur[1]+'" stroke="#0a0a0a" stroke-width="2" stroke-dasharray="10 8"/>';
+    if(p.length>2)h+='<circle cx="'+p[0][0]+'" cy="'+p[0][1]+'" r="22" fill="none" stroke="#e30613" stroke-width="3"/>'}
+  p.forEach(q=>h+='<rect x="'+(q[0]-7)+'" y="'+(q[1]-7)+'" width="14" height="14" fill="#0a0a0a"/>');
+  ES.pk.forEach(q=>h+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="25" fill="#0a0a0a" stroke="#e30613" stroke-width="3"/>');
+  es.innerHTML=h;
+  $('edo').classList.toggle('on',ES.mode=='out');$('edp').classList.toggle('on',ES.mode=='pk');
+  const m=ES.mode=='pk'||ES.closed?edCheck():'';$('edgo').classList.toggle('dis',!!edCheck());
+  $('edm').textContent=ES.msg||(ES.closed?m:'')}
+es.addEventListener('pointerdown',e=>{
+  const q=edPt(e),g=[edSnap(q[0]),edSnap(q[1])];ES.msg='';
+  if(ES.mode=='out'){
+    if(!ES.closed){
+      if(ES.pts.length>2&&Math.hypot(g[0]-ES.pts[0][0],g[1]-ES.pts[0][1])<22){edSave();ES.closed=true;ES.mode='pk'}
+      else if(!ES.pts.some(z=>z[0]==g[0]&&z[1]==g[1])){edSave();ES.pts.push(g)}}
+    else{const V=vertNear(ES.pts,q);if(V.d<18){edSave();ES.drag=V.v;es.setPointerCapture(e.pointerId)}}}
+  else{
+    if(!ES.closed){ES.msg='Close the outline first'}
+    else{const k=ES.pk.findIndex(z=>Math.hypot(z[0]-q[0],z[1]-q[1])<30);edSave();
+      if(k>=0)ES.pk.splice(k,1);
+      else{const V=vertNear(ES.pts,q),E=edgeNear(ES.pts,q),n=ES.pts.length;let z=[Math.round(q[0]),Math.round(q[1])];
+        if(V.d<SNAPD)z=ES.pts[V.v].slice();
+        else if(E.d<SNAPD){const a=ES.pts[E.e],b=ES.pts[(E.e+1)%n];z=[Math.round(a[0]+(b[0]-a[0])*E.t),Math.round(a[1]+(b[1]-a[1])*E.t)]}
+        ES.pk.push(z)}}}
+  edDraw()});
+es.addEventListener('pointermove',e=>{const q=edPt(e);
+  if(ES.drag>=0){ES.pts[ES.drag]=[Math.max(0,Math.min(EDW,edSnap(q[0]))),Math.max(0,Math.min(EDH,edSnap(q[1])))];edDraw()}
+  else if(ES.mode=='out'&&!ES.closed&&ES.pts.length){ES.cur=[edSnap(q[0]),edSnap(q[1])];edDraw()}});
+es.addEventListener('pointerup',()=>{ES.drag=-1});
+$('edo').onclick=()=>{ES.mode='out';edDraw()};
+$('edp').onclick=()=>{if(ES.closed)ES.mode='pk';else ES.msg='Close the outline first';edDraw()};
+$('edu').onclick=()=>{const h=ES.hist.pop();if(h){[ES.pts,ES.closed,ES.pk,ES.mode]=JSON.parse(h)}ES.msg='';edDraw()};
+$('edc').onclick=()=>{edSave();ES.pts=[];ES.pk=[];ES.closed=false;ES.mode='out';ES.msg='';edDraw()};
+$('mkb').onclick=()=>edOpen();
+$('edx').onclick=()=>ed.classList.remove('on');
+$('edgo').onclick=()=>{
+  const m=edCheck();if(m){ES.msg=m;edDraw();return}
+  const old=CUSTOM,prev=SHAPE.id;CUSTOM={pts:ES.pts.map(q=>q.slice()),pk:ES.pk.map(q=>q.slice())};
+  loadShape('custom');
+  if(!CUSTOK){CUSTOM=old;loadShape(prev);ES.msg='No room for 15 balls and the cue ball';edDraw();return}
+  store.set('pool-custom',JSON.stringify(CUSTOM));store.set('pool-shape','custom');
+  ed.classList.remove('on');shp.classList.remove('on');layout();newGame()};
+addEventListener('keydown',e=>{if(e.key=='Escape')ed.classList.remove('on')});
+$('shb').onclick=()=>{shapeMenu();shp.classList.add('on')};$('shx').onclick=()=>shp.classList.remove('on');
+addEventListener('keydown',e=>{if(e.key=='Escape')shp.classList.remove('on')});
+loadShape(store.get('pool-shape')=='custom'&&!CUSTOM?'classic':(store.get('pool-shape')||'classic'));
+layout();newGame();requestAnimationFrame(frame);
+</script></body></html>
