@@ -49,6 +49,7 @@
   .setbtn:hover { background:rgba(255,255,255,.12); border-color:rgba(232,198,90,.55); filter:none; }
   @media (max-width:640px) { .wrap { padding:6px; } .hud h1 { font-size:15px; } .hud .stats { gap:10px; font-size:12.5px; } .card { padding:18px 16px; } }
   .hint { position:absolute; left:0; right:0; bottom:22px; text-align:center; color:#fff; text-shadow:0 1px 6px rgba(0,0,0,.7); font-size:13px; pointer-events:none; z-index:3; }
+  @media (max-width:640px) { .hint { bottom:56px; font-size:12px; } }
   .board { position:absolute; top:10px; right:10px; background:rgba(10,20,14,.72); border-radius:10px; padding:6px; font-size:12.5px; min-width:150px; pointer-events:none; }
   .br { display:flex; align-items:center; gap:7px; padding:3px 6px; border-radius:6px; }
   .br i { width:9px; height:9px; border-radius:50%; flex:none; }
@@ -1381,7 +1382,7 @@ function sauropod() {
 
 function volcano(x, z, r, h, g) {
   const v = new THREE.Group();
-  const cone = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.14, r, h, 28), new THREE.MeshLambertMaterial({ color:0x4a4038, flatShading:true }));
+  const cone = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.14, r, h, 28), new THREE.MeshLambertMaterial({ color:0x4a4038 }));
   cone.position.y = h / 2; v.add(cone);
   const cr = new THREE.Mesh(new THREE.CircleGeometry(r * 0.14, 20), new THREE.MeshBasicMaterial({ color:0xff7a22, fog:false }));
   cr.rotation.x = -Math.PI / 2; cr.position.y = h + 0.5; v.add(cr);
@@ -2841,8 +2842,8 @@ function buildPeaks(g) {
   }
   const geo = P.shape === 'mesa' ? new THREE.CylinderGeometry(0.78, 1, 1, 9) : (P.shape === 'rock' ? new THREE.IcosahedronGeometry(1, 0) : new THREE.ConeGeometry(1, 1, 9));
   if (P.shape !== 'rock') geo.translate(0, 0.5, 0);
-  L.forEach((l, i) => inst(g, geo, new THREE.MeshLambertMaterial({ color:P.cols[i], flatShading:true }), l, false, TL, RAD));
-  if (C.length) { const cg = new THREE.ConeGeometry(1, 1, 9); cg.translate(0, 0.5, 0); inst(g, cg, new THREE.MeshLambertMaterial({ color:P.cap, emissive:P.capE || 0, flatShading:true }), C, false, TL, RAD); }
+  L.forEach((l, i) => inst(g, geo, new THREE.MeshLambertMaterial({ color:P.cols[i] }), l, false, TL, RAD));
+  if (C.length) { const cg = new THREE.ConeGeometry(1, 1, 9); cg.translate(0, 0.5, 0); inst(g, cg, new THREE.MeshLambertMaterial({ color:P.cap, emissive:P.capE || 0 }), C, false, TL, RAD); }
   if (P.stars) {
     const n = P.stars, pos = new Float32Array(n * 3), sr = mulberry(5);
     for (let i = 0; i < n; i++) { const u = sr() * 6.2832, v = Math.pow(sr(), 0.8) * 1.45, rr = 3600; pos[i * 3] = W / 2 + Math.cos(u) * Math.cos(v) * rr; pos[i * 3 + 1] = Math.sin(v) * rr * 0.9 - 200; pos[i * 3 + 2] = H / 2 + Math.sin(u) * Math.cos(v) * rr; }

@@ -79,6 +79,8 @@ html,body{margin:0;height:100%;overflow:hidden;background:#cdd6da;font:500 12px/
 #touch div{display:flex;gap:12px;pointer-events:auto}
 #touch b{width:78px;height:78px;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:30px;background:rgba(0,0,0,.25)}
 @media(pointer:coarse){#touch{display:flex}#tower{width:110px}#pos{font-size:54px}#spd{font-size:56px}}
+#touch.off{display:none!important}.tr{white-space:nowrap}
+@media(pointer:coarse){#tower{width:124px}.tr{height:17px;font-size:11px}#info{bottom:112px}#speedbox{right:auto;left:50%;transform:translateX(-50%);text-align:center}}
 @media(max-height:740px){.panel h1{font-size:40px}.two{margin-top:4px}.two>div{padding:1px 0}.trk{--rh:22px;font-size:13px}.tabrow{margin:6px 0 4px}.go{padding:8px 18px;font-size:17px}.go.alt{padding:6px 18px;font-size:15px}#acts{margin-top:8px}.panel h1{font-size:34px;margin:2px 0 0}.panel{padding-top:10px;padding-bottom:10px}}@media(max-height:540px){.trk{--rh:18px;font-size:12px}.panel h1{font-size:28px}.seg span{font-size:13px}.two>div{padding:1px 0}}@media(max-width:640px){#tracks{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}.trk.f:not(:first-child){border-top:0}}
 </style></head><body>
 <canvas id="gl"></canvas>
@@ -122,7 +124,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#cdd6da;font:500 12px/
  <div class="hk"><div><i class="kc" data-c="KeyP">P</i><i class="kc" data-c="KeyM">M</i></div>Pause · Sound</div>
  <div class="tip">Brake in a straight line, then release as you turn in. Steer smoothly, add throttle gradually on exit. Follow the line: red brake, green accelerate. Gamepad: left stick, RT gas, LT brake.</div>
  <div class="row2"><span id="hOk">Got it</span></div></div></div>
-<div id="touch"><div><b data-k="left">◀</b><b data-k="right">▶</b></div><div><b data-k="brake">■</b><b data-k="gas">▲</b></div></div>
+<div id="touch" class="off"><div><b data-k="left">◀</b><b data-k="right">▶</b></div><div><b data-k="brake">■</b><b data-k="gas">▲</b></div></div>
 
 <script>/**
  * @license
@@ -544,9 +546,10 @@ function envMonaco(tk,SC,r){
  ko(700,62,-1);ko(692,52,1);ko(1095,46,1);ko(2610,70,-1);ko(185,24,-1);ko(2945,24,1);
  // ---- landmarks ----
  const DIM={700:[50,24],692:[36,20],1095:[32,16],185:[9,9],2945:[12,10]};
- const place=(s,side,off,fn)=>{const t=trackPt(s,0),[hl,hd]=DIM[s]||[20,12];let o=off,ok=false;
+ const place=(s,side,off,fn)=>{const [hl,hd]=DIM[s]||[20,12];let t=null,o=off,ok=false;
+  for(const sh of[0,-25,25,-50,50,-80,80]){if(ok)break;t=trackPt(s+sh,0);o=off;
   for(let k=0;k<30&&!ok;k++,o+=3){const x=t.x+t.nx*side*o,z=t.z+t.nz*side*o;ok=!pl.wet(x,z,4);
-   for(const[cx,cz]of[[0,0],[1,1],[1,-1],[-1,1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]]){if(!ok)break;const qx=x+t.tx*cx*hl+t.nx*side*cz*hd,qz=z+t.tz*cx*hl+t.nz*side*cz*hd;if(pl.tdist(qx,qz)<WOFF+4)ok=false}}
+   for(const[cx,cz]of[[0,0],[1,1],[1,-1],[-1,1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]]){if(!ok)break;const qx=x+t.tx*cx*hl+t.nx*side*cz*hd,qz=z+t.tz*cx*hl+t.nz*side*cz*hd;if(pl.tdist(qx,qz)<WOFF+4)ok=false}}}
   if(!ok){console.warn('landmark skipped',s);return}o-=3;const x=t.x+t.nx*side*o,z=t.z+t.nz*side*o;pl.claim(x,z,Math.max(hl,hd)*.9);fn(x,heightAt(x,z),z,Math.atan2(t.tx*side*-1,t.tz*side*-1)+Math.PI,t)};
  // Casino de Monte-Carlo (left of the cars, set back behind gardens), facing the track
  place(700,-1,WOFF+46,(x,y,z,yaw,t)=>{const yw=Math.atan2(t.tx,t.tz)-Math.PI/2;const L2=(lx,lz)=>[x+Math.cos(yw)*lx+Math.sin(yw)*lz,z-Math.sin(yw)*lx+Math.cos(yw)*lz];
@@ -1984,10 +1987,10 @@ function aiStep(c,dt,go){
   else{dT=clamp(T.d+c.passSide*3.3,-lim,lim);tv*=1.03;if(g>0&&g<5&&Math.abs(T.d-c.d)<2.1&&c.passSide*(c.d-T.d)<0.7){c.st='follow';c.passCool=2.5}}}
  if(c.st!=='pass'){
   if(A){
-   if(ag<8.5)tv=Math.min(tv,A.v+(ag-6.8)*1.3);
+   if(ag<8.5){tv=Math.min(tv,A.v+(ag-6.8)*1.3);if(A.v<1&&S.clock>4&&ag>3.5)tv=Math.max(tv,3.2)}
    else if(ag<26&&Math.abs(A.d-c.d)<2.2)tv=Math.min(tv*1.035,tv+3.5);
    const closing=A.v<tv*0.997;
-   if(ag<22&&closing&&c.passCool<=0&&c.v>8&&go){
+   if(ag<22&&closing&&c.passCool<=0&&(c.v>8||(A.v<1&&S.clock>4))&&go){
     let ka=0,cnt=0;for(let k=Math.floor(60/ds);k<Math.floor(260/ds);k+=3){ka+=kapS[(i+k)%N];cnt++}ka/=Math.max(cnt,1);
     const pref=Math.abs(ka)>0.0016?-Math.sign(ka):(A.d>0?-1:1);
     for(const sd of[pref,-pref]){const dd=A.d+sd*3.3;if(Math.abs(dd)<=lim&&free(dd,A)){c.st='pass';c.tgt=A;c.passSide=sd;c.passT=7;break}}
@@ -1998,7 +2001,7 @@ function aiStep(c,dt,go){
  dT=clamp(dT,-(HW-1.3),HW-1.3);
  const aA=Math.max(0.5,Math.max(1,Math.min(17,PW*PKF()/Math.max(c.v,5))-0.000825*DK()*c.v*c.v)-9.81*gradeAt(c.s));
  const dv=clamp((tv-c.v)*3.5,-46,aA);c.aL=lerp(c.aL,dv,0.2);c.v=Math.max(0,c.v+dv*dt);
- const rate=(c.st==='pass'?2.6:3.2)*clamp(c.v/14,0,1),od=c.d;c.d+=clamp(dT-c.d,-rate*dt,rate*dt);
+ const rate=(c.st==='pass'?2.6:3.2)*clamp((c.st==='pass'&&c.tgt&&c.tgt.v<3?Math.max(c.v,9):c.v)/14,0,1),od=c.d;c.d+=clamp(dT-c.d,-rate*dt,rate*dt);
  c.s+=c.v*dt/(1+c.d*kap[i]);
  const q=trackPt(c.s,c.d),dDot=(c.d-od)/Math.max(dt,0.001);
  const hx=q.tx*Math.max(c.v,2)+q.nx*dDot,hz=q.tz*Math.max(c.v,2)+q.nz*dDot;
@@ -2121,12 +2124,12 @@ function setTrack(id,quiet){const tk=TRACKS.find(t=>t.id==id)||TRACKS[0];S.track
 function startRace(prac){
  S.practice=!!prac;setTrack(S.track);
  S.clock=0;S.lightT=0;S.hold=0.8+Math.random()*1.0;S.phase=S.practice?'race':'lights';S.fin=false;S.finOrder=[];S.best=1e9;S.paused=false;S.camPsi=player.psi;
- $('menu').classList.add('hide');$('end').classList.add('hide');$('pause').classList.add('hide');
+ $('menu').classList.add('hide');$('end').classList.add('hide');$('pause').classList.add('hide');$('touch').classList.remove('off');
  HUDIDS.forEach(id=>$(id).classList.remove('off'));
  dmReset();drawDmg(1);$('dmg').classList.toggle('off',!DM.on);$('tower').classList.toggle('off',S.practice);$('pos').style.display=S.practice?'none':'';$('kbar').classList.toggle('off',!S.practice);$('lights').classList.toggle('off',S.practice);
  lineMesh.visible=S.line;$('bline').classList.toggle('on',S.line);
  buildTower();toast(TK.name,S.practice?'Practice':TK.cc+' · '+TK.km,2600)}
-function toMenu(){S.phase='menu';S.paused=false;$('menu').classList.remove('hide');$('end').classList.add('hide');$('pause').classList.add('hide');HUDIDS.forEach(id=>$(id).classList.add('off'));setTrack(S.track);toast('')}
+function toMenu(){$('touch').classList.add('off');S.phase='menu';S.paused=false;$('menu').classList.remove('hide');$('end').classList.add('hide');$('pause').classList.add('hide');HUDIDS.forEach(id=>$(id).classList.add('off'));setTrack(S.track);toast('')}
 function toast(t,sub,ms){const e=$('toast');if(!t){e.classList.remove('on');return}e.innerHTML=t+(sub?'<small>'+sub+'</small>':'');e.classList.add('on');lastToast=performance.now()+(ms||1800)}
 function resetCar(){if(S.practice)dmReset();const q=trackPt(player.s,0);player.x=q.x;player.z=q.z;player.psi=q.psi;player.vx=player.vz=0;player.v=0;player.r=0;player.steer=0;player.d=0;player.idx=q.i}
 
