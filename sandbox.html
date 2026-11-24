@@ -10,42 +10,121 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--accent:#e30613;--g:24px}
 
-body{background:#fff;color:#000;font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-.page{max-width:1200px;margin:0 auto;padding:0 var(--g)}
-.row{display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--g)}
+:root{--bg:#fff;--fg:#000;--accent:#e30613;--gutter:24px}
 
-.topbar{padding:1.4rem 0 0}
-.topbar a{display:block;width:fit-content;line-height:0}
+body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-size:17px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+}
+
+a{color:var(--fg);text-decoration:none}
+
+.page{max-width:1200px;margin:0 auto;padding:0 var(--gutter)}
+
+.row{display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--gutter)}
+
+.topbar{padding:1.4rem 0 0;font-weight:700;font-size:1rem}
 .topbar a:hover{color:var(--accent)}
+.topbar a{display:block;width:fit-content;line-height:0}
 
-header{padding:3rem 0 1.2rem;border-bottom:2px solid #000}
-h1{grid-column:1/-1;font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1;letter-spacing:-.04em}
+header{padding:2.2rem 0 1.2rem;border-bottom:3px solid var(--fg)}
 
-.item{position:relative;display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--g);padding:1.2rem 0;border-bottom:1px solid #000}
-.item h2{grid-column:1/-1;font-size:1.5rem;font-weight:700;letter-spacing:-.02em;line-height:1.2}
-.item p{grid-column:1/-1;font-size:1rem;line-height:1.4;margin-top:.2rem}
+h1{
+    grid-column:1/-1;
+    font-size:clamp(2.6rem,7.2vw,5.6rem);
+    font-weight:700;
+    line-height:0.98;
+    letter-spacing:-0.035em;
+}
+
+.item{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    column-gap:var(--gutter);
+    padding:1.2rem 0;
+    border-bottom:1px solid var(--fg);
+}
+
+.item h2{
+    grid-column:1/-1;
+    font-size:1.5rem;
+    font-weight:700;
+    letter-spacing:-.02em;
+    line-height:1.2;
+}
+
+.item p{
+    grid-column:1/-1;
+    font-size:1rem;
+    line-height:1.4;
+    margin-top:.2rem;
+}
+
 .item:hover h2{color:var(--accent)}
+
 .cover{position:absolute;inset:0}
 
-.games-section{margin-top:4rem;border-top:2px solid #000}
-.games-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;background:none;border:0;border-bottom:2px solid #000;padding:1.2rem 0;font-family:inherit;color:#000;text-align:left;cursor:pointer}
-.games-toggle h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1;letter-spacing:-.04em}
+.games-section{margin-top:4rem;border-top:3px solid var(--fg)}
+
+.games-toggle{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:none;
+    border:0;
+    border-bottom:3px solid var(--fg);
+    padding:2.2rem 0 1.2rem;
+    font-family:inherit;
+    color:var(--fg);
+    text-align:left;
+    cursor:pointer;
+}
+
+.games-toggle h1{
+    font-size:clamp(2.6rem,7.2vw,5.6rem);
+    font-weight:700;
+    line-height:0.98;
+    letter-spacing:-0.035em;
+}
+
 .games-toggle:hover h1{color:var(--accent)}
-.arrow{font-size:1.5rem;transition:transform .25s ease}
+
+.arrow{
+    font-size:1.5rem;
+    transition:transform .25s ease;
+}
+
 .games-toggle[aria-expanded="true"] .arrow{transform:rotate(180deg)}
 
-.games-content{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease}
+.games-content{
+    display:grid;
+    grid-template-rows:0fr;
+    transition:grid-template-rows .35s ease;
+}
+
 .games-content.open{grid-template-rows:1fr}
+
 .games-inner{overflow:hidden}
 
-footer{padding:1.2rem 0 2.5rem;font-weight:700}
+footer{
+    padding:1rem 0 2.5rem;
+    font-size:.9rem;
+    font-weight:700;
+}
 
-@media(max-width:600px){
-    :root{--g:16px}
-    header{padding-top:2.5rem}
+@media(max-width:800px){
+    :root{--gutter:16px}
+}
+
+@media(prefers-reduced-motion:reduce){
+    .games-content,.arrow{transition:none}
 }
 </style>
 </head>
