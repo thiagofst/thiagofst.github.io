@@ -21,26 +21,31 @@ a{color:inherit;text-decoration:none}
 .topbar a{display:block;width:fit-content;line-height:0}
 .topbar a:hover{color:var(--accent)}
 
-header{padding:5rem 0 1.2rem;border-bottom:3px solid #000}
-h1{grid-column:1/-1;font-size:clamp(3rem,10vw,8rem);font-weight:700;line-height:.9;letter-spacing:-.04em}
-
-.games-header{padding:2rem 0 1.2rem;border-bottom:3px solid #000}
-.games-header h1{font-size:clamp(2.5rem,7vw,5rem)}
+header{padding:3rem 0 1.2rem;border-bottom:2px solid #000}
+h1{grid-column:1/-1;font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1;letter-spacing:-.04em}
 
 .item{position:relative;display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--g);padding:1.2rem 0;border-bottom:1px solid #000}
 .item h2{grid-column:1/-1;font-size:1.5rem;font-weight:700;letter-spacing:-.02em;line-height:1.2}
 .item p{grid-column:1/-1;font-size:1rem;line-height:1.4;margin-top:.2rem}
 .item:hover h2{color:var(--accent)}
-
 .cover{position:absolute;inset:0}
-.split{height:4rem}
+
+.games-section{margin-top:4rem;border-top:2px solid #000}
+.games-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;background:none;border:0;border-bottom:2px solid #000;padding:1.2rem 0;font-family:inherit;color:#000;text-align:left;cursor:pointer}
+.games-toggle h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1;letter-spacing:-.04em}
+.games-toggle:hover h1{color:var(--accent)}
+.arrow{font-size:1.5rem;transition:transform .25s ease}
+.games-toggle[aria-expanded="true"] .arrow{transform:rotate(180deg)}
+
+.games-content{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease}
+.games-content.open{grid-template-rows:1fr}
+.games-inner{overflow:hidden}
 
 footer{padding:1.2rem 0 2.5rem;font-weight:700}
 
 @media(max-width:600px){
     :root{--g:16px}
-    header{padding-top:4rem}
-    .games-header{padding-top:2rem}
+    header{padding-top:2.5rem}
 }
 </style>
 </head>
@@ -90,15 +95,17 @@ footer{padding:1.2rem 0 2.5rem;font-weight:700}
 <p>Periodic table and nuclide chart, with the origin of each element</p>
 </div>
 
-<!-- Games section -->
+<!-- Collapsible games section -->
 
-<div class="split"></div>
+<section class="games-section">
 
-<header class="games-header">
-<div class="row">
+<button class="games-toggle" id="gamesToggle" type="button" aria-expanded="false" aria-controls="gamesContent">
 <h1>Games</h1>
-</div>
-</header>
+<span class="arrow" aria-hidden="true">↓</span>
+</button>
+
+<div class="games-content" id="gamesContent">
+<div class="games-inner">
 
 <div class="item">
 <a class="cover" href="sandbox/games/cartogram.html" target="_blank" aria-label="Open Cartogram"></a>
@@ -142,6 +149,11 @@ footer{padding:1.2rem 0 2.5rem;font-weight:700}
 <p>8-ball pool on unconventional tables.</p>
 </div>
 
+</div>
+</div>
+
+</section>
+
 </main>
 
 <footer>
@@ -149,5 +161,17 @@ footer{padding:1.2rem 0 2.5rem;font-weight:700}
 </footer>
 
 </div>
+
+<script>
+const gamesToggle = document.getElementById('gamesToggle');
+const gamesContent = document.getElementById('gamesContent');
+
+gamesToggle.addEventListener('click', () => {
+    const isOpen = gamesToggle.getAttribute('aria-expanded') === 'true';
+    gamesToggle.setAttribute('aria-expanded', String(!isOpen));
+    gamesContent.classList.toggle('open', !isOpen);
+});
+</script>
+
 </body>
 </html>
